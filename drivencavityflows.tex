@@ -1,0 +1,307 @@
+%-------------------------------------------------------------------------------
+% DRIVEN CAVITY FLOWS 
+%-------------------------------------------------------------------------------
+
+\section{2D driven Cavity Flows} \label{sec:driven_cav}
+
+In two-dimensional (2D) driven cavity flows, a viscous Newtonian incompressible
+fluid is confined within a square (or rectangular) domain. In these model
+problems, the fluid is driven through the motion of the bounding walls. These
+types of flow configurations have been widely used due to their simplicity and
+relevance as benchmarks problem for validating numerical solvers and
+investigating various flow phenomena.
+
+A recent and comprehensive review conducted by \citet{kuhlmann2019} provides
+insights for the extensive research carried out on the many variants of the
+lid-driven cavity.
+
+\subsection{The single lid-driven Cavity Flow}
+
+The most basic configuration of the flow problem involves a square cavity where
+only one wall, referred to as the lid, is in motion while the other walls
+remain stationary. This simple 2D case has been extensively studied numerically
+and serves as one of the canonical benchmark problems nowadays. The first
+thorough computational investigation lies more than half a century back
+\citep{burggraf1966}. Figure \ref{fig:cav_simple} shows the basic setup, and
+figure \ref{fig:Re_cav_simple} illustrates the typical flow pattern for two
+different Reynolds numbers. The depicted streamlines show a central vortex
+driven by the upper lid's motion to the right. Therefore, the primary vortex
+rotates clockwise. Moreover, the flow shows secondary vortices at the upper and
+lower corners at higher Reynolds numbers ($8000$).
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[scale=1.5]
+  \draw[thick] (0, 0) rectangle (2, 2);
+  \draw[thick, pattern=north west lines, pattern color=gray] (0, 2)
+    rectangle (2, 2.15);
+  \draw[->, thick] (0.5, 2.25) -- (1.5, 2.25);
+  
+  \node at (1, 1) {Fluid};
+  \node at (1, 2.3) [above] {Moving lid};
+\end{tikzpicture}
+\caption{Single lid-driven cavity}
+\label{fig:cav_simple}
+\end{figure}
+
+\begin{figure}[ht!]
+\begin{center}
+  \includegraphics[width=0.7\textwidth]{figs/fig_kuhlmann2019}
+\end{center}
+\caption{Isolines of the streamfunction of the lid-driven cavity at Reynolds
+  numbers 1 (a) and 8000 (b), figures adapted from \cite{kuhlmann2019}}
+\label{fig:Re_cav_simple}
+\end{figure}
+
+The patterns which arise at the corners have been studied analytically in the
+literature \citep{}. The flow phenomena in the upper corners result from the
+discontinuous boundary conditions of the mathematical problem. These are caused
+by the horizontal component being set to a velocity $U$ at the upper corners,
+but on the contrary, the vertical walls are not moving. What follows is that
+the pressure and the vorticity diverge at these corners. This phenomenon is a 
+special case of Taylor's scrapper problem, and there exists a closed-form
+solution in terms of series expansions \citep{kuhlmann2019}. The other effect
+worth mentioning is the formation of two eddies at the lower corners of the cavity.
+These vortices rotate in an anti-clockwise way, separated from the central
+vortex. They are called Moffat eddies, and similarity solutions have
+been found for them \citep{}.
+
+Apart from the analytical studies, calculating the solutions of the cavity
+while varying the Reynolds number has been done extensively. The single
+lid-driven cavity becomes unstable at a Hopf bifurcation (see section \ref{sec:bif})
+somewhere in the range of the Reynolds number [7500, 8100] \citep{kuhlmann2019}
+conducted by different studies. No conclusive results could be drawn due to the
+significant uncertainty. The numerical deviations come mainly from the large
+Reynolds number at which the bifurcations appear and the different
+discretization used to obtain the results. Another main issue, as mentioned
+before, is the corner singularities caused by discontinuous boundary
+conditions.
+
+Until now, we have restricted our attention only to the simple 2D single
+lid-driven case. However, there is a whole spectrum of different variants.
+First, the analysis can be performed for different aspect ratios (height-width
+of the box) and evaluate the effect on the flow pattern. Other shapes apart
+from a rectangular cavity can be considered as well. With more computing
+resources being available, the 3D variant has also been studied, giving rise to
+other types of singularities and flow patterns. Lastly, the problem can be
+combined with heat convection by keeping facing sides at different
+temperatures \citep{}. \\
+
+In this work, we want to consider another type of flow variant by adapting the
+boundary conditions. \cite{kuhlmann1997} investigated numerically and
+experimentally a two-sided flow problem where two opposing lids move in
+opposite directions. It has been found that the primary symmetric flow pattern
+is only stable for low Reynolds numbers, and the flow becomes unstable at a large
+Reynolds number because of a three-dimensional mode. \citep{wahba2009} did
+further numerical experiments and proposed an extension, the four-sided
+version, where all four walls are moving at different speeds (top-bottom and
+right-left lids moving rightwards-leftwards and upwards-downwards,
+respectively). This problem exhibits bifurcations from a very low Reynolds number
+onward. Figure \ref{fig:bc_types} shows the different types of boundary
+conditions.
+
+\begin{figure}[h]
+\centering
+\begin{subfigure}[b]{0.3\textwidth}
+  \centering
+  \begin{tikzpicture}[scale=2]
+    \draw (0,0) rectangle (1,1);
+    \draw[thick, ->] (-0.1,0.9) -- (-0.1,0.1);
+    \draw[thick, ->] (1.1,0.1) -- (1.1,0.9);
+  \end{tikzpicture}
+  \caption{Two-sided lid-driven cavity \\ \hspace{\textwidth}}
+  \label{subfig:bc_2s}
+\end{subfigure}
+\begin{subfigure}[b]{0.3\textwidth}
+  \centering
+  \begin{tikzpicture}[scale=2]
+    \draw (0,0) rectangle (1,1);
+    \draw[thick, ->] (-0.1,0.9) -- (-0.1,0.1);
+    \draw[thick, ->] (0.1,1.1) -- (0.9,1.1);
+  \end{tikzpicture}
+  \caption{Two-sided lid-driven cavity (non-facing)}
+  \label{subfig:bc_2s_nf}
+\end{subfigure}
+\begin{subfigure}[b]{0.3\textwidth}
+  \centering
+  \begin{tikzpicture}[scale=2]
+    \draw (0,0) rectangle (1,1);
+    \draw[thick, ->] (0.1,1.1) -- (0.9,1.1);
+    \draw[thick, ->] (1.1,0.1) -- (1.1,0.9);
+    \draw[thick, ->] (0.9,-0.1) -- (0.1,-0.1);
+    \draw[thick, ->] (-0.1,0.9) -- (-0.1,0.1);
+  \end{tikzpicture}
+  \caption{Four-sided lid-driven cavity \\ \hspace{\textwidth}}
+  \label{subfig:bc_4s}
+\end{subfigure}
+
+\caption{Variations of the boundary conditions for the cavity flow,
+ with  the moving lids set to equal speeds $U$}
+\label{fig:bc_types}
+\end{figure}
+
+\subsection{Regularization} \label{sec:regul}
+
+The corner singularities pose a well-known problem, and applying the analytic
+insights of the 2D case can give rise to more precise calculations.
+\cite{botella1998} used spectral methods (see section \ref{sec:spectral}) in
+combination with the substraction of the leading terms of the singularities. In
+this way, the numerically solved problem does not involve singularities, and
+the global discretization of spectral methods can safely be applied and gives
+highly accurate results. 
+
+Another successful strategy is to adapt the boundary condition to study a more
+well-posed problem. Regularized versions of the boundary conditions are used to
+replace discontinuous velocity profiles. The velocity is set to zero at the
+corners and increases to the desired value at the boundary. To construct such
+regularization functions, polynomials \citep{shen1991} and trigonometric
+\citep{} functions have been tested in the literature. \cite{shen1991} used
+4-th order polynomials, which seem to be too low of an order and give different
+results compared to the original problem. A more recent regularization function
+involves exponential \citep{lopez2017} which was applied for a 3D problem,
+which seems to work well to represent the constant velocity at the lid and
+still is smooth at the corners.
+
+Resembling the original problem through regularized functions can recover the
+exponential convergence of spectral discretizations. The resolution of the
+bifurcation points can thus be calculated more reliably.  
+
+\subsection{The four-sided lid-driven Cavity Flow} \label{sec:4sc}
+
+In the paper of \cite{wahba2009}, a multiplicity of states in the four-sided
+lid-driven cavity flows have been discovered. The numerical simulations have
+been carried out on a finite-difference grid with the line successive
+over-relaxation method (LSOR) to compute the results. The study reveals the
+presence of multiple steady solutions. The four-sided version exhibits
+interesting flow bifurcations. The flow is symmetric at low Reynolds numbers,
+and then two stable asymmetric solutions appear, whereas the symmetric solution
+becomes unstable. See figure \ref{fig:4fsc_states} for the visualization of
+these states.
+
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[width=0.455\textwidth]{figs/fig_wahba2009}
+  \end{center}
+  \caption{Symmetric and asymmetric solutions at $Re=300$, computed by
+    \cite{wahba2012}}
+  \label{fig:4fsc_states}
+\end{figure}
+
+Later, \cite{perumal2011} employed a Lattice Boltzmann Method (LBM), recovering
+multiple solutions obtained by the former finite-difference based code.
+Furthermore, other aspect ratios for cavities have been considered, which
+exhibit the multiplicity of solutions as well. 
+
+\cite{cadou2012} developed numerical tools for the stability analysis in two-
+and four-sided lid-driven cavity flows. They recognized a secondary bifurcation
+point at a higher Reynolds number where the symmetric solution is stable again.
+Equally, the two-sided cavity flow has been changed to have non-facing moving
+lids (figure \ref{subfig:bc_2s_nf}). In this asymmetric problem a Hopf
+bifurcation has been discovered. On the other hand, in the four-sided version,
+no such bifurcation has been reported in the literature.
+
+A full bifurcation diagram as presented by \cite{chen2013}. Through a
+continuation algorithm, the asymmetric solution branches could be followed (see
+section \ref{sec:bif}). The effect of changing the driving
+velocity in the two-sided, reveals two Pitchfork bifurcations and turning
+(saddle) points for the asymmetric solutions. 
+
+\begin{figure}[h]
+  \begin{center}
+  \includegraphics[width=0.8\textwidth]{figs/fig2_chen2013.png}
+  \end{center}
+  \label{fig:bif_diag_ref}
+  \caption{Bifurcation diagram obtained by \cite{chen2013} for the
+    non-regularized four-sided cavity flow, Reynolds numbers are 
+    double the results obtained in this study} 
+\end{figure}
+
+As pointed out in the section \ref{sec:regul}, the goal here is to look at a
+regularized problem with the aim of using spectral discretization. Apart from
+the LBM technique, the domain has been discretized with finite differences. A
+regularized version will now be introduced formally to define a more well-posed
+problem and achieve higher accuracy and an exponential convergence rate.
+
+\clearpage
+\subsection{The regularized four-sided lid-driven Cavity Flow (R4CF)} \label{sec:r4sc}
+
+Illustrated below, is the domain for the four-sided cavity flow problem. The
+motivation for using this normalized domain centered at the origin instead of
+the classical $[0,1]\times[0,1]$ is that, on the one hand, the reflectional
+symmetries of the flow are more natural, just implying a change of sign of the
+spatial variables $x$ or $y$. On the other hand, the $[-1,1]$ interval is the
+canonical domain for orthogonal polynomials. 
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[scale=1.7]
+  \draw (-1,-1) rectangle (1,1);
+  
+  \draw[->] (-1.2,0) -- (1.2,0) node[right] {$x$};
+  \foreach \x in {-1,-0.5,0.5,1}
+      \draw (\x,-0.05) -- (\x,0.05) node[right=4pt, below=4pt] {$\x$};
+  
+  \draw[->] (0,-1.2) -- (0,1.2) node[above] {$y$};
+  \foreach \y in {-1,-0.5,0.5,1}
+    \draw (-0.05,\y) -- (0.05,\y) node[below=5pt, left=4pt] {$\y$};
+\end{tikzpicture}
+\caption{Square domain $(x,y) \in [-1,1]\times[-1,1]$ for the four-sided cavity.}
+\label{fig:cav_4s}
+\end{figure}
+
+All lids have the same tangential velocity. The discontinuous boundary of the
+four-sided problem is,
+
+\begin{eqnarray}
+u(x,\pm 1,t) & = \pm 1,\label{non_reg_u_bca} \\
+v(x,\pm 1,t) & = 0, \\
+u(\pm 1,y,t) & = 0, \\
+v(\pm 1,y,t) & = \pm 1,,\label{non_reg_u_bcb}
+\label{non_reg_u_bc}
+\end{eqnarray}
+
+To discretize \eqref{eq:str} using a spectral method, \eqref{non_reg_u_bca} and
+\eqref{non_reg_u_bcb} are replaced by the regularized boundary conditions
+
+\begin{eqnarray}
+u(x,\pm 1,t) & = & \pm\left[\left(\rme^{k_0(x - 1)} - 1\right)
+  \left(\rme^{-k_0(x + 1)} - 1\right)\right]^2,\label{reg_u_bca} \\
+v(\pm 1,y,t) & = & \pm\left[\left(\rme^{k_0(y - 1)} - 1\right)
+  \left(\rme^{-k_0(y + 1)} - 1\right)\right]^2,\label{reg_u_bcb}
+\end{eqnarray}
+
+The exponential regularization function is adapted from \citep{lopez2017}. Where
+$k_0$ is a suitable parameter controlling the slope of the decay of the
+velocity profile near the corners. In this study, we set $k_0=10$ to get a
+suitable but not too extreme decay for the velocity at the edges. 
+
+\begin{figure}[h!]
+\begin{center}
+  \includegraphics[width=0.4\textwidth]{figs/bc_profile.pdf}
+\end{center}
+\caption{\label{bc_profile} Regularized horizontal velocity profile
+  \eqref{reg_u_bca} at the top wall $y=1$ for $k_0=10$.}
+\end{figure}
+
+The regularized boundary conditions impose a zero velocity at all four cavity
+corners. Figure \ref{bc_profile} shows such a profile for the regularization
+parameter $k_0=10$.
+
+\subsection{A physical or mathematical problem}
+
+The final important point is that the 2D problem must be studied cautiously.
+The paper of \cite{eturk2009} concludes that the single lid-driven cavity is a
+fictitious flow at high Reynolds numbers. Fictitious meaning that the problem
+from a physical point of view would no longer be two-dimensional. However,
+numerical solutions exist at high Reynolds numbers for the 2D case. 
+
+Additionally, it is hard to replicate the lid-driven cavity experimentally with
+regularized boundary conditions. This problem is even worse considering the
+four-sided cavity flow version and different velocity directions at the lid.
+
+Using a regularized version, as presented above, will help for numerically
+accurate results, but additionally is even harder to reproduce in practice.
+From the point of view of a benchmark for an instability analysis for
+different solvers, the resulting flow (if fictional or not) should at least be
+computable accurately. That being said, this report will focus on the main
+aspect, which is the accurate computation of a well-posed mathematical problem. 

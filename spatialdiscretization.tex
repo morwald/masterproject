@@ -1,0 +1,561 @@
+%-------------------------------------------------------------------------------
+% SPATIAL DISCRETIZATION 
+%-------------------------------------------------------------------------------
+
+\section{Spatial Discretization} \label{sec:spectral}
+
+In order to numerically solve the R4CF problem, we need to approximate the
+spatial domain of the continuous problem. This procedure is typically done by
+dividing the domain into grid points, forming what is called a mesh. Various
+discretization techniques and numerical methods exist for solving partial
+differential equations.
+
+The most established ones are finite elements, finite differences, or finite
+volume for 3D discretizations. These discretization techniques are referred to
+as local techniques because the values and derivatives of a grid point only
+affect other nearby points. They employ local basis functions to approximate
+the local behavior and offer flexibility in handling irregular and complex
+geometries. These techniques are widely adopted in engineering due to their
+practical implementation and adaptive refinement capabilities.
+
+Another class of techniques is called spectral methods. These methods act
+globally, using basis functions evaluated over the entire domain to approximate
+individual grid points. \\
+
+In the following discussion, we will explore why spectral methods are
+well-suited for studying the R4CF and its simple 2D geometry. Additionally, the
+significance of regularizing the boundary conditions will become clear. Most of
+the theory presented in this section is derived from the textbook "Chebyshev
+and Fourier Spectral Methods" by Boyd \citep{boyd2001}. It is important to note
+that this section involves some simplifications and non rigour to give a broad
+overview and justify applying pseudospectral Chebyshev discretization for the
+R4CF problem.
+
+\subsection{Spectral Methods}
+
+Sectral methods encompass a range of global discretization techniques used to
+solve differential and integral equations and can be classified into two main
+categories. To develop the underlying theory, we will examine a one-dimensional
+approximation based on a finite series expansion of $N+1$ points:
+
+\begin{align}
+u(x) \approx u_N(x) = \sum_{i=1}^{N} a_i \, \psi(i). 
+\label{eq:approx}
+\end{align}
+
+The approximation can be plugged into a differential or integral equation of
+the form $Lu=f(x)$ where $L$ is the operator of the equation. To assess the
+accuracy of the approximation, we can analyze the residual function, which is
+defined as follows:
+
+\begin{align}
+R(x; a_0, a_1, . . . , a_N) = Lu_N - f \label{eq:res}
+\end{align}
+
+The residual function gives the error between the approximation and the real
+solution. We note that the residual at a point $x$ depends on all expansion
+coefficients, hence the name global. This residual function is formalized
+within the framework \emph{the methods of mean weighted residuals}. Spectral
+and other discretization methods can be characterized by how they minimize this
+residual function. We can distinguish broadly between two categories of
+spectral methods. The "interpolating" or "non-interpolating" versions
+\citep{boyd2001}. The so-called \emph{pseudospectral} or interpolating refers
+to the strategy of interpolation points on which the residual function should
+be exactly zero. This technique is also referred to as \emph{collocation}.
+
+\begin{align}
+R(x_i; a_0, a_1, . . . , a_N) = 0, \quad i=0,1,...,N 
+\label{eq:res_collo}
+\end{align}
+
+Through the $N+1$ points that are obtained, the coefficients $a_i$ can be
+determined. The non-interpolating versions try to use Galerkin's method or
+Lanczos tau-method to solve the equation by multiplying \eqref{eq:res} with a
+test-function and integrating the equation. This results in the integrated
+so-called weak form of the differential equation, and the residual is tried to
+be satisfied in terms of the integral. In the case of the widely used
+Galerkin's method the test function is chosen to be of the form of the
+approximating (basis) function,
+
+\begin{align}
+<\phi_i(x), R(x; a_0, a_1, . . . , a_N)> = 0, \quad i=0,1,...,N 
+\label{eq:res_galerkin}
+\end{align}
+
+where $<,>$ corresponds to the inner product of the functions. In this sense,
+the residual is minimized in a weighted manner by multiplying with the basis
+function. It can be shown that Galerkin's method gives higher results than the
+collocation method. But due to the simplicity of solving the equation at the
+collocation point exactly, the pseudospectral approach is preferred and doesn't
+lose much accuracy. In this study, the spectral method is
+actually referring to the pseudospectral approach. \\
+
+The choice of the basis functions is the following question that arises. The
+idea is to use a set of orthogonal basis functions (definition or not?). Very
+broadly speaking, the basis functions in the series should be as different as
+possible. Otherwise, numerical errors make new terms in the approximation
+useless and only improve a little the already gained accuracy.
+
+The classical orthogonal functions are part of the Fourier series. More widely
+used orthogonal functions are called \emph{Chebyshev polynomials of the first
+kind}. They can be obtained by a change of variable of the Fourier Series.
+
+\begin{align}
+T_n(\underbrace{\cos(\theta)}_{x}) \equiv \cos(n \theta) 
+\end{align}
+
+The Chebyshev polynomials $T_n(x)$ are defined for $x \in [-1, 1]$ and are
+often used in favor of the Fourier Series because they can easily be extended
+to other non-symmetrical domains. Using such a set of orthogonal functions
+leads to exponential convergence when approximating a function.
+
+\subsection{Singularities and Spectral Convergence Rate}
+
+Now, we want to define the term exponential convergence formally: 
+
+\begin{definition} \citep{boyd2001}
+If the algebraic index of convergence k is unbounded – in other words, if the
+coefficients $a_n$ decrease faster than $1/nk$ for any finite power of $k$ -
+then the series is said to have the property of \emph{infinite order},
+\emph{exponential}, or \emph{spectral} convergence.
+
+Alternative definition: 
+If
+\begin{align}
+a_n  \sim\ O(\mathrm{e}^{-qnr}) \quad n >> 1
+\end{align}
+
+with $q$ a constant for some $r > 0$, then the series has \emph{infinite order}
+or \emph{spectral} convergence.\
+\end{definition}
+
+$r$ is given by the next definition.
+
+\begin{definition} \citep{boyd2001}
+The exponential index of convergence r is given by
+
+\begin{align}
+r = lim_{n\to\infty} \frac{log | log(| a_n |) |}{log(n)}.
+\end{align}
+\end{definition}
+
+Depending on this index, the asymptotic convergence rate may be classified 
+further into supergeometric, subgeometric, and geometric (definition?). The
+following theorem captures the essence of the dependence of convergence on
+singularities given in a domain.
+
+\begin{theorem} (Darboux's principle, \citep{boyd2001})
+For all types of spectral expansions (and for ordinary power series), both the
+domain of convergence in the complex plane and also the rate of convergence
+are controlled by the location and strength of the gravest singularity in the
+complex plane. \emph{Singularity} in this context denotes poles, fractional powers,
+logarithms and other branch points, and discontinuities of f(z) or any of its
+derivatives. Each such singularity gives its own additive contribution to the
+coefficients an in the asymptotic limit $n\to\infty$. The \emph{gravest}
+singularity is the one whose contribution is larger than the others in this
+limit; there may be two or more of equal strength.
+\end{theorem}
+
+It can be shown that Chebyshev polynomials have the property of exponential
+convergence to approximate non-periodic functions. The gravest singularity
+dominates the actual convergence rate and domain of convergence.
+
+\subsection{Why Regularizing the four-sided cavity flow?}
+
+Intuitively, it makes sense that the approximation coefficients should also go
+to infinity near the singularities as the function itself becomes unbounded.
+This can lead to poor approximation quality and render the approximation
+useless in those regions.
+
+In other words, the spectral approximation becomes "too good" near the
+singularities, resulting in numerical issues. This is especially relevant in
+cases where the problem involves discontinuous boundary conditions and when the
+underlying mathematical problem has singularities, such as vorticity and
+pressure terms which diverge in the un-regularized cavity flows.
+
+This limitation is inherent to spectral methods. On the other hand, finite
+element methods are less affected by this issue since the singularity only
+contributes to a piecewise and low-order polynomial in the vicinity of the
+corner.
+
+However, the strength of spectral methods lies in their ability to provide
+exact solutions for well-posed mathematical problems, ensuring mathematical
+convergence and serving as a benchmark for solvers. In real-world scenarios, as
+an example perfect corners rarely exist, and extreme mathematical problems may
+not be encountered, mitigating the impact of singularities to some extent.
+
+In the setting of a benchmark solver that uses a pseudospectral method to
+guarantee a mathematically converged solution, it seems that we have three
+essential options now. First, use substraction of the singularity, which was
+done by \citep{botella1998}, but this technique is rather complex. Secondly,
+one could use rounded borders as the cavity, but this would lead to the fact
+that the geometry is not simple anymore, and discretization errors and corners
+are guaranteed. Furthermore, the third option is to make well-posed,
+regularized boundary conditions to get an accurate solution to a slightly
+different cavity flow problem. In the interest of looking at the original
+problem with discontinuous boundary conditions, the regularization should be
+almost step-function-like to be almost as the original velocity profile.
+
+\subsection{Pseudospectral Discretization}
+
+The preceding sections explored the advantages of employing the pseudospectral
+approach. However, it has to be stressed that the actual interpolation points
+where we do the collocation have yet to be mentioned. It was only stated that a
+truncated Chebyshev polynomial leads to a good approximation. Determining
+coefficients, denoted as $a_i$, for the basis functions is actually equivalent
+to evaluating the polynomial at specific locations, namely $f(x_j)$. By
+utilizing the cardinal functions representation, we can express the
+approximation as follows:
+
+\begin{align}
+f(x) \approx \sum^{N-1}_{j=0} f(x_j) C_j(x)
+\end{align}
+
+Where $C_j$ corresponds to the $j$th cardinal function for a Chebyshev
+polynomial (should I show them?). When comparing this formulation to the
+alternative expression (2), we observe a change in the coefficients to be
+determined, from $a_i$ to $f(x_j)$ denoted by $f_j$. For pseudospectral
+Chebyshev, an essential point to note is that the optimal interpolation points
+are the roots of the Chebyshev polynomial, which minimize the approximation
+error \cite{boyd2001}. Additionally, it is worth mentioning that the Galerkin
+method is equivalent to using Gaussian quadrature points for numerical
+integration, hence the term "pseudospectral." The fundamental idea revolves
+around utilizing Chebyshev polynomials as a basis for function approximation
+while evaluating them on the non-uniformly spaced grid defined by the roots.
+Specifically, the discretization points for Chebyshev can be expressed as:
+
+\begin{align}
+x_j = cos(\frac{j \pi}{m}), \quad j=0, 1,...,m.
+\label{eq:cheb_nodes1d}
+\end{align}
+
+These definition yields $m+1$ points in the interval $[-1, 1]$. Notably, the
+grid points cluster at the boundary. Figure \ref{fig:cheb_grid1d} illustrates a
+Chebyshev grid's unevenly spaced grid point distribution.
+
+\begin{figure}[h]
+  \centering
+
+  \begin{tikzpicture}
+    \def\R{2}
+    \def\centerX{0}
+    \def\centerY{0}
+    
+    \draw[thick] (\centerX-\R, \centerY) arc (180:0:\R);
+    
+    \pgfmathsetmacro{\N}{5}
+    
+    \foreach \i in {0,...,\N}{
+      \pgfmathsetmacro{\angle}{180 - (\i)/(2*\N)*180}
+      \pgfmathsetmacro{\x}{\centerX + \R * cos(\angle)}
+      \pgfmathsetmacro{\y}{\centerY + \R * sin(\angle)}
+      
+      \draw[thin, dashed] (\x, \y) -- (\x, \centerY);
+      
+      \filldraw (\x, \centerY) circle (1pt);
+      
+      \pgfmathsetmacro{\negx}{\centerX - \R * cos(\angle)}
+      \filldraw (\negx, \centerY) circle (1pt);
+      \draw[thin, dashed] (\negx, \y) -- (\negx, \centerY);
+    }
+    
+    \node[below] at (\centerX+\R, \centerY) {$1$};
+    \node[below] at (\centerX-\R, \centerY) {$-1$};
+    \node[below] at (\centerX, \centerY) {$0$};
+    
+    \draw[->] (\centerX-\R-0.5,\centerY) -- (\centerX+\R+0.5,\centerY) node[right] {$x$};
+  \end{tikzpicture}
+
+  \caption{Chebyshev grid visualized as the projection of equally spaced
+    points on a unit circle}
+  \label{fig:cheb_grid1d}
+\end{figure}
+
+Utilizing these points, we can approximate a function within a given 1D domain
+and achieve the optimal approximation of Chebyshev polynomials which could be
+recovered by going back to the representation with the coefficients $a_i$ (not
+discussed here).
+
+\subsection{Chebyshev Differentiation Matrix}
+
+If we would like to approximate derivatives in a discrete setting, using the
+concept of differentiation matrices is convenient. A derivate on a given set of
+nodes $\{x_0, x_1,..., x_n\}$ with respect to a function $f$, can be written as
+
+\begin{align}
+f_j' = \sum_{j=0}^{n}\mathbf{D}_{ij}f_j.
+\end{align}
+
+This formulation is commonly employed for finite difference approximations
+where the elements of the differentiation matrix $\mathbf{D}$ correspond to the
+derivatives of the respective cardinal functions. In the context of Chebyshev
+polynomials, we can utilize the same framework. The Chebyshev grid can be
+interpreted as an nth-order finite difference approximation at non-equidistant
+grid points. For the 1D Chebyshev nodes, the differentiation matrix is given by
+\citep{meseguer2020}:
+
+\begin{align}
+\mathbf{D}_{ij} =
+\begin{dcases}
+  (-1)^{i+j} \frac{\delta_j}{\delta_j(x_i - x_j)},
+    & (i \neq j), \\
+  \frac{(-1)^{i+j}}{\delta_i} \sum^{n}_{k=0 \, (k \neq i)}
+    \frac{\delta_j}{x_i - x_k}, & (i = j).
+\end{dcases}
+\label{eq:cheb_diff}
+\end{align}
+
+As mentioned earlier, the grid points cluster near the boundaries of the
+interval, which can result in small differences in function evaluations. The
+definition \eqref{eq:cheb_diff} utilizes a numerically more stable formula to
+address this issue.
+
+For higher-order derivates, one can calculate them by setting the matrix to the
+power of the given order. For instance, s second order is given as follows:
+
+\begin{align}
+  f_j'' = \sum_{j=0}^{n}\mathbf{D}_{ij}^{2}f_j.
+\end{align}
+
+\subsection{2D Chebyshev Discretization}
+
+To define a two-dimensional Chebyshev grid, we can extend the one-dimensional
+definition \eqref{eq:cheb_nodes1d} to both spatial directions, $(x_i, y_j)$:
+
+\begin{align} \label{eq:cheb_nodes2d}
+  \begin{split}
+  x_i & = \cos(\frac{i \pi}{m}), \quad i = 0,1,...,m, \\ 
+  y_j &  = \cos(\frac{j \pi}{n}), \quad j = 0,1,...,n
+  \end{split}
+\end{align}
+
+Figure \ref{fig:cheb_grid2d} shows such a rectangular grid. Analogoysly to the
+1D case grid points are clustered in the corner.
+
+\begin{figure}[h]
+  \centering
+
+  \begin{tikzpicture}[scale=1.5]
+  \def\nx{7}
+  \def\ny{7}
+
+  \def\length{2}
+  \def\height{2}
+
+  \draw (0,0) rectangle (\length,\height);
+
+  \foreach \x in {1,...,\nx} {
+    \foreach \y in {1,...,\ny} {
+      \pgfmathsetmacro\xx{\length/2*(1-cos((\x-0.5)*180/\nx))}
+      \pgfmathsetmacro\yy{\height/2*(1-cos((\y-0.5)*180/\ny))}
+      \filldraw[black] (\xx,\yy) circle (0.04);
+    }
+  }
+
+  \draw[<->, thick] (0, -0.2) -- node[below] {$y$, $n+1$ points} (\length, -0.2);
+  \draw[<->, thick] (\length + 0.2, 0) -- node[right] {$x$, $m+1$ points}
+    (\length + 0.2, \height);
+
+  \end{tikzpicture}
+
+  \caption{2D Chebyshev grid points in a square domain.}
+  \label{fig:cheb_grid2d}
+\end{figure}
+
+The next step is to define differentiation in the $x$ and $y$ direction of the
+grid of a function. One approach is to use the Kronecker delta product
+($\mathbf{D} = \mathbf{Dx} \otimes \mathbf{Dy}$) to create the differentiation
+matrix for a 2D scalar function $f(x,y)$ \citep{trefethen2000}. Each unknown
+value of the function corresponds to an element in a flattened vector. The
+differentiation matrices in both spatial directions are combined into a single
+large matrix $\mathbf{D} \in \mathbb{R}^{(m+1)(n+1)\times(m+1)(n+1)}$. This
+matrix is multiplied by the vector to compute the derivatives. Although the
+matrix is not completely dense, higher derivatives result in a dense matrix. \\
+
+Another approach is to consider the grid points in terms of a matrix. Instead
+of representing the unknown values as a flattened vector, we can use a matrix
+$\Psi \in \mathrm{R}^{(m+1) \times (n+1)}$, where the grid points $ij$
+correspond to the $ji$-th entry of the matrix $\Psi$. The spatial derivative of
+one grid point are then given by relations \eqref{eq:discr_der} (Einsteins
+summation notation). All derivatives can then simple be obtained the
+derivatives by multiplying $\mathbf{Dx}$ from the left with $\Psi$ for the
+$x$-derivative and $\Psi \mathbf{Dy}^T$ for the $y$-derivative. The matrix
+$\Psi$ is shown below.
+
+\begin{align}
+\Psi = 
+\underbrace{
+\left.
+\begin{bmatrix}
+  \Psi_{00} & \dots  & \Psi_{0j} & \dots  & \Psi_{0m} \\
+  \vdots & \ddots & \vdots & \ddots & \vdots \\
+  \Psi_{i0} & \dots  & \Psi_{ij} & \dots  & \Psi_{im} \\
+  \vdots & \ddots & \vdots & \ddots & \vdots \\
+  \Psi_{n0} & \dots  & \Psi_{nj} & \dots  & \Psi_{nm} \\
+\end{bmatrix}
+\right\} \text{y direction}
+\hspace*{-55pt}}_{x \, \text{direction}}
+\label{eq:str_matrix}
+\end{align}
+
+\begin{align}
+  \begin{split}
+  \partial_x \Psi_{ij} = \mathbf{Dx}_{ik} \Psi_{kj} \\
+  \partial_y \Psi_{ij} = \mathbf{Dy}_{jl} \Psi_{il}
+  \end{split}
+\label{eq:discr_der}
+\end{align}
+
+For the streamfunction equation \eqref{eq:str}, the discrete Laplace operator
+($\Delta_{dis}$) and the biharmonic operator are defined as:
+
+\begin{align}
+  \Delta_{dis} \Psi &= \mathbf{Dx}^2\Psi + \Psi{\mathbf{Dy}^2}^T \\
+  \Delta_{dis}^2 \Psi &= \mathbf{Dx}^2(\Delta_{dis} \Psi) (\Delta_{dis}
+    \Psi){\mathbf{Dy}^2}^T 
+\end{align}
+
+Combining all the above, we can state the discrete streamfunction equation we
+want to solve numerically:
+
+\begin{align}
+\partial_t \Delta_{dis} \Psi = \frac{1}{\Rey} \Delta_{dis}^2 \Psi
+  + \mathbf{Dx}\Psi((\Delta_{dis}\Psi)\mathbf{Dy}^T)
+  - \Psi\mathbf{Dy}^T (\mathbf{Dx}(\Delta_{dis} \Psi)). 
+\label{eq:str_dis}
+\end{align}
+
+Here, $\Psi$ is a matrix representing the finite-dimensional approximation of
+the streamfunction. The partial derivative with respect to time will be
+discussed in section \ref{sec:time} on temporal discretization.
+
+\subsection{Incorporating the Boundary Conditions} \label{sec:bc}
+
+As seen in the section before, it is convenient for the R4CF to view the grid
+points as the transpose of the matrix $\Psi$, and so we can do derivation in
+$x$ and $y$ by just applying a matrix multiplication from the left or right
+with $\mathbf{Dx}$ or the transpose of $\mathbf{Dy}$ respectively. 
+
+Incorporating the boundary conditions has to be carefully considered and can be
+done in many different ways. One possible option is to explicitly substitute
+the discrete equations into the equations for the boundary conditions (see
+\cite{meseguer2020}). As we will see in our case, the boundary conditions are
+simple enough to make the evaluation efficient.
+
+Recalling the tangential boundary conditions \eqref{reg_u_bca},
+\eqref{reg_u_bcb} and the definition of the stream function
+\eqref{eq:str_defx}, \eqref{eq:str_defy} we see that the boundary conditions
+are essential of type Dirichlet as the streamfunction is defined through the
+derivative of the two velocity components. For clarity, this is shown below:
+
+\begin{eqnarray}
+\frac{\partial\Psi(x,\pm 1,t)}{\partial y} & = & \pm\left[\left(\rme^{k_0(x - 1)} - 1\right)
+  \left(\rme^{-k_0(x + 1)} - 1\right)\right]^2,\label{reg_psi_bca} \\
+  \frac{\partial\Psi(\pm 1,y,t)}{\partial x} & = & \mp\left[\left(\rme^{k_0(y - 1)} - 1\right)
+  \left(\rme^{-k_0(y + 1)} - 1\right)\right]^2.\label{reg_psi_bcb}
+\end{eqnarray}
+
+Furthermore, as stated, the boundary components are only nonzero in the
+tangential direction of the four lids, meaning this corresponds to the derivate
+of the streamfunction normal to the boundary. Regarding the normal component of
+the velocity, we can us the fact is that the streamfunction is defined up to a
+constant. And the streamfunctions values can be set to $0$ at all the
+boundaries (outermost rows and columns of the matrix). As the geometric shape
+of the cavity is a square or rectangle, this tells us that the derivative of
+the streamfunction along the lids is $0$. Corresponding to the normal component
+of the velocity field, which ensures no flux outwards from within the cavity.
+
+We want to now incoorporate the boundary conditions above \eqref{reg_psi_bca}
+and \eqref{reg_psi_bcb}, by expressing the first inner grid points (outermost
+are all $0$) in terms of the other components. Using the Einstein summation
+convention, we can express the derivative of the horizontal walls for the
+streamfuncton as,
+
+\begin{align}
+\partial_x \Psi_{0j} = \sum_{k=0}^{m} \mathbf{Dx}_{0k} \Psi_{kj}
+  &= \mycancel{=0}{\mathbf{Dx}_{00}\Psi_{kj}} + \mathbf{Dx}_{01}\Psi_{1j} 
+  + \mathbf{Dx}_{0m-1}\Psi_{m-1j} +  \mycancel{=0}{\mathbf{Dx}_{0m}\Psi_{mj}}
+  + \mathbf{Dx}_{0\bar{k}}\Psi_{\bar{k}j} \nonumber \\
+  &= \mathbf{Dx}_{01}\Psi_{1j} + \mathbf{Dx}_{0m-1}\Psi_{m-1j}
+  + \mathbf{Dx}_{0\bar{k}}\Psi_{\bar{k}j}, \\
+\partial_x \Psi_{nj} = \sum_{k=0}^{m} \mathbf{Dx}_{mk} \Psi_{kj}
+  &= \mathbf{Dx}_{m1}\Psi_{1j} + \mathbf{Dx}_{mm-1}\Psi_{m-1j} 
+  + \mathbf{Dx}_{m\bar{k}}\Psi_{\bar{k}j}.
+\end{align}
+
+The same is the case for the derivatives in the $y$ direction. $\bar{k}$ is
+denoted as the index running from $k=1$ to $k=m-1$.
+
+We can express the above relations as a matrix equation:
+
+\begin{align}
+\underbrace{\begin{bmatrix} \mathbf{Dx}_{01} & \mathbf{Dx}_{0m-1} \\
+  \mathbf{Dx}_{01} & \mathbf{Dx}_{0m-1} \\
+\end{bmatrix}}_{A \in \mathrm{R}^{2 \times 2}}
+\begin{bmatrix} \Psi_{1j} \\ \Psi_{m-1j}
+\end{bmatrix} &=
+\begin{bmatrix}
+\partial_x\Psi_{0j} - \mathbf{Dx}_{0\bar{k}}\Psi_{\bar{k}j} \\
+\partial_x\Psi_{mj} - \mathbf{Dx}_{m\bar{k}}\Psi_{\bar{k}j} \\
+\end{bmatrix}, \nonumber \\
+\begin{bmatrix} \Psi_{1j} \\ \Psi_{m-1j}
+\end{bmatrix} &=
+\underbrace{\begin{bmatrix} a_{11} & a_{12} \\ a_{21} & a_{22} 
+\end{bmatrix}}_{A^{-1}}
+\begin{bmatrix}
+\partial_x\Psi_{1j} - \mathbf{Dx}_{0\bar{k}}\Psi_{\bar{k}j} \\
+\partial_x\Psi_{mj} - \mathbf{Dx}_{m\bar{k}}\Psi_{\bar{k}j} \\
+\end{bmatrix}.
+\end{align}
+
+The above matrix equation tells us that all elements on the first inner grid
+points for the horizontal components are explicitly given through the boundary
+conditions. The $2 \times 2$ matrix to the left is known in advance from the
+Cheyshev differentiation matrix. It follows that the inverse can be precomputed
+and reused in succeeding calculations whenever the boundary conditions have to
+be evaluated. The right part of the equations is given through the partial
+derivates and a sum of a matrix-vector product of the inner elements $\Psi$.
+
+The same procedure can be done for the $y$ derivatives of the streamfunction at
+the vertical wall. Similarly, we get again a matrix that can be pre-stored. 
+
+\begin{align}
+\begin{bmatrix} \Psi_{i1} \\ \Psi_{in-1}
+\end{bmatrix} &=
+\underbrace{\begin{bmatrix} b_{11} & b_{12} \\ b_{21} & b_{22} 
+\end{bmatrix}}_{B^{-1}}
+\begin{bmatrix}
+\partial_y\Psi_{i0} - \mathbf{Dy}_{0\bar{l}}\Psi_{i\bar{l}} \\
+\partial_x\Psi_{in} - \mathbf{Dy}_{n\bar{l}}\Psi_{j\bar{l}} \\
+\end{bmatrix}.
+\end{align}
+
+One subtlety is that the calculations for the boundary conditions for the 
+horizontal and vertical walls have to be done one after the other, as the
+outermost values in the first rows or columns are dependent. Figure
+\ref{fig:bc_calc} shows the calculation steps.
+
+\begin{figure}[h]
+  \center
+  \includegraphics[width=0.4\textwidth]{figs/bc_calculation.png}
+\begin{tikzpicture}
+
+  \matrix (m) [matrix of math nodes, nodes in empty cells,
+               left delimiter={[}, right delimiter={]}]
+  {
+    \textcolor{red}{\textbf{i1}} & \textbf{i2} & \textbf{i3} & \dots & \textbf{iM} \\
+    \textbf{j1} & j2 & j3 & \dots & jM \\
+    \textbf{k1} & k2 & k3 & \dots & kM \\
+    \vdots & \vdots & \vdots & \ddots & \vdots \\
+    \textbf{N} & N+1 & N+2 & \dots & \textbf{M} \\
+  };
+
+  \begin{scope}[on background layer]
+    \fill[blue!20] (m-1-2.north west) rectangle (m-1-5.south east);
+  \end{scope}
+
+  \fill[red!20] (m-2-1.west) rectangle (m-5-1.east);
+\end{tikzpicture}
+\caption{Elements of streamfunction matrix needed for the boundary calculation}
+\label{fig:bc_calc}
+\end{figure}

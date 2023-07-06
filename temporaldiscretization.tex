@@ -1,0 +1,158 @@
+%-------------------------------------------------------------------------------
+% TEMPORAL DISCRETIZATION AND SOLVERS 
+%-------------------------------------------------------------------------------
+
+\section{Temporal Discretization and Solvers} \label{sec:time}
+
+Time-stepping refers to the time integration or time discretization of
+time-dependent differential equations. In the previous section, we have seen
+the benefits of using a spectral discretization of the spatial dimension of our
+problem. Due to its nature, the time component is usually discretized with a
+local discretization, not a global discretization such as a spectral. The first
+thing to note is that time integration is affected by the resolution of the
+spatial discretization of the problem. However, as mentioned in the previous
+section, this is less of a problem. 
+% The eigenvalues are exponentially decaying.
+% We have seen that using a Chebyshev collocation method (the first N
+% eigenvalues) is a good approximation, and the dispersion for a Chebyshev
+% discretization is minimal compared to a finite difference approximation
+% \citep{boyd2001}.
+
+The continuous time domain is divided into discrete time intervals or steps for
+a solution evolving in time. In this case, a equispaced grid $t_j = jh$ (where
+$j$ goes from $0$ to $N$) is employed in the time domain $t \in [0, T]$, where
+$h$ corresponds to the time interval for each step.
+
+There exist various discretizations for the time operator. In an explicit time
+scheme, the values of the dependent variables at a future time step are
+computed solely based on the values of the dependent variable at the current
+time step and previous time steps. On the contrary, an implicit time scheme
+uses the values of the dependent variable of the current and future time steps.
+
+The time-dependent equation \eqref{eq:str} is nonlinear and also classified as
+a stiff equation. Stiff equations generally involve dynamics that change
+rapidly on one time scale whereas slowly on another. These phenomena are
+characterized by a large range of magnitude of eigenvalues associated with the
+discrete problem.
+
+Explicit time schemes become very slow for stiff equations as time step $h$ has
+to be chosen very small. Otherwise the numerical scheme will become unstable,
+meaning that the numerical solution will not. A stable time scheme ensures that
+small errors in the initial conditions or numerical approximations do not
+amplify and cause the solution to become unbounded or oscillated, converging to
+the underlying problem. For our Chebyshev discretization already for the 1D
+case, time-stepping is stable only if $h$ is of $O(1/N^2)$ or smaller
+\citep{boyd2001}.
+
+An implicit time scheme has to be used to ensure stability and  means that we
+have to solve we have to solve a nonlinear equation at every time step $t_j$. 
+
+\subsection{Implicit Euler Method}
+
+In this study, the implicit Euler method is used. The Euler method is a stiff,
+stable method, and it can be characterized as the first-order backward
+differentiation formula (BDF1). It is a straightforward method and is used when
+applicable widely in many stiff problems.
+
+Given an ordinary differential equation (ODE) of the form: \[ \frac{{dx}}{{dt}}
+= f(t, x) \] where $x$ represents the dependent variable and $f(t, x)$ is the
+derivative function with respect to $t$. The approximate solution is given by
+
+\[ x_{n+1} = x_n + h \cdot f(t_n, x_n) \] where $h$ is the timestep size and
+$t_n$ and $y_n$ represent the time and solution at the $n$-th timestep,
+respectively.
+
+\subsection{Streamfunction Timestepping Equation}
+
+Some adjustments must be made to apply the Euler method to the R4CF. First, the
+one-dimensional problem extends to problems where $\mathbf{x}$ is a
+finite-dimensional vector. Secondly, the streamfunction equation involves the
+Laplace operator for the streamfunction. From the fact that it is through the
+derivative of the underlying Navier-Stokes equations \eqref{eq:ns2d}. This
+means that the time derivative is applied to the Laplace of the stream
+function. We get:  
+
+\begin{align}
+  \Delta\Psi_{t+1} = \Delta\Psi_t + h \cdot (\frac{1}{\Rey}\Delta^2 \Psi_{t+1} +
+  (\partial_x \Psi_{t+1}) \partial_y(\Delta \Psi_{t+1}) -
+  (\partial_y \Psi_{t+1}) \partial_x(\Delta \Psi_{t+1})) \label{eq:str_timestepping}
+\end{align}
+
+This equation can be rewritten as follows:
+
+\begin{align}
+  F(\Psi_{t+1}) & = - \Delta\Psi_{t+1} + \Delta\Psi_t + h (\frac{1}{\Rey}\Delta^2 \Psi_t +
+    (\partial_x \Psi_t) \partial_y(\Delta \Psi_t) -
+    (\partial_y \Psi_t) \partial_x(\Delta \Psi_t)) \nonumber \\
+  & =  0 \label{eq:newton_ts}
+\end{align}
+
+This means that to calculate the solution the timestep $t_{n+1}$ from a given
+solution at time step $t_n$, we have to solve the nonlinear equation
+\eqref{eq:newton_ts}. The discretized streamfunction on the grid in the cavity
+can be seen as a
+
+The equation for the cavity flow is usually solved with a Newton-Raphson
+algorithm \citep{kuhlmann2019} briefly introduced in the following section. 
+
+\subsection{Newton-Raphson Method}
+
+The Newton-Raphson algorithm is an iterative method used to find the roots of a
+system of nonlinear equations. The algorithm can be applied to find the
+solution vector $\mathbf{x} = (x_1, x_2, \ldots, x_p)$.
+
+Given a system of $p$ nonlinear equations $F(\mathbf{x}) = \mathbf{0}$, the
+algorithm starts with an initial guess $\mathbf{x}_0$ and iteratively improves
+the solution by updating the guess using the iteration formula:
+
+\begin{align} \mathbf{x}_{k+1} = \mathbf{x}_k - J_F(\mathbf{x}_k)^{-1} \cdot
+F(\mathbf{x}_k) \end{align}
+
+where $\mathbf{x}_{k+1}$ is the updated guess at the $(k+1)$-th iteration,
+$J_F(\mathbf{x}_k)$ is the Jacobian matrix of partial derivatives of $F$
+evaluated at $\mathbf{x}_k$, and $F(\mathbf{x}_k)$ is the vector of function
+values evaluated at $\mathbf{x}_k$.
+
+The algorithm continues to iterate until a convergence criterion is satisfied,
+typically by checking the norm of the update $\|\mathbf{x}_{k+1} -
+\mathbf{x}_k\|$ against a tolerance value.
+
+The Newton-Raphson algorithm is known for its fast convergence when the initial
+guess is sufficiently close to the solution and the Jacobian matrix is well
+conditioned.
+
+\subsection{Preleminary Results with Time Integration}
+
+To motivate the following next section on bifurcation analysis The logical next
+step would be to use the time integration and the spectral discretization to
+compute solutions of the streamfunction equation \eqref{eq:str}. It is then
+interesting to see if the regularized problem will produce such asymmetric
+solutions shown in \ref{fig:4fsc_states}. Figure \ref{fig:timestepping} shows
+the time-stepping on a Chebyshev grid of size $64 \times 64$ and
+\ref{fig:r4sc_states} shows the asymmetric solutions at a Reynolds number of
+$250$. The time stepper is launched with random noise to avoid staying at the
+symmetric solution.
+
+\begin{figure}[ht!]
+\begin{center}
+  \includegraphics[width=0.4\textwidth]{figs/timestepping_inf.png}
+\end{center}
+\caption{Value of the center grid point of the streamfunction after $150$
+  timesteps with $h=1$}
+\label{fig:timestepping}
+\end{figure}
+
+\begin{figure}[ht!]
+\begin{center}
+  \includegraphics[width=0.4\textwidth]{figs/64x64_asym_solutions.png}
+\end{center}
+\caption{Assymetric and symmetric states obtained by time-stepping at a
+  Reynolds number of $250$}
+\label{fig:r4sc_states}
+\end{figure}
+
+It becomes clear that a certain Reynolds number (around $60$) of two asymmetric
+solution branches start to emerge one is the solution as in the non-regularized
+case. Furthermore, the base symmetric solutions are unstable. To analyze such
+kinds of different solutions, we will have to introduce tools of bifurcation
+analysis.

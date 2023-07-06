@@ -1,0 +1,509 @@
+%-------------------------------------------------------------------------------
+% BIFURCATION ANALYSIS 
+%-------------------------------------------------------------------------------
+
+\section{Bifurcation Analysis and Dynamical Systems} \label{sec:bif}
+
+Hydrodynamic stability theory studies how a fluid flow is affected by small
+disturbances of an initial state. This field of fluid dynamics involves
+analytical, experimental, and more and more computational explorations. Flow
+regimes can be categorized as either unstable or stable. Unstable in the sense
+that even infinitesimally small variations will cause the flow to deviate from
+its initial state, resulting in a different flow state or the onset of
+turbulence. Conversely, disturbances do not change the initial system's state in
+a stable flow.
+
+In the context of the R4CF problem, the main objective is to investigate the
+behavior of the driven flow for different configurations in a numerical
+experiment. We want to mainly understand how the flow is affected by the length
+of the side-walls, the boundary velocity, and the fluid's viscosity. Moreover, all
+these quantities are captured within the non-dimensional parameter, the
+Reynolds number.
+
+From the preliminary results shown in the temporal discretization section
+\ref{sec:time}, it has been identified that two asymmetric states are possible
+after a critical Reynolds number, and although the symmetric base flow remains
+a solution to the governing equations, it becomes unstable. The point at which
+the two states emerge is called a bifurcation point. A bifurcation is the
+change of a value of qualitative character and a set of possible steady and
+unsteady flows in dynamical equilibrium (\ref{drazin}). These points are often
+associated with instabilities, multiple flow patterns, or the emergence of
+oscillatory behavior. Recalling the \ref{bif_diag} it is aimed to distinguish
+the different points where the flow states are altered. 
+
+To understand this bifurcation diagram, we want to introduce the equations from
+a dynamical system point of view. Thenafter, the occurring bifurcations for the
+4RCF will be explained in detail.
+
+\subsection{The Dynamical Systems Point of View}
+
+An alternative perspective on our problem is through the theory of dynamical
+systems. In this framework, the state of a system is represented by a point
+denoted as $x$ within a set of all possible states, referred to as the state
+space or phase space (denoted as $X$). This point not only describes the
+system's current position but also includes the necessary dimensions needed to
+determine its future evolution.
+
+A time variable $t \in T$ governs the evolution of a system, where $T$ is a set
+of positive real numbers ($T \in \mathbb{R}^+$). The evolution operator $\varphi_t
+: X \to X$ is a map that describes the system's transformation over time. For
+the evolution to comply with the deterministic nature of dynamical systems, the
+evolution operator must satisfy two conditions defined in the book of
+\cite{kuznetsov2004}:
+
+\begin{align}
+  \varphi^0 &= id, \label{eq:op_cond1}, \\
+  \varphi^{t + s} &= \varphi^t \circ \varphi^s. \label{eq:op_cond2}
+\end{align}
+
+The first condition corresponds to the identity map where for an initial
+condition $x_0$ at time $0$, the map should result in $x_0$ again. The second
+statement is related to time invariance and signifies that for any $x \in X$,
+the evolution operator $\varphi_t$ remains constant over time, that is, $\varphi_t(x)
+= \varphi_s}(x)$ for all $t, s \in T$. \\
+
+Now, a dynamical system can be defined as follows:
+
+\begin{definition}
+A dynamical system is a triple $ \{ T, X, \varphi^t \} $, where $T$ is a time set,
+$X$ is a state space, and $\varphi^t : X \to X$ is a family of evolution operators
+parametrized by $t \in T$ and satisfying the properties \eqref{eq:op_cond1} and
+\eqref{eq:op_cond2} \citep{kuznetsov2004}.
+\end{definition}
+
+The equation for the streamfunction \eqref{eq:str} is an autonomous
+differential equation, which can be reformulated as a dynamical system. We
+consider an infinite-dimensional point denoted as $\Psi$ in a state space $X$.
+Using the streamfunction at time $t$, we not only have the locations of all
+fluid particles but as well their evolution (velocities $u$ and $v$) explicitly
+given by the definition of the derivatives \eqref{eq:str_def}.
+
+This infinite-dimensional space is divided into discrete points with the chosen
+pseudo-spectral discretization. As already mentioned, theory of spectral
+discretization ensures that this approximation converges to the mathematical
+solution of the infinite-dimensional state space. Increasing $N$ achieves
+higher accuracy and is expected to converge exponentially because of to the
+regularization. The finite-dimensional space for the numerical computations can
+be defined as:
+
+\begin{align}
+  \frac{d(\Delta \Psi_j)}{dt} &= {F_j(\Psi)} \quad \quad \quad
+    j= 1,2, ...,(M+1)(N+1) \label{eq:dyn_sys}
+\end{align}
+
+where $F_j$ to the $j$th component of of the nonlinear function of a grid point.
+Equations \eqref{eq:dyn_sys} is essentially a dynamical system of $(M+1)(N+1)$
+equations.
+
+This more abstract framework is helpful in the sense that it provides a
+geometrical representation of the sought-after solutions. 
+What follows are some useful definitions:
+
+\begin{definition}
+An invariant set of a dynamical system $\{T, X, \varphi^t\}$ is a subset set such
+that $x_0$ that implies $\varphi(x_0) \in S$ for all $t \in T$. \citep{kuznetsov2004}. 
+\end{definition}
+
+Additionally, what is referred to as an invariant manifold corresponds to a
+hypersurface such that all future times maps of the evolution operator reside
+on this surface.
+
+Another important concept are fixed points (or equilibria). This points where
+$\varphi^t(x_0) = x_0$ for all time $t \in T$. 
+
+\todo{Introduce periodic orbits limit cycles}
+
+
+\subsection{Steady-State Solutions}
+
+We have seen that launching a time stepper gives us different kinds of states
+depending on the initial condition. A steady state solution corresponds to the
+solution of the differential equation where the time $t$ approaches infinity.
+Moreover, this is exactly a fixed point (and invariant set) that can be
+obtained by setting the time-dependent term to zero. All steady-state solutions
+satisfy the following:
+
+\begin{align}
+  F(\Psi, \Rey) & = \frac{1}{\Rey}\Delta^2 \Psi +
+    (\partial_x \Psi) \partial_y(\Delta \Psi) -
+    (\partial_y \Psi) \partial_x(\Delta \Psi) \nonumber \\
+  & =  0 \label{eq:str_steady}
+\end{align}
+
+As the outer grid points are explicitly known through the boundary conditions
+\ref{sec:bc}, a reduced system of equations $F(\psi, \Rey) = 0$ can be
+formulated. $\psi \in \mathbb{R}^{(m-1)\times(n-1)} $ corresponds now to the
+inner grid points. 
+
+Practically in the case of the two-dimensional cavity flow, it will have a
+system of $(M-3) \cdot (N-3)$ equations. Which result
+
+\subsection{Linearstability Analysis}
+
+To analyze the stability of fixed points, a mathematical technique called
+linear stability analysis can be used. Given an equilibrium solution $\Psi_0$
+which is a solution to the steady equation \ref{eq:str_steady}, we can try to
+perturb the system and see how it would behave. Let us define a perturbated
+$\Psi$,
+
+\begin{align}
+\Psi = \Psi_0 + \epsilon \tilde{\Psi},
+\end{align}
+
+where $\epsilon$ is a small disturbance. We can insert this expression into the
+time-dependent streamfunction equation. By only looking at first-order terms
+$\mathcal{O}(\epsilon)$ and using the fact that $F_{steady}(\Psi_0) = 0$, we
+get
+
+\begin{align}
+\partial_t \Delta \tilde{\Psi} = \frac{1}{Re} \Delta^2 \tilde{\Psi}
+  + (\partial_x \Psi_0) \partial_y (\Delta \tilde{\Psi})
+  + (\partial_x \tilde{\Psi}) \partial_y (\Delta \Psi_0)
+  - (\partial_y \Psi_0) \partial_x (\Delta \tilde{\Psi})
+  - (\partial_y \tilde{\Psi}) \partial_x (\Delta \Psi_0)
+\label{eq:str_pert}
+\end{align}
+
+To solve this linear stability analysis problem, an Ansatz is thought for,
+where we separate time and the spatial variables as follows: 
+
+\begin{align}
+  \tilde{\Psi} = \tilde{\Psi}(x,y,t) = \mathrm{e}^{\lambda t} \Phi(x,y)
+\end{align}
+
+$\Phi$ only corresponds to a component of the solution which depends on $x$ and
+$y$. The time variable $t$ can be eliminated by plugin the above back into the
+equation.
+
+\begin{align}
+\lambda \Delta \Phi = \frac{1}{Re} \Delta^2 \Phi
+  + (\partial_x \Psi_0) \partial_y (\Delta \Phi)
+  + (\partial_x \Phi) \partial_y (\Delta \Psi_0)
+  - (\partial_y \Psi_0) \partial_x (\Delta \Phi)
+  - (\partial_y \Phi) \partial_x (\Delta \Psi_0)
+\label{eq:str_phi}
+\end{align}
+
+This equation is a generalized eigenvalue problem. In terms of two operators
+$A$ and $B$, the problem can be stated as follows: 
+
+\begin{align} \label{eq:eig_prob}
+  \begin{split}
+  A \Phi & = \lambda B \Phi \\[4pt]
+  \begin{split}
+  A & = \frac{1}{Re} \Delta^2 \bullet
+    + (\partial_x \Psi_0) \partial_y (\Delta \bullet)
+    + (\partial_x \bullet) \partial_y (\Delta \Psi_0) \\
+    &\quad - (\partial_y \Psi_0) \partial_x (\Delta \bullet)
+    - (\partial_y \Phi) \partial_x (\Delta \Psi_0)
+  \end{split} \\
+  B & = \Delta
+  \end{split}
+\end{align}
+
+We recognize that $\Phi(x,y)$ corresponds to an eigenmode, and $\lambda$ is the
+associated eigenvector. If all the eigenvalues of the generalized eigenvalue
+problem have a positive real part, the equilibrium is stable. On the contrary,
+if only one of the eigenvalues is found to be positive, then the system is
+unstable because a small perturbation will grow exponentially in time which can
+be directly seen in the definition of the Ansatz.
+
+This linear stability problem becomes very large because the perturbation
+$\eps$ has to be performed on every grid point, and the numerical eigenvalue
+problem is solved with matrices of the size $(M+1)(N+1) \times (M+1)(N+1)$.
+
+\subsection{Bifurcations}
+
+Now we have formally defined all the tools need to precisly characterize all
+the bifurcations occuring in the RCF4. To study equation \eqref{dyn_sys}, the
+equation we now vary the $\Rey$ number. As we deal with only partial
+differential equation our problem can be approached from a dynamical system
+point of view as described before. To illustrate such bifurcations normally a
+characteristic point in the system and it's. Let us use $U$ to. The first
+bifurcation we want to have a look at is the pitchfork \ref{fig:pitchfork}
+where the symmetric is broken and we have two different flow solutions
+appearing from. The base flow is still an equilibria (i.e. )  but now unstable.
+
+\begin{figure}[ht]
+\centering
+  \begin{subfigure}[t]{0.3\textwidth}
+    \centering
+    % \scalebox{0.7}{
+      \begin{tikzpicture}[scale=0.6]
+        \draw[->] (-0.5,0) -- (6,0) node[right] {$\mu$};
+        \draw[->] (0,-3) -- (0,3) node[above] {$U$};
+        
+        \draw[thick] plot[smooth,domain=-2:2] ({1 + \x*\x},\x);
+        \draw[thick] plot[smooth,domain=0:1] (\x,0);
+        \draw[thick] plot[smooth,domain=0:1] (\x,0);
+
+        \draw[thick, dashed] plot[smooth,domain=1:5.2] (\x,0);
+        \draw[thick, dashed] plot[smooth,domain=1:5.2] (\x,0);
+        
+        \draw[fill=custom] (1,0) circle (0.05);
+        \node[above left] at (1,0) {$\mu_c$};
+      \end{tikzpicture}
+    % }
+    \caption{Supercritical pitchfork bifurcation}
+    \label{fig:pitchfork}
+  \end{subfigure}
+  \hspace{0.1\textwidth}
+  \begin{subfigure}[t]{0.3\textwidth}
+    \centering
+    % \scalebox{1}{
+      \begin{tikzpicture}[scale=0.6]
+
+      \draw[->] (-0.5,0) -- (6,0) node[right] {$\mu$};
+      \draw[->] (0,-3) -- (0,3) node[above] {$U$};
+
+      \draw[thick, dashed] plot[smooth,domain=-1.9:0] ({5 - 1.2*\x*\x},\x);
+      \draw[thick] plot[smooth,domain=0:1.9] ({5 - 1.2*\x*\x},\x);
+
+      \draw[fill=custom] (5,0) circle (0.05);
+      \node[above right] at (5,0) {$\mu_c$};
+
+      \end{tikzpicture}
+    % }
+    \caption{Saddle node bifurcation}
+    \label{fig:saddlenode}
+  \end{subfigure}
+\end{figure}
+
+Another type of bifurcation is called a saddle node or fold bifurcation where a
+set of stable and unstable fixed points collide. In a phase diagram in figure
+\ref{fig:saddlenode} this is defined by a saddle point hence the name.
+
+A Hopf bifurcation named after Eberhard Hopf is a bifurcation where a stable
+fixed point looses its stability and from the critical we have unstable or
+stable (limit cycles) periodic orbits. This is characterized by the real
+complex conjugate pair of eigenvalues crossing when performing the stability
+analysis. One can distinguish between sub- and super critical Hopf bifurcation
+which are depicted in \ref{fig:hopf}. Compared to the other bifurcation this is
+a global bifurcation as these behaviors such at. On the other hand pitchforks
+and saddle node are called local bifurcations.
+
+\subsection{Continuation Algorithms}
+
+Having detected this different asymmetric solutions in the prelimary results
+the next key idea is how to actually track such a branches of fixed points.  
+
+The simplest way is called natural continuation where we first obtain
+solution obtained by timestepping and further converged with the Newton solver
+then increase the Reynolds number. The initial guess for the next Newton solve
+is now the from befor. In this way we can "continue" a branch and don't
+have to use timestepping algorithm for each steady-state solution we want to
+obtain. Furthermore an unstable branch can be followed as well which would not
+be able to be tracked solely by time evolution.
+
+But there is actually a limitation. In the fold bifurcation depicted in figure
+\ref{fig:saddlenode} the continuation has to follow a curve when the parameter
+is decreasing again. This can't be detected by the natural continuation.
+Another strategie to overcome this issue is called pseudo-arclength
+continuation and was introduced by Keller in the 1970th \citep{}. We want to
+use a tangent to approximate the curve. Given two fixed points $u^{(0)}$ and
+$u^{(1)}$  which parameter values $\mu^{(0)}$ and $\mu^{(1)}$ we want to find
+the next $u^{(0)}$ and $\mu^{(2)}$. First of let's make a prediction using the approximated
+tangents from the already given fixed points:
+
+\begin{equation}
+  \tilde{u}^{(2)} = u^{(1)}  + \underbrace{[u^{(1)} - u^{(0)}]}_{\text{\normalfont $\hat{u}$}} \gamma
+\end{equation}
+
+Here $\gamma$ is a parameter which determines the prediction step size.
+$\tilde{u}^{(2)}$ is called the predictor. Now we want to impose another
+equation with what is called the corrector.
+
+\begin{equation}
+  (u^{(2)} - u^{(1)})  \cdot \hat{u} \label{eq:extra}
+\end{equation}
+
+This equation tells us that we want to find the next point on the curve such that it   
+is in our phase space orthogonal to the tangent drawn from our previous points. Figure
+\ref{fig:cont} illustrates this idea geometrically.
+
+Consequently, $\mu^{(2)}$ is determined explicitly by adding the equation
+\eqref{eq:extra}. To practicaly find the next point we want to augment our
+initial system of nonlinear equations \eqref{eq:dyn_sys}:
+
+\begin{equation}
+  F(u^{(2)}, \mu^{(0)}) = 
+\begin{bmatrix} F(u^{(2)}, \mu) \\ (u^{(2)} - u^{(1)})  \cdot \hat{u}
+\end{bmatrix} \label{eq:dyn_sys_cont}
+\end{equation}
+
+This means the parameter $\mu$ is now part of the equation. The Jacobian can be
+formulated as follows: 
+
+\begin{center}
+\[
+\renewcommand\arraystretch{1.5}
+J = 
+\left[
+\begin{array}{c:c}
+  J_u \quad \quad \quad \quad & F_{\mu} \\
+  \hdashline
+  (u^{(2)} - u^{(1)})^T
+\end{array} \label{eq:jac_aug}
+\right]
+\]
+\end{center}
+
+So we first of all solve the normal system with the jacabian and the last line
+of our jacobian is given by the derivative of the scalar with respect to each
+of the components. It is necessary to   scale the the change in $\lambda$ to
+get a well-conditioned Jacobian.
+
+\begin{figure}[ht]
+\centering
+
+\begin{subfigure}[t]{0.3\textwidth}
+\centering
+\begin{tikzpicture}
+  \draw[->] (0,-0.5) -- (0,4) node[above] {$"u"$};
+  \draw[->] (-0.5,0) -- (4,0) node[right] {$\lambda$};
+  
+  \draw[smooth, thick, variable=\x, domain=0.5:4] plot ({\x},{1.2 + 0.2*(\x - 1)^2});
+  
+  \draw[fill=black] (0.6,{1.2 + 0.2*(0.6 - 1)^2}) circle (0.03) node[below] {$u^{(0)}$};
+  \draw[fill=black] (1.6,{1.2 + 0.2*(1.6 - 1)^2}) circle (0.03) node[below] {$u^{(1)}$};
+  
+  % % Tangent line at initial point
+  \draw[dashed] (0.6,{1.2 + 0.2*(0.6 - 1)^2}) -- (1.6,{1.2 + 0.2*(1.6 - 1)^2});
+  % 
+  % % Displaced point
+  % \draw[fill=red] (-0.2,0.5) circle (0.03) node[above] {$P$};
+  % 
+  % % Displacement vector
+  % \draw[->, thick] (-1.2,-0.5) -- (-0.2,0.5) node[midway, above left] {$\Delta x$};
+  % 
+  % % Arc length marker
+  % \draw[<->] (-0.8,-0.3) -- (-0.8,0.3) node[midway, left] {$\Delta s$};
+\end{tikzpicture}
+
+ \label{fig:saddlenode}
+  \end{subfigure}
+\end{figure}
+
+Another type of bifurcation is called a saddle node or fold bifurcation where a
+set of stable and unstable fixed points collide. In a phase diagram in figure
+\ref{fig:saddlenode} this is defined by a saddle point hence the name.
+
+A Hopf bifurcation named after Eberhard Hopf is a bifurcation where a stable
+fixed point looses its stability and from the critical we have unstable or
+stable (limit cycles) periodic orbits. This is characterized by the real
+complex conjugate pair of eigenvalues crossing when performing the stability
+analysis. One can distinguish between sub- and super critical Hopf bifurcation
+which are depicted in \ref{fig:hopf}. Compared to the other bifurcation this is
+a global bifurcation as these behaviors such at. On the other hand pitchforks
+and saddle node are called local bifurcations.
+
+\subsection{Continuation Algorithms}
+
+Having detected this different asymmetric solutions in the prelimary results
+the next key idea is how to actually track such a branches of fixed points.  
+
+The simplest way is called natural continuation where we first obtain
+solution obtained by timestepping and further converged with the Newton solver
+then increase the Reynolds number. The initial guess for the next Newton solve
+is now the from befor. In this way we can "continue" a branch and don't
+have to use timestepping algorithm for each steady-state solution we want to
+obtain. Furthermore an unstable branch can be followed as well which would not
+be able to be tracked solely by time evolution.
+
+But there is actually a limitation. In the fold bifurcation depicted in figure
+\ref{fig:saddlenode} the continuation has to follow a curve when the parameter
+is decreasing again. This can't be detected by the natural continuation.
+Another strategie to overcome this issue is called pseudo-arclength
+continuation and was introduced by Keller in the 1970th \citep{}. We want to
+use a tangent to approximate the curve. Given two fixed points $u^{(0)}$ and
+$u^{(1)}$  which parameter values $\mu^{(0)}$ and $\mu^{(1)}$ we want to find
+the next $u^{(0)}$ and $\mu^{(2)}$. First of let's make a prediction using the approximated
+tangents from the already given fixed points:
+
+\begin{equation}
+  \tilde{u}^{(2)} = u^{(1)}  + \underbrace{[u^{(1)} - u^{(0)}]}_{\text{\normalfont $\hat{u}$}} \gamma
+\end{equation}
+
+Here $\gamma$ is a parameter which determines the prediction step size.
+$\tilde{u}^{(2)}$ is called the predictor. Now we want to impose another
+equation with what is called the corrector.
+
+\begin{equation}
+  (u^{(2)} - u^{(1)})  \cdot \hat{u} \label{eq:extra}
+\end{equation}
+
+This equation tells us that we want to find the next point on the curve such that it   
+is in our phase space orthogonal to the tangent drawn from our previous points. Figure
+\ref{fig:cont} illustrates this idea geometrically.
+
+Consequently, $\mu^{(2)}$ is determined explicitly by adding the equation
+\eqref{eq:extra}. To practicaly find the next point we want to augment our
+initial system of nonlinear equations \eqref{eq:dyn_sys}:
+
+\begin{equation}
+  F(u^{(2)}, \mu^{(0)}) = 
+\begin{bmatrix} F(u^{(2)}, \mu) \\ (u^{(2)} - u^{(1)})  \cdot \hat{u}
+\end{bmatrix} \label{eq:dyn_sys_cont}
+\end{equation}
+
+This means the parameter $\mu$ is now part of the equation. The Jacobian can be
+formulated as follows: 
+
+\begin{center}
+\[
+\renewcommand\arraystretch{1.5}
+J = 
+\left[
+\begin{array}{c:c}
+  J_u \quad \quad \quad \quad & F_{\mu} \\
+  \hdashline
+  (u^{(2)} - u^{(1)})^T
+\end{array} \label{eq:jac_aug}
+\right]
+\]
+\end{center}
+
+So we first of all solve the normal system with the jacabian and the last line
+of our jacobian is given by the derivative of the scalar with respect to each
+of the components. It is necessary to   scale the the change in $\lambda$ to
+get a well-conditioned Jacobian.
+
+\begin{figure}[ht]
+\centering
+
+\begin{subfigure}[t]{0.3\textwidth}
+  \centering
+  \begin{tikzpicture}
+    \draw[->] (0,-0.5) -- (0,4) node[above] {$"u"$};
+    \draw[->] (-0.5,0) -- (4,0) node[right] {$\lambda$};
+    
+    \draw[smooth, thick, variable=\x, domain=0.5:4] plot ({\x},{1.2 + 0.2*(\x - 1)^2});
+    
+    \draw[fill=black] (0.6,{1.2 + 0.2*(0.6 - 1)^2}) circle (0.03) node[below] {$u^{(0)}$};
+    \draw[fill=black] (1.6,{1.2 + 0.2*(1.6 - 1)^2}) circle (0.03) node[below] {$u^{(1)}$};
+    
+    \draw[dashed] (0.6,{1.2 + 0.2*(0.6 - 1)^2}) -- (1.6,{1.2 + 0.2*(1.6 - 1)^2});
+  \end{tikzpicture}
+  \caption{Natural continuation}
+  \label{fig:nat_cont}
+\end{subfigure}
+\hspace{0.1\textwidth}
+\begin{subfigure}[t]{0.3\textwidth}
+  \centering
+  \begin{tikzpicture}
+    \draw[->] (0,-0.5) -- (0,4) node[above] {$"u"$};
+    \draw[->] (-0.5,0) -- (4,0) node[right] {$\lambda$};
+    
+    \draw[smooth, thick, variable=\x, domain=0.5:4] plot ({\x},{1.2 + 0.2*(\x - 1)^2});
+    
+    \draw[fill=black] (0.6,{1.2 + 0.2*(0.6 - 1)^2}) circle (0.03) node[below] {$u^{(0)}$};
+    \draw[fill=black] (1.6,{1.2 + 0.2*(1.6 - 1)^2}) circle (0.03) node[below] {$u^{(1)}$};
+    
+    \draw[dashed] (0.6,{1.2 + 0.2*(0.6 - 1)^2}) -- (1.6,{1.2 + 0.2*(1.6 - 1)^2});
+  \end{tikzpicture}
+  \caption{Pseudo-arclength continuation}
+  \label{fig:nat_cont}
+\end{subfigure}
+\caption{Sketch of continuation algorithms, 
+  $"u"$ refers to a projection onto a plane for illustration purposes}
+\end{figure}

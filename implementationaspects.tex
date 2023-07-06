@@ -1,0 +1,180 @@
+%-------------------------------------------------------------------------------
+% IMPLEMENTATION ASPECTS
+%-------------------------------------------------------------------------------
+
+\section{Implementation Aspects}
+
+\subsection{The Julia Programming Language}
+
+Another important aspect of this work is the implementation using the
+open-source programming language Julia \citep{bezanson2017}. This programming
+language is designed for high-performance computing. It is a dynamically typed
+language but compiles efficient code via LLVM. The LLVM compiler infrastructure
+gives a code language-intermediated representation that is
+platform-independent. Another important feature is the use of the multiple
+dispatch paradigm. This paradigm allows a function to be dynamically dispatched
+based on the run-time information of the function's arguments. Additionally,
+once a function has been compiled for a set of input types, the successive call
+of the function will not have to be recompiled and will give the expected
+performance. The compiler chooses the appropriate dispatch based on the input
+types, hence the name multiple dispatch.
+
+For the regularized four-sided cavity flow, the \emph{Group of linear fluid
+dynamics} at UPC has already developed a \emph{Matlab} code implementing some
+of the necessary algorithms for this problem. This project has dealt with the
+translation of some of the parts of the already existing code and provides a
+rewrite in Julia which tries to be a simple open-source example. This section
+will skip many implementation details but highlight some optimization and
+design choices for the code.
+
+\subsection{Implementation of the nonlinear Function}
+
+Julia provides a way to develop the code like a scripting language as
+\emph{Python}, but then one can add optimizations where needed without
+changing the language. We want to recall the dynamical system defined in
+equations \eqref{dyn_sys}. The code of this nonlinear function $F(\Psi, Re)$
+has to be highly optimized, as it is called in a very Newton-Raphson
+iteration multiple times. The most costly part consists of calculating the
+Jacobian where the function is called of the order $\mathcal{O}(n^4)$.
+
+The code snippet \ref{code:f} shows a straightforward implementation of the
+nonlinear function. 
+
+\begin{jllisting}
+function f(u, p::CavityStruct)
+    @unpack Re, n, D1, D2, D4 = p
+
+    Ψ = constructBC(u, p)
+
+    biharmΨ = D4*Ψ +  Ψ*D4' + 2*(D2*Ψ)*D2'
+    laplΨ = D2*Ψ + Ψ*D2'
+    nonlinterm = (D1*Ψ).*(laplΨ*D1') - (D1*laplΨ).*(Ψ*D1')
+    
+    fΨ = 1/Re*biharmΨ - nonlinterm
+    fu = fΨ[3:(n - 1), 3:(n - 1)][:]
+
+    return fu 
+end
+\end{jllisting}
+
+In the above, the input vector \jlinl{u} corresponds to the inner elements of
+the streamfunction. The second input \jlinl{p} is a \jlinl{struct}
+containing the parameters and the differentiation matrices. The coding style is
+of defining the nonlinear function of a differential equation as \jlinl{f(u,p)}
+is widely used in the Julia ecosystem and useful as we can pass the function
+easily to other libraries to compute the Jacobian, for example.
+
+We can use Unicode input such as the $\Psi $ symbol, which corresponds to the
+matrix notation of the streamfunction defined in \eqref{}. This facilitates the
+notations for mathematical expressions. The \jlinl{constructBC(u,p)} is a
+function (see appendix) which returns the whole matrix and constructs the two
+outer rows and columns that are given by the boundary conditions.
+
+Though this function could be more efficient, if we want to use it repeatedly,
+every function call will allocate a new variables for the matrices. A useful
+approach is to preallocate memory which we pass to the function, and reuse this
+memory at every function call. The optimized version is shown below and is
+allocation free. Moreover, this cache-like programming style is important when
+writing efficient Julia code. The exclamation mark is then standard to inform
+the programmer that the function is changing its input variable (here
+\jlinl{fu}). \jlinl{f!(fu, u, p)} is called an in-place function.
+
+\begin{jllisting}
+function f!(fu, u, p::CavityStruct)
+    @unpack Re, n, D1, D2, D4 = p.params
+    @unpack fΨ, Ψ, D2Ψ, ΨD2, D4Ψ, ΨD4, laplΨ, biharmΨ = p.cache
+
+    @inbounds @views Ψ[3:(n - 1), 3:(n - 1)][:] .= u
+
+    constructBC!(Ψ, p)
+
+    mul!(D4Ψ, D4, Ψ)
+    mul!(ΨD4, Ψ, D4')
+
+    mul!(D2Ψ, D2, Ψ)
+    mul!(ΨD2, Ψ, D2')
+
+    mul!(laplΨ, D2Ψ, D2') # using as intermediate memory
+    @inbounds @. biharmΨ = D4Ψ + ΨD4 + 2 * laplΨ
+    @inbounds @. laplΨ = D2Ψ + ΨD2
+
+    mul!(D2Ψ, D1, Ψ)
+    mul!(ΨD2, Ψ, D1')
+
+    mul!(ΨD4, laplΨ, D1')
+    mul!(D4Ψ, D1, laplΨ)
+
+    @inbounds @. laplΨ = D2Ψ * ΨD4 - D4Ψ * ΨD2
+    @inbounds @. fΨ = (1 / Re) * biharmΨ + laplΨ
+
+    @inbounds @views fu .= fΨ[3:(n - 1), 3:(n - 1)][:]
+
+    return nothing
+end
+\end{jllisting}
+
+The \jlinl{strut} \jlinl {p} is now split into a parameter part and a cache.
+The cache variables are reused to store the intermediate results. The
+\jlinl{mul!(C, A, B)} stores the values in C without allocating a new variable.
+Secondly, a dot (\jlinl{.}) before an operation applies the element-wise
+operation, and the macro is denoted by an \jlinl{@.} will apply it to all the
+operations of an expression. The \jlinl{@.} inbounds macro turns off bound
+checking (consumes time) and should be used carefully.
+
+A bottleneck in this implementation is that copies are made from \jlinl{u} to
+\jlinl{Ψ} and vis versa in every function call. The inner elements of the
+matrix \jlinl{Ψ} are not memory aligned, and these copies could be more
+efficient.
+
+\subsection{Comparison Matlab and Julia}
+
+The table below provides a comparison between some basic operations for the
+R4CF implemented in Julia and Matlab. 
+
+\begin{table}[h!]
+  \caption{Comparison of solve for a steady state solution precomputed solution 
+    from time-stepping at Reynolds 100 where Median values of times are compared
+  (Matlab: \jlinl{timeit}, Julia: \jlinl{@benchmark})}
+  \label{tab:matlab_julia}
+\begin{tabular}{lrrr}
+Test & $N$ & Matlab time (s) & Julia time (s) \\
+\hline
+Function evaluation  & 32 & 0.000094894  & 0.000052603 \\
+& 64 & 0.00032666 & 0.000223192 \\
+ Creating the jacobian  & 32 & 0.0836  &  0.049540  \\
+& 64 & 1.1526 & 0.858283 \\
+Newton (3 iterations)  & 32 & 0.1967  & 0.126673 \\
+& 64 & 5.8606  & 4.878 \\
+\end{tabular}
+\end{table}
+
+The table shows only a slight decrease in time using the Julia module. One
+might expect that the Julia code should be much faster, but the problem here is
+that most of the time is spent doing matrix multiplication where Matlab is
+highly optimized, and essentially both implementations will run the same lower
+level \emph{Blas} (Basic Linear Algebra Subprograms) routines. Nonetheless,
+this cache-like programming style in Julia seems to be indispensable to
+achieving a similar accuracy as in Matlab, but one has to do these kinds of
+optimizations only for specific functions where efficiency matters.
+
+Below is a list of the implemented algorithms in Julia (only for a grid of
+$(N+1) \times (N+1)$:
+
+\begin{itemize}
+\item Newton-Rapshon (Jacobian construction through FinitDiff.jl)
+\item Time-stepping with an implicit Euler Scheme
+\item Pseudo-arclength continuation
+\item Linear stability analysis
+\end{itemize}
+
+\\
+
+The functions are implemented in a Julia package which can be found on GitHub.
+Finally, it has to be mentioned that there exists a package for Julia called
+\emph{BifurcationKit.jl} \citep{veltz2020}. This module provides parameter
+continuation for a given nonlinear problem. This Julia module provides a
+Newton-Krylov (Matrix-free) solver and forward mode automatic differentiation.
+This is indispensable in large problems. However, the Newton-Raphson and an
+explicitly constructed Jacobian work best for the four-sided cavity. Through
+regularization, the convergence rate of the spectral discretizations should not
+need too many grid points.
