@@ -4,18 +4,25 @@
 
 \appendix
 
+\pagenumbering{arabic}
+\renewcommand*{\thepage}{A\arabic{page}}
+
 \includepdf[
   scale=0.8,
   pages=-,
   offset=75 -75,
   pagecommand=\vspace*{-2cm}\section*{\centering Appendix A 
-    - Abstract for Presentation at the International Coutte-Taylor-Workshop 2023}
+    - Abstract for the presentation at the International Coutte-Taylor-Workshop 2023}
 ]{figs/ictw23_abstract.pdf}
+
+
+\pagenumbering{arabic}
+\renewcommand*{\thepage}{B\arabic{page}}
 
 \includepdf[
   scale=0.8,
   pages=-,
   offset=75 -75,
   pagecommand=\vspace*{-2cm}\section*{\centering Appendix B 
-    - Abstract for Presentation at the Spanish Fluid Mechanics Conference 2023},
+    - Abstract for the presentation at the Spanish Fluid Mechanics Conference 2023},
 ]{figs/sfmc23_abstract.pdf}

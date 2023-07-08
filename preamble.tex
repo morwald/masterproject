@@ -10,7 +10,6 @@
 \usepackage{mathtools}
 \usepackage{cancel}
 \usepackage{tikz}
-\usetikzlibrary{patterns,matrix,decorations,backgrounds}
 \usepackage{hyperref}
 \usepackage{graphicx}
 \usepackage{subcaption}
@@ -18,6 +17,8 @@
 \usepackage{titlesec}
 \usepackage{jlcode}
 \usepackage{arydshln}
+\usepackage{pgfplots}
+\usetikzlibrary{patterns,matrix,decorations.pathreplacing,backgrounds}
 \usepackage[title,titletoc]{appendix}
 \usepackage[round]{natbib} 
 
@@ -27,9 +28,14 @@
 
 \newcommand{\Rey}{\mathrm{Re}}
 \newcommand{\rme}{\mathrm{e}}
+\newcommand{\D}{\mathbb{D}}
+\newcommand{\phim}{\mathbb{\Phi}}
+
 \newcommand{\mycancel}[2]{\overset{#1}{\cancel{#2}}}
 
 \newtheorem{theorem}{Theorem}
 \newtheorem{definition}{Definition}
 
 \definecolor{custom}{HTML}{295290}
+
+\pagenumbering{roman}
