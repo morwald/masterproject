@@ -45,7 +45,7 @@ The code snippet below shows a straightforward implementation of the
 nonlinear function. 
 
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \begin{jllisting}
 function f(u, p::CavityStruct)
     @unpack Re, n, D1, D2, D4 = p
@@ -87,7 +87,7 @@ writing efficient Julia code. The exclamation mark is then standard to inform
 the programmer that the function is changing its input variable (here
 \jlinl{fu}). \jlinl{f!(fu, u, p)} is called an in-place function.
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \begin{jllisting}
 function f!(fu, u, p::CavityStruct)
     @unpack Re, n, D1, D2, D4 = p.params
@@ -142,7 +142,7 @@ efficient.
 The table below provides a comparison between some basic operations for the
 R4CF implemented in Julia and Matlab. 
 
-\begin{table}[h]
+\begin{table}[ht]
   \caption{Comparison of solve for a steady state solution precomputed solution 
     from time-stepping at Reynolds 100 where Median values of times are compared
   (Matlab: \jlinl{timeit}, Julia: \jlinl{@benchmark})}
