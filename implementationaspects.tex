@@ -45,8 +45,7 @@ The code snippet below shows a straightforward implementation of the
 nonlinear function. 
 
 
-\begin{figure}[ht]
-\begin{jllisting}
+\begin{jllisting}[caption=Simple implementation in Julia of the nonlinear function $F$]
 function f(u, p::CavityStruct)
     @unpack Re, n, D1, D2, D4 = p
 
@@ -62,8 +61,6 @@ function f(u, p::CavityStruct)
     return fu 
 end
 \end{jllisting}
-\caption{Simple implementation in Julia of the nonlinear function $F$}
-\end{figure}
 
 In the above, the input vector \jlinl{u} corresponds to the inner elements of
 the streamfunction. The second input \jlinl{p} is a \jlinl{struct}
@@ -87,8 +84,7 @@ writing efficient Julia code. The exclamation mark is then standard to inform
 the programmer that the function is changing its input variable (here
 \jlinl{fu}). \jlinl{f!(fu, u, p)} is called an in-place function.
 
-\begin{figure}[ht]
-\begin{jllisting}
+\begin{jllisting}[caption=Optimized implementation in Julia of the nonlinear function $F$]
 function f!(fu, u, p::CavityStruct)
     @unpack Re, n, D1, D2, D4 = p.params
     @unpack fΨ, Ψ, D2Ψ, ΨD2, D4Ψ, ΨD4, laplΨ, biharmΨ = p.cache
@@ -121,8 +117,6 @@ function f!(fu, u, p::CavityStruct)
     return nothing
 end
 \end{jllisting}
-\caption{Optimized implementation in Julia of the nonlinear function $F$}
-\end{figure}
 
 The \jlinl{struct p} is now split into a parameter part and a cache.
 The cache variables are reused to store the intermediate results. The
@@ -139,8 +133,38 @@ efficient.
 
 \subsection{Comparison Matlab and Julia}
 
-The table below provides a comparison between some basic operations for the
+Table \ref{tab:comp} provides a comparison between some basic operations for the
 R4CF implemented in Julia and Matlab. 
+
+The table shows only a slight decrease in time using the Julia module. One
+might expect that the Julia code should be much faster, but the problem here is
+that most of the time is spent doing matrix multiplication where Matlab is
+highly optimized, and essentially both implementations will run the same lower
+level \emph{Blas} (Basic Linear Algebra Subprograms) routines. Nonetheless,
+this cache-like programming style in Julia seems to be indispensable to
+achieving a similar accuracy as in Matlab, but one has to do these kinds of
+optimizations only for specific functions where efficiency matters.
+
+Below is a list of the implemented algorithms in Julia (only for a grid of
+$(N+1) \times (N+1)$:
+
+\begin{itemize}
+  \item Newton-Rapshon (Jacobian construction through FinitDiff.jl) with an absolute tolerance
+    set to $10^{-10}$
+  \item Time-stepping with an implicit Euler Scheme
+  \item Pseudo-arclength continuation (saving results to a CSV file)
+  \item Linear stability analysis
+\end{itemize}
+
+The functions are implemented in a Julia package which will be available on
+GitHub. Finally, it has to be mentioned that there exists a package for Julia
+called \emph{BifurcationKit.jl} \citep{veltz2020}. This module provides
+parameter continuation for a given nonlinear problem, a Newton-Krylov
+(Matrix-free) solver and forward mode automatic differentiation. This is
+indispensable in large problems. However, the Newton-Raphson and an explicitly
+constructed Jacobian work best for the four-sided cavity. Through
+regularization, the convergence rate of the spectral discretizations should not
+need too many grid points anyway.
 
 \begin{table}[ht]
   \caption{Comparison of solve for a steady state solution precomputed solution 
@@ -156,35 +180,7 @@ Function evaluation  & 32 & 0.000094894  & 0.000052603 \\
 & 64 & 1.1526 & 0.858283 \\
 Newton (3 iterations)  & 32 & 0.1967  & 0.126673 \\
 & 64 & 5.8606  & 4.878 \\
+\label{tab:comp}
 \end{tabular}
 \end{table}
 
-The table shows only a slight decrease in time using the Julia module. One
-might expect that the Julia code should be much faster, but the problem here is
-that most of the time is spent doing matrix multiplication where Matlab is
-highly optimized, and essentially both implementations will run the same lower
-level \emph{Blas} (Basic Linear Algebra Subprograms) routines. Nonetheless,
-this cache-like programming style in Julia seems to be indispensable to
-achieving a similar accuracy as in Matlab, but one has to do these kinds of
-optimizations only for specific functions where efficiency matters.
-
-Below is a list of the implemented algorithms in Julia (only for a grid of
-$(N+1) \times (N+1)$:
-
-\begin{itemize}
-\item Newton-Rapshon (Jacobian construction through FinitDiff.jl) with an absolute tolerance
-  set to $10^{-10}$
-\item Time-stepping with an implicit Euler Scheme
-\item Pseudo-arclength continuation (saving results to a CSV file)
-\item Linear stability analysis
-\end{itemize}
-
-The functions are implemented in a Julia package which can be found which will
-be available on GitHub. Finally, it has to be mentioned that there exists a
-package for Julia called \emph{BifurcationKit.jl} \citep{veltz2020}. This
-module provides parameter continuation for a given nonlinear problem. This
-Julia module provides a Newton-Krylov (Matrix-free) solver and forward mode
-automatic differentiation. This is indispensable in large problems. However,
-the Newton-Raphson and an explicitly constructed Jacobian work best for the
-four-sided cavity. Through regularization, the convergence rate of the spectral
-discretizations should not need too many grid points.
