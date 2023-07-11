@@ -2,16 +2,29 @@
 % CONCLUSION
 %-------------------------------------------------------------------------------
 
+\clearpage
+
 \section{Conclusion} \label{concl}
 
-To conclude this master project has investigated a regularized version of the
-four-sided cavity. The problem recovers similar bifurcations occurring in the
-in the un-regularized version and seems agree well with the already calculated
-bifurcation diagram.
-
-
-With the intention of providing a benchmark. As we are looking at low Reynolds
-numbers. 
-
-
-
+In conclusion, this master project focused on the four-sided lid-driven cavity flow using
+regularized boundary conditions. The study's spectral Chebyshev discretization
+technique combined with the regularization yields highly accurate results
+having an exponential convergence rate as the grid size increases. The
+implementation was carried out using the programming language Julia and
+provides an open-source example for reference. The regularized version of the
+cavity flow shows a bifurcation diagram resembling the diagram with
+discontinuous boundary conditions. A super-critical Hopf bifurcation was found
+at a Reynolds number of $348.319$. Additionally, a pitchfork bifurcation occurs
+just prior to the saddle-node bifurcation at around $353.347$ Reynolds. This
+connected unstable branch breaks the $\pi$-rotation symmetry of the asymmetric
+solutions. On the other hand, for the saddle-node bifurcation, further
+investigation is required due to an unclear eigenvalue crossing, possibly
+associated with a complex conjugate pair. The presence of three pitchfork
+bifurcations and the Hopf bifurcation in this problem offers robust scenarios
+to benchmark a Navier-Stokes solver. The regularized four-sided lid-driven
+cavity only requires slight adaptations from the classical one-sided version,
+making it easily applicable to existing codes. This modified setup allows for
+testing the multiplicity of states and periodic orbits at low to moderate
+Reynolds numbers, providing the means to assess a solver's capability in
+identifying these solution types and the oscillatory behavior. In general, it
+can make up for an interesting bifurcation benchmark.

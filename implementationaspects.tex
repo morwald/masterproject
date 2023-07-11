@@ -2,7 +2,7 @@
 % IMPLEMENTATION ASPECTS
 %-------------------------------------------------------------------------------
 
-\section{Implementation Aspects}
+\section{Implementation Aspects} \label{sec:impl}
 
 \subsection{The Julia Programming Language}
 
@@ -20,7 +20,7 @@ performance. The compiler chooses the appropriate dispatch based on the input
 types, hence the name multiple dispatch.
 
 For the regularized four-sided cavity flow, the Group of linear fluid
-dynamics at UPC has already developed a Matlab code implementing some
+dynamics at UPC has already developed a MATLAB code implementing some
 of the necessary algorithms for this problem. This project has dealt with the
 translation of some of the parts of the already existing code and provides a
 rewrite in Julia which tries to be a simple open-source example. This section
@@ -131,22 +131,22 @@ A bottleneck in this implementation is that copies are made from \jlinl{u} to
 matrix \jlinl{Ψ} are not memory aligned, and these copies could be more
 efficient.
 
-\subsection{Comparison Matlab and Julia}
+\subsection{Comparison MATLAB and Julia}
 
 Table \ref{tab:comp} provides a comparison between some basic operations for the
-R4CF implemented in Julia and Matlab. 
+R4CF implemented in Julia and MATLAB. 
 
 The table shows only a slight decrease in time using the Julia module. One
 might expect that the Julia code should be much faster, but the problem here is
-that most of the time is spent doing matrix multiplication where Matlab is
+that most of the time is spent doing matrix multiplication where MATLAB is
 highly optimized, and essentially both implementations will run the same lower
 level \emph{Blas} (Basic Linear Algebra Subprograms) routines. Nonetheless,
 this cache-like programming style in Julia seems to be indispensable to
-achieving a similar accuracy as in Matlab, but one has to do these kinds of
+achieving a similar accuracy as in MATLAB, but one has to do these kinds of
 optimizations only for specific functions where efficiency matters.
 
-Below is a list of the implemented algorithms in Julia (only for a grid of
-$(N+1) \times (N+1)$:
+Below is a list of the implemented algorithms in Julia which are only implented
+for a grid of $(m+1) \times (m+1)$:
 
 \begin{itemize}
   \item Newton-Rapshon (Jacobian construction through FinitDiff.jl) with an absolute tolerance
@@ -169,17 +169,17 @@ need too many grid points anyway.
 \begin{table}[ht]
   \caption{Comparison of solve for a steady state solution precomputed solution 
     from time-stepping at Reynolds 100 where Median values of times are compared
-  (Matlab: \jlinl{timeit}, Julia: \jlinl{@benchmark})}
+  (MATLAB: \jlinl{timeit}, Julia: \jlinl{@benchmark})}
   \label{tab:matlab_julia}
 \begin{tabular}{lrrr}
-Test & $N$ & Matlab time (s) & Julia time (s) \\
+Test & $m$ & MATLAB time (s) & Julia time (s) \\
 \hline
-Function evaluation  & 32 & 0.000094894  & 0.000052603 \\
-& 64 & 0.00032666 & 0.000223192 \\
- Creating the jacobian  & 32 & 0.0836  &  0.049540  \\
-& 64 & 1.1526 & 0.858283 \\
-Newton (3 iterations)  & 32 & 0.1967  & 0.126673 \\
-& 64 & 5.8606  & 4.878 \\
+Function evaluation  & $32$ & $0.000094894$  & $0.000052603$ \\
+& $64$ & $0.00032666$ & $0.000223192$ \\
+ Creating the Jacobian  & $32$ & $0.0836$  &  $0.049540$  \\
+& $64$ & $1.1526$ & $0.858283$ \\
+Newton (3 iterations)  & $32$ & $0.1967$ & $0.126673$ \\
+& $64$ & $5.8606$  & $4.878$ \\
 \label{tab:comp}
 \end{tabular}
 \end{table}
