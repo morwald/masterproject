@@ -8,15 +8,15 @@ Time-stepping refers to the time integration or time discretization of
 time-dependent differential equations. In the previous section, we have seen
 the benefits of using a spectral discretization of the spatial dimension of our
 problem. Due to its nature, the time component is usually discretized with a
-local discretization, not a global discretization such as a spectral. The first
-thing to note is that time integration is affected by the resolution of the
-spatial discretization of the problem. However, as mentioned in the previous
-section, this is less of a problem. 
+local discretization, not a global discretization such as a spectral one. The
+first thing to note is that time integration is affected by the resolution of
+the spatial discretization of the problem. However, as mentioned in the
+previous section, this is less of a problem. 
 
-The continuous time domain is divided into discrete time intervals or steps for
-a solution evolving in time. In this case, an equispaced grid $t_j = jh$ (where
-$j$ goes from $0$ to $N$) is employed in the time domain $t \in [0, T]$, where
-$h$ corresponds to the time interval for each step.
+The continuous time domain is divided into discrete time intervals or steps. In
+this case, an equispaced grid $t_j = jh$ (where $j$ goes from $0$ to $N$) is
+employed in the time domain $t \in [0, T]$, where $h$ corresponds to the time
+interval for each step.
 
 There exist various discretizations for the time operator. In an explicit time
 scheme, the values of the dependent variables at a future time step are
@@ -46,24 +46,33 @@ have to solve a nonlinear equation at every time step $t_j$.
 
 In this study, the implicit Euler method is used. The Euler method is a stiff,
 stable method, and it can be characterized as the first-order backward
-differentiation formula (BDF1). It is a straightforward method and is used when
-applicable widely in many stiff problems.
+differentiation formula (BDF1). It is a straightforward method and, when
+applicable, is used in many stiff problems.
 
-Given an atonomous ordinary differential equation (ODE) of the form: \[
-\frac{{dx}}{{dt}} = f(x) \] where $x$ represents the dependent variable and
-$f(x)$ is the derivative function with respect to $t$. The approximate
-solution is given by
+Given an autonomous ordinary differential equation (ODE) of the form:
 
-\[ x_{j+1} = x_j + h \cdot f(x_j) \] where $h$ is the timestep size and
+\begin{equation}
+  \frac{{dx}}{{dt}} = f(x),
+\end{equation}
+
+where $x$ represents the dependent variable and
+$f(x)$ is the derivative function with respect to $t$. The implicit Euler
+approximates the solution by
+
+\begin{equation}
+  x_{j+1} = x_j + h \cdot f(x_j),
+\end{equation}
+
+where $h$ is the timestep size and
 $t_j$ and $x_j$ represent the time and solution at the $j$-th timestep,
 respectively.
 
 \subsection{Streamfunction Time-stepping Equation}
 
 Some adjustments must be made to apply the Euler method to the R4CF. First, the
-one-dimensional problem extends to problems where $\mathbf{x}$ is a
+one-dimensional problem naturally generalizes to problems where $\mathbf{x}$ is a
 finite-dimensional vector. Secondly, the streamfunction equation involves the
-Laplace operator for the streamfunction and means that the time derivative is
+Laplace operator applied to the streamfunction, which means that the time derivative is
 applied to the Laplace of the stream function. We get:  
 
 \begin{align}
@@ -81,13 +90,11 @@ This equation can be rewritten as follows:
   & =  0 \label{eq:newton_ts}
 \end{align}
 
-This means that to calculate the solution the timestep $t_{n+1}$ from a given
-solution at time step $t_n$, we have to solve the nonlinear equation
-\eqref{eq:newton_ts}. The discretized streamfunction on the grid in the cavity
-can be seen as a
-
-The equation for the cavity flow is usually solved with a Newton-Raphson
-algorithm \citep{kuhlmann2019} briefly introduced in the following section. 
+This means that in order to calculate the solution the timestep $t_{n+1}$ from
+a given solution at time step $t_n$, we have to solve the nonlinear equation
+\eqref{eq:newton_ts}. The equation for the cavity flow is usually solved with a
+Newton-Raphson algorithm \citep{kuhlmann2019} as briefly introduced in the
+following section. 
 
 \subsection{Newton-Raphson Method}
 
@@ -115,12 +122,12 @@ conditioned.
 
 \subsection{Preliminary Results with Time Integration}
 
-To motivate the following next section on bifurcation analysis The logical next
+To motivate the following next section on bifurcation analysis, the logical next
 step would be to use the time integration and the spectral discretization to
 compute solutions of the streamfunction equation \eqref{eq:str}. It is then
 interesting to see if the regularized problem will produce such asymmetric
 solutions shown in \ref{fig:4fsc_states}. Figure \ref{fig:timestepping} shows
-the time-stepping resulst for a Chebyshev grid of size $64 \times 64$. The time
+the time-stepping result for a Chebyshev grid of size $64 \times 64$. The time
 stepper is launched with random noise to avoid converging to the symmetric
 solution.
 
@@ -133,8 +140,8 @@ solution.
 \label{fig:timestepping}
 \end{figure}
 
-It becomes clear that a certain Reynolds number (around $60$) of two asymmetric
-solution branches start to emerge one is the solution as in the non-regularized
-case. Furthermore, the base symmetric solutions are unstable. To analyze such
-kinds of different solutions, we will have to introduce tools of bifurcation
-analysis.
+It becomes clear that as a certain Reynolds number (around $60$) of two
+asymmetric solution branches start which are the same solutions as in the
+non-regularized case. Furthermore, the base symmetric solutions are unstable.
+To analyze such different solution types, we will have to introduce tools of
+bifurcation analysis.

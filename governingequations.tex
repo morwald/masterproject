@@ -6,7 +6,7 @@
 
 The following presents an overview of the physical and mathematical framework
 for the 2D cavity flow problem introduced in section \ref{sec:driven_cav}. The
-aim is to show the theory regarding the Navier-Stokes equations and the
+aim is to introduce the theory the Navier-Stokes equations and the
 stream-function formulation. \\
 
 An incompressible Newtonian fluid in a domain $\Omega$ is governed by the
@@ -105,15 +105,15 @@ non-dimensional operators are scaled as $\partial_t = \frac{U}{l}
 these definitions into \eqref{eq:str}, simplifying and dividing by
 $\frac{U^2}{L^2}$ we get,
 
-\begin{align*}
+\begin{align}
 \partial_{t^*} \Delta_* \Psi^* = \frac{\nu U}{l} \Delta^2_* \Psi^*
   + (\partial_x^* \Psi^*) \partial_y^*(\Delta_* \Psi^*)
   - (\partial_y^* \Psi^*) \partial_x^*(\Delta_* \Psi^*). 
-\end{align*}
+\end{align}
 
-We notice that we can recover the Reynolds number $\Rey = \frac{Ul}{\nu}$ that,
+We notice that we can recover the Reynolds number, $\Rey = \frac{Ul}{\nu}$ that,
 as a non-dimensional parameter, characterizes the relative importance of
-inertial forces and viscous forces in the flow. For clarity, we will omit ($*$)
+inertial forces and viscous forces in the flow. For clarity, we will omit $*$
 notation. All quantities will correspond to the dimensionless variables. The
 final equation reads,
 
@@ -227,8 +227,8 @@ parameter $k_0=10$.
 
 The previous literature has used a different domain, namely $[0,1] \times
 [0,1]$ for the four-sided cavity flow. The reference length $l_{ref}$ used in
-\citet{wahba2009} and the subsequent studies is therefor half the length $l$
-used here, therefore
+\citet{wahba2009} and the subsequent studies is therefore half the length $l$
+used here, thus
 
 \begin{align}
 \Rey = \frac{U \cdot l}{\nu} 
@@ -243,9 +243,9 @@ symmetric domain.
 
 \subsection{A physical or mathematical problem}
 
-The final important point is that the 2D problem must be studied cautiously.
+The final important point to make is that the 2D problem must be studied cautiously.
 The paper of \cite{eturk2009} concludes that the single lid-driven cavity is a
-fictitious flow at high Reynolds numbers. Fictitious meaning that the problem
+\emph{fictitious} flow at high Reynolds numbers. Fictitious meaning that the problem
 from a physical point of view would no longer be two-dimensional. However,
 numerical solutions exist at high Reynolds numbers for the 2D case. 
 
@@ -253,9 +253,9 @@ Additionally, it is hard to replicate the lid-driven cavity experimentally with
 regularized boundary conditions. This problem is even worse considering the
 four-sided cavity flow version and different velocity directions at the lid.
 
-Using a regularized version, as presented above, will help for numerically
-accurate results, but additionally is even harder to reproduce in practice.
+Using a regularized version, as presented above, will help to obtain numerically
+accurate results, but makes them even harder to reproduce in practice.
 From the point of view of a benchmark for an instability analysis for different
-solvers, the resulting flow (if fictional or not) should at least be accurately
+solvers, the resulting flow (whether fictional or not) should at least be accurately
 computable. That being said, this report will focus on the main aspect, which
 is the accurate computation of a well-posed mathematical problem. 

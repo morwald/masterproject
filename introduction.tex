@@ -7,29 +7,29 @@
 Driven cavity flows have long served as essential benchmarks for validating
 Navier-Stokes solvers. These problems can test spatial discretization
 methodologies such as finite elements, finite differences, and spectral
-methods. They also assess a variety of boundary condition implementations and
-time-stepping schemes.
+methods. They may also be used to assess a variety of boundary condition
+implementations and time-stepping schemes.
 
-Current theoretical and computational Navier-Stokes flows research goes beyond
-the time integration of the equations of motion. Since the publication of the
-seminal work by Eberhard Hopf 75 years ago \citep{hopf1948}, bifurcation and
-dynamical systems theory have been vindicated as suitable deterministic
-frameworks to understand hydrodynamic instabilities and the transition to fluid
-flow turbulence.
+Current theoretical and computational research into Navier-Stokes flows goes
+beyond the time integration of the equations of motion. Since the publication
+of the seminal work by Eberhard Hopf 75 years ago \citep{hopf1948}, bifurcation
+and dynamical systems theory have been vindicated as suitable deterministic
+frameworks to understand hydrodynamic instabilities and the transition to
+turbulent flow regimes.
 
 Exploring the infinite-dimensional phase space of the Navier-Stokes equations
 is necessary to anticipate instabilities and comprehend the emergence of new
-flow states. That implies the seek for invariant sets or manifolds in that
-space, the simplest cases being equilibria (steady flows) and periodic orbits
-(time-periodic flows). These manifolds are often linearly unstable, although
-dynamically relevant, and therefore systematically overlooked by time
+flow states. That implies the seek for invariant sets or manifolds, the
+simplest cases being equilibria (steady flows) and periodic orbits
+(time-periodic flows). Although dynamically of high relevance, these manifolds
+are often linearly unstable, and therefore systematically overlooked by time
 integrators of the Navier-Stokes equations, as time-stepping will only approach
 local attractors.
 
 Accurately computing steady or time-periodic flows, regardless of their
-stability requires the implementation of suitable continuation algorithms
-\citep{kuznetsov2004} to monitor them as the Reynolds number is varied.
-Moreover the linear stability analysis of these invariant flows is crucial for
+stability,,requires the implementation of suitable continuation algorithms to
+monitor them as the Reynolds number is varied \citep{kuznetsov2004}. Moreover,
+the linear stability analysis of these invariant flows is crucial for
 predicting potential local bifurcations in parameter space. However, this
 analysis poses challenges due to the high-dimensional generalized eigenvalue
 problem resulting from the local linearization of the Navier-Stokes operator.
@@ -44,24 +44,24 @@ have long been known for providing unbeatable exponential convergence, provided
 the domain is simple, and the boundary conditions are mathematically
 well-posed.
 
-Among the wide variety of two-dimensional lid-driven cavity flows, the one
-that, for historical reasons, has received more attention is the one-sided
-version \citep{kuhlmann2019}. This cavity consists of a square with one lid
-sliding at a uniform speed, and the three other lids are kept stationary. In
-this case, the flow is steady and stable even for high Reynolds numbers. The
-first instability found is due to a Hopf bifurcation which may lie somewhere in
-the interval [7500, 8100] \citep{kuhlmann2019} reported by different
-studies. This uncertainty in the critical Reynolds number is due to multiple
-factors, such as the large Reynolds number where the instability appears,
-demands very high resolutions in space and time, as well as the different
-spatial discretization techniques and methodologies used in the works to
-identify the bifurcation (time integration or linear stability analysis). Due
-to its simple geometry, the square lid-driven cavity has long been qualified as
-a good candidate for a canonical benchmark problem. Still, lid-driven cavity
-flow problems, in their original formulations, typically have singular boundary
-conditions at the corners, where the velocity profile is discontinuous. In this
-case, the exponential convergence of spectrally approximated flow solutions is
-at stake. 
+For historical reasons, the one-sided version has received most attention among
+the wide variety of two-dimensional lid-driven cavity flows
+\citep{kuhlmann2019}. This cavity consists of a square with one lid sliding at
+a uniform speed, and the three other lids are kept stationary. In this case,
+the flow is steady and stable even for high Reynolds numbers. The first
+instability found is due to a Hopf bifurcation which may lie somewhere in the
+interval [7500, 8100] reported by different studies \citep{kuhlmann2019}. This
+uncertainty in the reported critical Reynolds number is due to multiple
+factors. For instance,  the large Reynolds number where the instability
+appears, demands very high resolutions in space and time, as well as the
+different spatial discretization techniques and methodologies used in the works
+to identify the bifurcation (time integration or linear stability analysis).
+Due to its simple geometry, the square lid-driven cavity has long been
+qualified as a good candidate for a canonical benchmark problem. Still,
+lid-driven cavity flow problems, in their original formulations, typically have
+singular boundary conditions at the corners, where the velocity profile is
+discontinuous. In this case, the exponential convergence of spectrally
+approximated flow solutions is at stake. 
 
 The corner-singularity problem has, however, been successfully circumvented
 using different approaches, such as substraction methods \citep{botella1998},
@@ -89,7 +89,7 @@ performance comparable to compiled C/Fortran codes, making it an attractive
 platform for implementing scientific computing. A developed Julia module
 provides a reproducible example of the regularized cavity.
 
-The regularized four-sided lid-driven cavity shows most of the primary
+The regularized, four-sided lid-driven cavity shows most of the primary
 bifurcation scenarios. The flow undergoes instabilities, such as pitchfork,
 saddle-node (fold), and Hopf. Predicting the precise location of the
 bifurcations could present an amenable benchmark when testing and comparing

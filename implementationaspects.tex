@@ -19,9 +19,9 @@ of the function will not have to be recompiled and will give the expected
 performance. The compiler chooses the appropriate dispatch based on the input
 types, hence the name multiple dispatch.
 
-For the regularized four-sided cavity flow, the Group of linear fluid
-dynamics at UPC has already developed a MATLAB code implementing some
-of the necessary algorithms for this problem. This project has dealt with the
+For the regularized four-sided cavity flow, the Group of linear fluid dynamics
+at UPC has already developed a MATLAB code implementing some of the necessary
+algorithms for solving this problem. This project has dealt with the
 translation of some of the parts of the already existing code and provides a
 rewrite in Julia which tries to be a simple open-source example. This section
 will skip many implementation details but highlight some optimization and
@@ -29,11 +29,11 @@ design choices for the code.
 
 \subsection{Implementation of the nonlinear Function}
 
-Julia provides a way to develop the code like a scripting language as for
-example Python, but then one can add optimizations where needed without
-changing the language. Julia is free, open-source, and provides good
-performance comparable to compiled C/Fortran codes, making it an attractive
-platform for scientific computing. 
+Julia provides a way to develop the code like with a scripting language such as
+Python, but then one can add optimizations where needed without changing the
+language. Julia is free, open-source, and provides good performance comparable
+to compiled C/Fortran codes, making it an attractive platform for scientific
+computing. 
 
 Now, want to recall the dynamical system defined in equations \eqref{eq:dyn_sys}.
 The code of this nonlinear function $F(\Psi, Re)$ has to be highly optimized,
@@ -41,8 +41,10 @@ as it is called in a very Newton-Raphson iteration multiple times. The most
 costly part consists of calculating the Jacobian where the function is called
 of the order $\mathcal{O}(n^4)$.
 
-The code snippet below shows a straightforward implementation of the
+The following code snippet shows a straightforward implementation of the
 nonlinear function. 
+
+\clearpage
 
 
 \begin{jllisting}[caption=Simple implementation in Julia of the nonlinear function $F$]
@@ -79,7 +81,7 @@ Though this function could be more efficient, if we want to use it repeatedly,
 every function call will allocate a new variables for the matrices. A useful
 approach is to preallocate memory which we pass to the function, and reuse this
 memory at every function call. The optimized version is shown below and is
-allocation free. Moreover, this cache-like programming style is important when
+allocation-free. Moreover, this cache-like programming style is important when
 writing efficient Julia code. The exclamation mark is then standard to inform
 the programmer that the function is changing its input variable (here
 \jlinl{fu}). \jlinl{f!(fu, u, p)} is called an in-place function.
@@ -131,7 +133,7 @@ A bottleneck in this implementation is that copies are made from \jlinl{u} to
 matrix \jlinl{Ψ} are not memory aligned, and these copies could be more
 efficient.
 
-\subsection{Comparison MATLAB and Julia}
+\subsection{Comparison between MATLAB and Julia}
 
 Table \ref{tab:comp} provides a comparison between some basic operations for the
 R4CF implemented in Julia and MATLAB. 
@@ -163,13 +165,12 @@ parameter continuation for a given nonlinear problem, a Newton-Krylov
 (Matrix-free) solver and forward mode automatic differentiation. This is
 indispensable in large problems. However, the Newton-Raphson and an explicitly
 constructed Jacobian work best for the four-sided cavity. Through
-regularization, the convergence rate of the spectral discretizations should not
+regularization, the convergence rate of the spectral discretizations does not
 need too many grid points anyway.
 
 \begin{table}[ht]
-  \caption{Comparison of solve for a steady state solution precomputed solution 
-    from time-stepping at Reynolds 100 where Median values of times are compared
-  (MATLAB: \jlinl{timeit}, Julia: \jlinl{@benchmark})}
+  \caption{MATLAB vs Julia comparison of median time to solve for a steady
+    state solution at Reynolds number 100 (MATLAB: \jlinl{timeit}, Julia: \jlinl{@benchmark})}.
   \label{tab:matlab_julia}
 \begin{tabular}{lrrr}
 Test & $m$ & MATLAB time (s) & Julia time (s) \\

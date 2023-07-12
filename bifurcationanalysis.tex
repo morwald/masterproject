@@ -16,33 +16,34 @@ in a stable flow.
 In the context of the R4CF problem, the main objective is to investigate the
 behavior of the driven cavity for different configurations in a numerical
 experiment. We want to mainly understand how the flow is affected by the length
-of the side walls, the boundary velocity, and the fluid's viscosity. Moreover,
-all these quantities are captured within the Reynolds number.
+of the side walls, the boundary velocity, and the fluid's viscosity. All these
+quantities are captured by the Reynolds number.
 
 From the preliminary results shown in the temporal discretization section
 \ref{sec:time}, it has been identified that two asymmetric states are possible
-after a critical Reynolds number, and although the symmetric base flow remains
-a solution to the governing equations, it becomes unstable. The point at which
-the two states emerge is called a bifurcation point. A bifurcation is the
-change of a value of qualitative character and a set of possible steady and
-unsteady flows in dynamical equilibrium (\citeauthor{drazin2002}). These points
-are often associated with instabilities, multiple flow patterns, or the
-emergence of oscillatory behavior. Recalling the bifurcation diagram in figure
-\ref{fig:bif_diag_chen} it is aimed to distinguish the different points where
-the flow states are altered. 
+when the Reynolds number exceeds a critical treshhold, and, although the
+symmetric base flow remains a solution to the governing equations, it becomes
+unstable. The point at which the two states emerge is called a bifurcation
+point. A bifurcation is the change of a value of qualitative character and a
+set of possible steady and unsteady flows in dynamical equilibrium
+(\citeauthor{drazin2002}). These points are often associated with
+instabilities, multiple flow patterns, or the emergence of oscillatory
+behavior. Recalling the bifurcation diagram in figure \ref{fig:bif_diag_chen},
+it is aimed to distinguish the different points where the flow states are
+altered. 
 
-To understand this diagram, we want to introduce the equations from a dynamical
-system point of view. After that, the occurring bifurcations for the 4RCF will
-be explained in detail.
+To understand this diagram, we want to introduce the mathematical underpinnings
+from a dynamical system point of view. After that, the occurring bifurcations
+for the 4RCF will be explained in detail.
 
 \subsection{The Dynamical Systems Perspective}
 
-An alternative perspective on our problem is through the theory of dynamical
+An alternative perspective on our problem at hand is the theory of dynamical
 systems. In this framework, the state of a system is represented by a point
 denoted as $x$ within a set of all possible states, referred to as the state
 space or phase space (indicated as $X$). This point describes the system's
-current position and includes the necessary dimensions needed to determine its
-future evolution.
+current state and includes all the necessary dimensions to determine its future
+evolution.
 
 A time variable $t \in T$ governs the evolution of a system, where $T$ in our
 case is a set of positive real numbers ($T \in \mathbb{R}^+$). The evolution
@@ -61,21 +62,21 @@ differential equation, which can be reformulated as a dynamical system. We
 consider an infinite-dimensional point denoted as $\Psi$ in a state space $X$.
 $\Psi$ can be thought of as a vector covering all possible points of our cavity
 and thus is infinite-dimensional. Using the streamfunction at time $t$, we not
-only have the locations of all fluid particles but as well their evolution
+only have the locations of all fluid particles but also their evolution
 (velocities $u$ and $v$) explicitly given by the definition of the derivatives
 \eqref{eq:str_defx} and \eqref{eq:str_defy}.
 
 Further, this infinite-dimensional space will be divided into discrete points
 with the chosen pseudo-spectral discretization. As already mentioned, the
 theory of spectral discretization ensures that this approximation converges to
-the mathematical solution of the infinite-dimensional state space. Increasing
-$n$ should achieve higher accuracy and is expected to converge exponentially
-because of the regularization. The finite-dimensional space for the numerical
-computations can be defined as:
+the solution of the infinite-dimensional state space. Increasing $n$ should
+result in higher accuracy and the solution is expected to converge
+exponentially because of the singularity-avoiding regularization. The
+finite-dimensional space for the numerical computations can be defined as:
 
 \begin{align}
   \frac{d(\Delta \Psi_j)}{dt} &= {F_j(\Psi)} \quad \quad \quad
-    j= 1,2, ...,(m+1)(n+1) \label{eq:dyn_sys}
+    j= 1,2, ...,(m+1)(n+1), \label{eq:dyn_sys}
 \end{align}
 
 where $F_j$ to the $j$th component of the nonlinear function for one grid point.
@@ -85,18 +86,18 @@ equations.
 This more abstract framework is helpful in the sense that it provides a
 geometrical representation of the sought-after solutions. It is of use to look
 at subsets of the phase space $X$. A first example is an invariant set which is
-a subset $S$ such that for an $x_0$ implies $\varphi(x_0) \in S$ for all $t \in
+a subset $S$ such that an $x_0$ implies $\varphi(x_0) \in S$ for all $t \in
 T$ \citep{kuznetsov2004}. If $S$ just one single point (having measure 0) this
 set is called a fixed point (or equilibrium). 
 
 Additionally, an invariant manifold corresponds to a hypersurface such that all
-future times maps of the evolution operator reside on this surface.
-Trajectories on such manifolds are termed periodic orbits and are trajectories
-in phase space that will revisit the same state again. A limit cycle (stable
-periodic orbit) is a trajectory that will be visited repeatedly. Such limit
-cycles are characterized by being isolated locally, attracting other close-by
+future time maps of the evolution operator reside on this surface. Trajectories
+on such manifolds are termed periodic orbits and are trajectories in phase
+space that will revisit the same state again. A limit cycle (stable periodic
+orbit) is a trajectory that will be visited repeatedly. Such limit cycles are
+characterized by being isolated and attracting, attracting other close-by
 trajectories. Periodic orbits can be then characterized by their period and
-amplitude and are usually depicted in a phase portrait. These invariant sets
+amplitude. They are usually depicted in a phase portrait. These invariant sets
 help to characterize dynamical systems and understand the fundamental types of
 solutions when a parameter is varied.
 
@@ -125,10 +126,10 @@ Practically in the case of the two-dimensional cavity flow, it will have a
 system of $(m-3) \cdot (n-3)$ equations and we can solve this equation
 analogously to the time-stepping equation with a Newton iteration.
 
-\subsection{Linearstability Analysis}
+\subsection{Linear Stability Analysis}
 
 To analyze the stability of fixed points, a mathematical technique called
-linear stability analysis can be used. Given an equilibrium solution $\Psi_0$
+linear stability analysis can be used. Given an equilibrium solution $\Psi_0$,
 which is a solution to the steady equation \ref{eq:str_steady}, we can try to
 perturb the system and see how it would behave. Let us define a perturbated
 $\Psi$,
@@ -151,16 +152,16 @@ get
 \label{eq:str_pert}
 \end{align}
 
-To solve this linear stability analysis problem, an Ansatz is thought for,
+To solve this linear stability analysis problem, an Ansatz is used,
 where we separate time and the spatial variables as follows: 
 
 \begin{align}
   \tilde{\Psi} = \tilde{\Psi}(x,y,t) = \mathrm{e}^{\lambda t} \Phi(x,y)
 \end{align}
 
-$\Phi$ only corresponds to a component of the solution which depends on $x$ and
-$y$. The time variable $t$ can be eliminated by plugin the above back into the
-equation.
+$\Phi$ only corresponds to a component of the solution which depends only on
+$x$ and $y$. The time variable $t$ can be eliminated by plugin the above back
+into the equation.
 
 \begin{align}
 \lambda \Delta \Phi = \frac{1}{Re} \Delta^2 \Phi
@@ -192,27 +193,28 @@ We recognize that $\Phi(x,y)$ corresponds to an eigenmode, and $\mu$ is the
 associated eigenvector. If all the eigenvalues of the generalized eigenvalue
 problem have a positive real part, the equilibrium is stable. On the contrary,
 if only one of the eigenvalues is found to be positive, then the system is
-unstable because a small perturbation will grow exponentially in time which can
-be directly seen in the definition of the Ansatz.
+unstable because a small perturbation will grow exponentially in time, which
+can be directly seen in the definition of the Ansatz.
 
-This linear stability problem becomes very large because the perturbation
-$\epsilon$ has to be performed on every grid point, and the numerical
-eigenvalue problem is solved with matrices of the size $(m+1)(n+1) \times
-(m+1)(n+1)$. A final remark is that with linear stability analysis, we are only
-looking at linear perturbation meaning that nonlinear disturbances (second or
-higher order) are not captured with this technique.
+This linear stability problem becomes computationally demanding because the
+perturbation $\epsilon$ has to be performed on every grid point, and the
+numerical eigenvalue problem is solved with matrices of the size $(m+1)(n+1)
+\times (m+1)(n+1)$. A final remark is that with linear stability analysis, we
+are only looking at linear perturbation meaning that nonlinear disturbances
+(second or higher order) are not captured with this technique.
 
 \subsection{Bifurcations}
 
 We have formally defined the tools needed to characterize all the bifurcations
 occurring in the RCF4 precisely. 
 
-To illustrate the encountered bifurcations, the parameter of interest $\mu$
-will be varied and plotted against a variable that identifies a different
-state. Let us use this variable by $U$ ($\Psi_{center}$ in the RCF4). The first
-bifurcation we want to have a look at is the pitchfork (figure \ref{fig:pitch_saddle})
-where the symmetry is broken, and there are two different flow solutions
-appearing. The base flow is still in equilibrium but is now unstable.
+To illustrate bifurcations we encountered, the parameter of interest $\mu$ will
+be varied and plotted against a variable that identifies a different state. Let
+us use this variable by $U$ ($\Psi_{center}$ in the RCF4). The first
+bifurcation we want to have a look at is the pitchfork (figure
+\ref{fig:pitch_saddle}) where the symmetry is broken, and there are two
+different flow solutions appearing. The base flow is still in equilibrium but
+is now unstable.
 
 \begin{figure}[ht]
 \centering
@@ -263,15 +265,14 @@ characterized by a real complex conjugate pair of eigenvalues crossing when
 performing the stability analysis. One can distinguish between sub- and
 super-critical Hopf bifurcation. At a Hopf bifurcation, a stable fixed point
 becomes unstable, and the system suddenly oscillates. A sketch of the
-amplitudes is depicted in \ref{fig:hopf}. Compared
-to local bifurcation (pitchfork, saddle-node), this is called a global
-bifurcation. This global behavior is seen, for example, in the super-critical
-Hopf when the system is changing suddenly from a fixed point to a stable
-periodic orbit (SPO). Moreover, now having a trajectory in a larger invariant
-set. On the other hand, the sub-critical Hopf is much more "dangerous". Before
-the critical $\mu$, there are unstable periodic orbits, and then it is unclear
-what the amplitudes of oscillations will be when the fixed point becomes
-unstable.
+amplitudes is depicted in \ref{fig:hopf}. Compared to local bifurcation
+(pitchfork, saddle-node), this is called a global bifurcation. This global
+behavior is seen, for example, in the super-critical Hopf when the system is
+changing suddenly from a fixed point to a stable periodic orbit (SPO) and now
+having a trajectory in a larger invariant set. On the other hand, the
+sub-critical Hopf is more unpredictable. Before the critical $\mu$, there are
+unstable periodic orbits, and then it is unclear what the amplitudes of
+oscillations will be when the fixed point becomes unstable.
 
 \begin{figure}[ht]
 \centering
@@ -320,7 +321,7 @@ unstable.
 
 \subsection{Continuation Algorithms}
 
-Having detected these different asymmetric solutions in the preliminary results
+Having detected these different asymmetric solutions in the preliminary results,
 the next key idea is how to actually track such branches of fixed points.  
 
 The simplest way is called natural continuation, where we start with a solution
@@ -329,12 +330,13 @@ guess for the next Newton iteration is the one from the step before. In this
 way, we can "continue" a branch and don't have to use a time integration
 algorithm for each steady-state solution we want to obtain if a small enough
 step size is employed such that the Newton still converges. Furthermore, an
-unstable branch can be followed as well, which would not be able to be tracked
-solely by time evolution.
+unstable branch can be followed as well, which could not be tracked solely by
+time evolution.
 
-But there is actually a limitation. In the fold bifurcation depicted in figure
-\ref{fig:pitch_saddle}, the continuation has to follow a curve when the parameter
-is decreasing again. This can't be detected by the natural continuation.
+But there is limitation. In the fold bifurcation depicted in figure
+\ref{fig:pitch_saddle}, the continuation has to follow a curve when the
+parameter is decreasing again. This cannot be properly by the natural
+continuation, as the Reynolds number is manually set to increase.
 Another strategy to overcome this issue is called pseudo-arclength
 continuation. Given two fixed points $x^{(0)}$ and $x^{(1)}$ on a curve with
 parameter values $\mu^{(0)}$ and $\mu^{(1)}$ we want to find the next $x^{(2)}$
@@ -385,10 +387,11 @@ J =
 \end{center}
 
 So we, first of all, solve the normal system with the Jacobian, and the last
-row of augmented Jacobian is just given by the transpose of the distance in
-phase space. The last column (without the last row) making the finit difference
-derivative with respect of the nonlinear function with respect to $\mu$. It is
-necessary to scale the change in $\mu$ to obtain a well-conditioned Jacobian.
+row of the augmented Jacobian is just given by the transpose of the distance in
+phase space. The last column (without the last row) making the finite
+difference derivative with respect of the nonlinear function with respect to
+$\mu$. It is necessary to scale the change in $\mu$ to obtain a
+well-conditioned Jacobian.
 
 \begin{figure}[h]
 \centering

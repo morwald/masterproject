@@ -2,32 +2,33 @@
 % DRIVEN CAVITY FLOWS 
 %-------------------------------------------------------------------------------
 
-\section{2D driven Cavity Flows} \label{sec:driven_cav}
+\section{2D Driven Cavity Flows} \label{sec:driven_cav}
 
 In two-dimensional (2D) driven cavity flows, a viscous Newtonian incompressible
 fluid is confined within a square (or rectangular) domain. In these model
-problems, the fluid is driven through the motion of the bounding walls. These
+problems, the fluid is driven by the motion of the bounding walls. These
 types of flow configurations have been widely used due to their simplicity and
 relevance as benchmarks problem for validating numerical solvers and
 investigating various flow phenomena.
 
 A recent and comprehensive review conducted by \citet{kuhlmann2019} provides
-insights for the extensive research carried out on the many variants of the
+insights into the extensive research carried out on the many variants of the
 lid-driven cavity.
 
 \subsection{The single lid-driven Cavity Flow}
 
-The most basic configuration of the flow problem involves a square cavity where
-only one wall, referred to as the lid, is in motion while the other walls
-remain stationary. This simple 2D case has been extensively studied numerically
-and serves as one of the canonical benchmark problems nowadays. The first
-thorough computational investigation lies more than half a century back
-\citep{burggraf1966}. Figure \ref{fig:cav_simple} shows the basic setup, and
-figure \ref{fig:Re_cav_simple} illustrates the typical flow pattern for two
-different Reynolds numbers. The depicted streamlines show a central vortex
-driven by the upper lid's motion to the right. Therefore, the primary vortex
-rotates clockwise. Moreover, the flow shows secondary vortices at the upper and
-lower corners at higher Reynolds numbers ($8000$).
+The most basic configuration of this type of flow problem involves a square
+cavity where only one wall, referred to as the lid, is in motion while the
+other walls remain stationary. This simple 2D case has been extensively studied
+numerically and serves as one of the canonical benchmark problems for numerical
+Navier-Stokes solver nowadays. The first thorough computational
+investigation lies more than half a century back \citep{burggraf1966}. Figure
+\ref{fig:cav_simple} shows the basic setup, and figure \ref{fig:Re_cav_simple}
+illustrates the typical flow pattern for two different Reynolds numbers. The
+depicted streamlines show a central vortex driven by the upper lid's motion to
+the right. Therefore, the primary vortex rotates clockwise. Moreover, the flow
+shows secondary vortices at the upper and lower corners at higher Reynolds
+numbers of $8000$.
 
 \begin{figure}[ht]
 \centering
@@ -55,11 +56,11 @@ lower corners at higher Reynolds numbers ($8000$).
 
 The flow phenomena in the upper corners result from the discontinuous boundary
 conditions of the mathematical problem. These are caused by the horizontal
-component being set to a velocity $U$ at the upper corners, but on the
-contrary, the vertical walls are not moving. What follows is that the pressure
-and the vorticity diverge at these corners. This phenomenon is a special case
-of Taylor's scrapper problem, and there exists a closed-form solution in terms
-of series expansions \citep{kuhlmann2019}. The other effect worth mentioning is
+component being set to a velocity $U$ at the upper corners, whereas, the
+vertical walls are not moving. What follows is that the pressure and the
+vorticity diverge at these corners. This phenomenon is a special case of
+Taylor's scrapper problem, and there exists a closed-form solution in terms of
+series expansions \citep{kuhlmann2019}. The other effect worth mentioning is
 the formation of two eddies at the lower corners of the cavity. These vortices
 rotate in an anti-clockwise way, separated from the central vortex. They are
 called Moffat eddies, and similarity solutions have been found for them
@@ -68,35 +69,36 @@ called Moffat eddies, and similarity solutions have been found for them
 Apart from these studies, calculating the solutions of the cavity while varying
 the Reynolds number has been done extensively. The single lid-driven cavity
 becomes unstable at a Hopf bifurcation (see section \ref{sec:bif}) somewhere in
-the range of the Reynolds number [7500, 8100] \citep{kuhlmann2019} conducted by
-different studies. No conclusive results could be drawn due to the significant
-uncertainty. The numerical deviations come mainly from the large Reynolds
-number at which the bifurcations appear and the different discretization used
-to obtain the results. Another main issue, as mentioned before, is the corner
-singularities caused by discontinuous boundary conditions.
+the range of the Reynolds number [7500, 8100] \citep{kuhlmann2019} as reported
+by different studies. No conclusive results could be drawn due to significant
+uncertainty. The numerical variations are primarly the result of the large
+Reynolds number at which the bifurcations appear and the different
+discretization used when solving the Navier-Stokes equations numerically.
+Another issue, as mentioned before, is the corner singularities caused by
+discontinuous boundary conditions.
 
 Until now, we have restricted our attention only to the simple 2D single
-lid-driven case. However, there is a whole spectrum of different variants.
-First, the analysis can be performed for different aspect ratios (height-width
-of the box) and evaluate the effect on the flow pattern. Other shapes apart
-from a rectangular cavity can be considered as well. With more computing
+lid-driven case. However, there is a whole spectrum of different variants. For
+one, the analysis can be performed for different aspect ratios (height-width
+ratio of the box) and evaluate the effect on the flow pattern. Shapes other
+than a rectangular cavity can be considered as well. With more computing
 resources being available, the 3D variant has also been studied, giving rise to
-other types of singularities and flow patterns \citep{lopez2017}. Lastly, the
+other types of singularities and flow patterns \citep{lopez2017}. Further, the
 problem can be combined with heat convection by keeping facing sides at
 different temperatures \citep{koseff1985}. \\
 
 In this work, we want to consider another type of flow variant by adapting the
-boundary conditions. \cite{kuhlmann1997} investigated numerically and
-experimentally a two-sided flow problem where two opposing lids move in
-opposite directions. It has been found that the primary symmetric flow pattern
-is only stable for low Reynolds numbers, and the flow becomes unstable at a
-large Reynolds number because of a three-dimensional mode. \citep{wahba2009}
-did further numerical experiments and proposed an extension, the four-sided
-version (figure \ref{fig:cav_4s}), where all four walls are moving at different
-speeds (top-bottom and right-left lids moving rightwards-leftwards and
-upwards-downwards, respectively). This problem exhibits bifurcations from a
-very low Reynolds number onward. Figure \ref{fig:bc_types} shows the different
-types of boundary conditions.
+boundary conditions. \cite{kuhlmann1997} investigated a two-sided flow problem
+numerically and experimentally where two opposing lids move in opposite
+directions. It has been found that the primary symmetric flow pattern is only
+stable for low Reynolds numbers, and the flow becomes unstable at a large
+Reynolds number because of a three-dimensional mode. \citep{wahba2009} did
+further numerical experiments and proposed an extension, the four-sided version
+(figure \ref{fig:cav_4s}), where all four walls are moving at the same
+tangential speeds but in different directions (top-bottom and right-left lids
+moving rightwards-leftwards and upwards-downwards, respectively). This problem
+exhibits bifurcations from a very low Reynolds number onward. Figure
+\ref{fig:bc_types} shows the different types of boundary conditions.
 
 \begin{figure}[ht]
 \centering
@@ -141,7 +143,7 @@ types of boundary conditions.
 \subsection{Regularization} \label{sec:regul}
 
 The corner singularities pose a well-known problem, and applying analytic
-insights of the 2D case can give rise to more precise calculations.
+insights of the 2D case may enable more precise calculations.
 \cite{botella1998} used spectral methods (see section \ref{sec:spectral}) in
 combination with the substraction of the leading terms of the singularities. In
 this way, the numerically solved problem does not involve singularities, and
@@ -183,7 +185,7 @@ bifurcation points can thus be calculated more reliably.
   \draw[<->, thick] (2.15,0) -- node[pos=0.5, right] {$l$} (2.15,2);
 \end{tikzpicture}
 \caption{The four-sided cavity ($l \times l$) with tangential velocities $U$ and
-  kinematik viscosity $\nu$ }
+  kinematic viscosity $\nu$ }
 \label{fig:cav_4s}
 \end{figure}
 
@@ -200,14 +202,14 @@ visualization of these states.
 \begin{figure}[ht]
   \centering
   \includegraphics[width=0.455\textwidth]{figs/fig_wahba2009}
-  \caption{Symmetric and asymmetric solutions at $Re=300$, computed by
+  \caption{Symmetric and asymmetric solutions at Reynolds number, $Re=300$, computed by
     \cite{wahba2009}}
   \label{fig:4fsc_states}
 \end{figure}
 
 Later, \cite{perumal2011} employed a Lattice Boltzmann Method (LBM), recovering
-multiple solutions obtained by the former finite-difference based code.
-Furthermore, other aspect ratios for cavities have been considered, which
+multiple solutions previously obtained by the former finite-difference based
+code. Furthermore, other aspect ratios for cavities have been considered, which
 exhibit the multiplicity of solutions as well. 
 
 \begin{figure}[ht]
@@ -233,12 +235,12 @@ plotted against an increasing Reynolds number. Through a continuation
 algorithm, the asymmetric solution branches could be followed (see section
 \ref{sec:bif}) and are visualized in the diagram. The solid curves represent
 stable solutions, whereas the dashed curves correspond to unstable ones. One
-notices that the effect of changing the Reynolds in the four-sided reveals two
-pitchfork bifurcations and saddle node (fold) points for the asymmetric
-solutions. Apart from the LBM technique in \citet{chen2013}, the domain has
-been discretized with finite differences, and as pointed out in the section
-\ref{sec:regul}, the goal here is to look at a regularized problem with the aim
-of using spectral discretization.
+notices that the effect of changing the Reynolds number in the four-sided
+reveals two pitchfork bifurcations and saddle-node (fold) points for the
+asymmetric solutions. Apart from the LBM technique in \citet{chen2013}, the
+domain has been discretized with finite differences, and as pointed out in the
+section \ref{sec:regul}, the goal here is to look at a regularized problem with
+the aim of using spectral discretization.
 
 The governing equations will now be introduced formally and the more well-posed
 boundary conditions will be defined to achieve higher accuracy and an
