@@ -143,7 +143,7 @@ for orthogonal polynomials.
 
 \begin{figure}[ht]
 \centering
-\begin{tikzpicture}[scale=2.7]
+\begin{tikzpicture}[scale=2.5]
 
   \draw (-1,-1) rectangle (1,1);
   \draw (-1,-1) rectangle (1,1);
@@ -156,13 +156,13 @@ for orthogonal polynomials.
   \foreach \y in {-1,-0.5,0.5,1}
     \draw (-0.02,\y) -- (0.02,\y) node[below=5pt, left=4pt] {\small $\y$};
 
-  \node at (0.22,0.5) {$u_T, v_T$};
+  \node at (0.24,0.5) {$u_T, v_T$};
   \fill (0, 0.5) circle [radius=0.6pt];
 
   \node at (-0.5,0.1) {$u_L, v_L$};
   \fill (-0.5,0) circle [radius=0.6pt];
 
-  \node at (0.22,0.1) {$\Psi_{center}$};
+  \node at (0.24,0.1) {$\Psi_{center}$};
   \fill (0,0) circle [radius=0.6pt];
 \end{tikzpicture}
 \caption{Square domain $(x,y) \in [-1,1]\times[-1,1]$ for the four-sided cavity.}
@@ -201,8 +201,8 @@ suitable but not too extreme decay for the velocity at the edges.
   \begin{axis}[
     xlabel={$x$},
     ylabel={$u(x, 1)$},
-    xlabel style={at=(current axis.right of origin), anchor=west}, 
-    ylabel style={at=(current axis.above origin), anchor=east, rotate=-90},
+    xlabel style={at={(current axis.right of origin)}, anchor=west}, 
+    ylabel style={at={(0.2,0.85)}, anchor=east, rotate=-90},
     domain=-1.0:1.0,
     samples=200,
     axis lines=left,

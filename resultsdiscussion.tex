@@ -60,7 +60,7 @@ $96$ & $66.197$ & $172.708$ & $348.319$ & $0.0599$ & $353.357$ & $353.654$ \\
 
 \begin{figure}[h!]
   \centering
-  \includegraphics[width=\textwidth]{figs/bifurcation_diag64x64.png}
+  \includegraphics[width=0.95\textwidth]{figs/bifurcation_diag64x64.pdf}
   \caption{Bifurcation diagram for the regularized version of the four-sided
     cavity flow, calculated with the developed Julia module} 
   \label{fig:bif_diag}
@@ -103,19 +103,26 @@ a super-critical Hopf bifurcation. One can also recognize that the stable
 periodic orbits pass close to all the locally attracting unstable branches.
 
 \begin{figure}[ht]
+  \begin{subfigure}[b]{0.42\textwidth}
   \centering
-  \includegraphics[width=0.65\textwidth]{figs/orbits32x32.png}
-  \caption{Periodic orbits at different Reynolds numbers illustrated in phase space (plot not finished).} 
-  \label{fig:orbit}
-\end{figure}
-
-\begin{figure}[ht]
+  \includegraphics[trim={3cm 0 4.6cm 0},clip,width=\textwidth]{figs/orbits_bif_diag32x32.pdf}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.58\textwidth}
   \centering
-  \includegraphics[width=0.6\textwidth]{figs/orbits_bif_diag32x32.png}
+  \includegraphics[trim={1cm 0cm 1cm 0cm},clip,width=\textwidth]{figs/orbits32x32.pdf}
+  \end{subfigure}
   \caption{Center value of streamfunction for the computed periodic orbits of figure \ref{fig:orbit}
   (plot not finished).} 
   \label{fig:orbit_bif_diag}
 \end{figure}
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.8\textwidth]{figs/orbits_zoom32x32.pdf}
+  \caption{Periodic orbits at different Reynolds numbers illustrated in phase space (plot not finished).} 
+  \label{fig:orbit}
+\end{figure}
+
 
 It becomes clear that stable orbits exist below the critical Reynolds number of
 the Hopf bifurcation. The periodic orbits below this Reynolds number are
@@ -129,7 +136,7 @@ illustrates what seems to be happening. A saddle-node of orbits joins the upper
 branch with the stable periodic orbits depicted in the previous figure. It
 seems very likely that this corresponds to a sub-critical Hopf.
 
-\begin{figure}[ht]
+\begin{figure}[h!]
 \centering
 \begin{tikzpicture}[scale=0.5]
   \draw[thick, dashed] plot[smooth,domain=-2.8:1.5] ({-\x*\x},\x);
@@ -207,7 +214,7 @@ saddle-node. \\\\
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.8\textwidth]{figs/lsa_sn96x96.png}
+  \includegraphics[width=0.8\textwidth]{figs/lsa_sn96x96.pdf}
   \caption{Linear stability analysis around saddle-node (increasing and
     decreasing Reynolds number). The real part of the three largest eigenvalues
     are shown, grid $96 \times 96$.} 
@@ -228,7 +235,7 @@ reveals how the eigenvalues can be related to point $B$ (i.e. $P_3$).
 
 \begin{figure}[h!]
   \centering
-  \includegraphics[width=0.9\textwidth]{figs/branch2_64x64.png}
+  \includegraphics[width=0.9\textwidth]{figs/branch2_64x64.pdf}
   \caption{3D plot of the asymmetric branch (blue) and second branch (green) and the
     connection of the two branches at point $B$}
   \label{fig:branch2}
@@ -247,15 +254,15 @@ to each other.
 \begin{figure}[h!]
 \begin{subfigure}[b]{0.33\textwidth}
   \centering
-  \includegraphics[width=\textwidth]{figs/psi_Re353.356_pf3.png}
+  \includegraphics[trim={2cm 0 2cm 0},clip,width=\textwidth]{figs/psi_Re353.356_pf3.pdf}
 \end{subfigure}
 \begin{subfigure}[b]{0.33\textwidth}
   \centering
-  \includegraphics[width=\textwidth]{figs/psi_Re375.000_branch2_u_t_smaller.png}
+  \includegraphics[trim={2cm 0 2cm 0},clip,width=\textwidth]{figs/psi_Re375.000_branch2_u_t_smaller.pdf}
 \end{subfigure}
 \begin{subfigure}[b]{0.33\textwidth}
   \centering
-  \includegraphics[width=\textwidth]{figs/psi_Re375.000_branch2_u_t_bigger.png}
+  \includegraphics[trim={2cm 0 2cm 0},clip,width=\textwidth]{figs/psi_Re375.000_branch2_u_t_bigger.pdf}
 \end{subfigure}
 \caption{Streamlines for the pitchfork $P_3$ to the left and the two asymmetric
   solutions of the new branches to the right}
@@ -264,7 +271,7 @@ to each other.
 
 \begin{figure}[h!]
   \centering
-  \includegraphics[width=0.7\textwidth]{figs/lsa_sn_branch2_zoom96x96.png}
+  \includegraphics[width=0.7\textwidth]{figs/lsa_branch2_96x96.pdf}
   \caption{Linear stability analysis around connection $B$ of second branch
   (decreasing and then increasing Reynolds number), grid $96 \times 96$}
   \label{fig:lsa_branch2}
@@ -296,7 +303,7 @@ $96 \times 96$.
 
 \begin{figure}[h!]
   \centering
-  \includegraphics[width=0.6\textwidth]{figs/lsa_sn_zoom96x96.png}
+  \includegraphics[width=0.6\textwidth]{figs/lsa_sn_zoom96x96.pdf}
   \caption{Zoom of figure \ref{fig:lsa} on location of saddle-node at Reynolds $353.654$} 
   \label{fig:lsa_zoom}
 \end{figure}

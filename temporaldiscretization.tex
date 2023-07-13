@@ -122,26 +122,26 @@ conditioned.
 
 \subsection{Preliminary Results with Time Integration}
 
-To motivate the following next section on bifurcation analysis, the logical next
+To motivate the following section on bifurcation analysis, the logical next
 step would be to use the time integration and the spectral discretization to
 compute solutions of the streamfunction equation \eqref{eq:str}. It is then
 interesting to see if the regularized problem will produce such asymmetric
 solutions shown in \ref{fig:4fsc_states}. Figure \ref{fig:timestepping} shows
 the time-stepping result for a Chebyshev grid of size $64 \times 64$. The time
-stepper is launched with random noise to avoid converging to the symmetric
-solution.
+stepper is launched at different Reynolds numbers with various initial random
+noise of the order of $10^{-3}$ to avoid converging to the symmetric solution.
 
 \begin{figure}[ht!]
 \begin{center}
-  \includegraphics[width=0.4\textwidth]{figs/timestepping_inf.png}
+  \includegraphics[width=0.65\textwidth]{figs/timestepping64x64.pdf}
 \end{center}
 \caption{Value of the center grid point of the streamfunction after $150$
-  timesteps with $h=1$ for different Reynolds numbers}
+  timesteps with $h=1$ for different Reynolds numbers up to $160$}
 \label{fig:timestepping}
 \end{figure}
 
-It becomes clear that as a certain Reynolds number (around $60$) of two
-asymmetric solution branches start which are the same solutions as in the
+It becomes clear that at a certain Reynolds number (around $60$), two
+asymmetric branches start to emerge, which are the same solutions as in the
 non-regularized case. Furthermore, the base symmetric solutions are unstable.
 To analyze such different solution types, we will have to introduce tools of
 bifurcation analysis.
