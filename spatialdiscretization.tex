@@ -14,7 +14,7 @@ The most established ones are finite elements, finite differences, or finite
 volume for 3D discretizations. These discretization techniques are referred to
 as local techniques because the values and derivatives of a grid point only
 affect other nearby points. They employ local basis functions to approximate
-the local behavior and offer flexibility in handling irregular and complex
+the solution and offer flexibility in handling irregular and complex
 geometries. These techniques are widely adopted in engineering due to their
 practical implementation and adaptive refinement capabilities.
 
@@ -26,9 +26,10 @@ In the following discussion, we will explore why spectral methods are
 well-suited for studying the R4CF and its simple 2D geometry. Additionally, the
 significance of regularizing the boundary conditions will become clear. Most of
 the theory presented in this section is derived from the books \citet{boyd2001}
-and \citet{canuto2006}. It is important to note that this section deliberatly
-involves some simplifications and non-rigour to give a broad overview and
-justify applying pseudo-spectral Chebyshev discretization for the R4CF problem.
+and \citet{canuto2006}. It is important to note that this section deliberately
+involves some simplifications and non-rigor to give a broad overview and
+justify applying a pseudo-spectral Chebyshev discretization for the R4CF
+problem.
 
 \subsection{Spectral Methods}
 
@@ -38,13 +39,12 @@ categories. To demonstrate some of the underlying theory for spectral methods,
 we will examine a one-dimensional approximation based on a finite series
 expansion of $n+1$ points with a basis functions $\psi_i$ and unknown
 coefficients $a_i$:
-
 \begin{align}
 u(x) \approx u_n(x) = \sum_{i=1}^{n} a_i \, \psi_i. 
 \label{eq:approx}
 \end{align}
 
-The approximation can be plugged into a differential or integral equation of
+This approximation can be plugged into a differential or integral equation of
 the form $Lu=f(x)$ where $L$ is the operator of the equation. To assess the
 accuracy of the approximation, we can analyze the residual function, which
 gives the error between the approximation and the real solution. We note that
@@ -60,63 +60,56 @@ We can distinguish broadly between two categories of spectral methods. The
 choosing interpolation points on which the residual function should be exactly
 zero. This technique is also referred to as \emph{collocation}. Through the
 $n+1$ points that are obtained, the coefficients $a_i$ can be determined. The
-non-interpolating versions try to use Galerkin's method or Lanczos tau-method
-to solve the equation by multiplying with a test-function ($\phi_i$) and by
-integrating the equation. This results in the integrated so-called weak form of
-the differential equation, and the residual is minimized in terms
-of the integral. In the case of the widely used Galerkin's method, the test
-function chosen to be of the form of the approximating (basis) function. In
-this sense, the residual is minimized in a weighted manner by multiplying with
-the basis function. It can be shown that Galerkin's method gives more accurate results
+non-interpolating versions use Galerkin's method or Lanczos' tau-method to
+solve the equation by multiplying with a test function $\phi_i$ and integrating
+the equation. This results in the integrated so-called weak form of the
+differential equation and the residual is minimized in terms of the integral.
+In the case of the widely used Galerkin's method, the test function is chosen
+to be of the form of the approximating (basis) function. In this sense, the
+residual is minimized in a weighted manner by multiplying with the basis
+function. It can be shown that Galerkin's method gives more accurate results
 than the collocation method. But due to the simplicity of solving the equation
-at the collocation point exactly, the pseudo-spectral approach is preferred and
-doesn't loose much accuracy. In this study, the spectral method is actually
-referring to the pseudo-spectral approach.
+at the collocation point exactly, the pseudo-spectral approach is usually
+preferred and doesn't lose much accuracy. In this study, the spectral method is
+actually referring to the pseudo-spectral approach.
 
 From the point of view of interpolation theory, using the collocation method is
 de facto equivalent to an implicit polynomial interpolation at specified grid
-points in the physical space. The question now is how to choose the right
-collocation points. It turns out that if we use unevenly spaced grids
-corresponding to the roots of orthogonal polynomials (Chebyshev, Fourier or
-Lagrange), we get a much better interpolation compared to an evenly spaced
-grid. These grids have a Lebesgue constant of order $1$ and, thus, are
-conditioning of the interpolation. Further, the Weierstrass approximation
-theorem ensures that any bounded function can be approximated as closely as
-wanted.
+points in the physical space. In contrast to the basis function formulation
+defined in \eqref{eq:approx}, we don't have to compute the coefficients of the
+basis function but just choose the right collocation points to approximate the
+solution using these grid points. It turns out that if we use unevenly spaced
+grids corresponding to the roots of orthogonal polynomials (Chebyshev, Fourier,
+or Lagrange), we get a much better interpolation compared to an evenly spaced
+grid.
 
 \subsection{Spectral Convergence Rate and Singularities}
 
-A well-conditioned set of nodes achieves a spectral (exponential) convergence
-\citep{meseguer2020} rate. This is different from linear or quadratic
-convergence, where the rate is constant and equal to $1$ and $2$. A spectral
-convergence rate refers to the situation of having a rate which is potentially
-unbounded. To achieve, so an unevenly spaced grid, for example obtained by
-Chebyshev polynomials, are preferred as they have a small Lebesgue constant
-and thus mitigate numerical issues. 
+Such a well-conditioned set of nodes can achieve a spectral (exponential)
+convergence rate \citep{meseguer2020}. This is different from linear or
+quadratic convergence, where the rate is constant and equal to $1$ and $2$. A
+spectral convergence rate refers to the situation of having a rate that is
+potentially unbounded. To achieve this, unevenly spaced grids, for example,
+obtained by Chebyshev polynomials, are preferred as they have a small Lebesgue
+constant and thus good conditioning of the interpolation. This mitigates
+numerical issues. 
 
 Another point is that singularities in the function to be approximated broadly
 affect this convergence rate. If the function has singularities, we can't
-expect a spectral convergence rate and due to the global nature of a
-pseudo-spectral discretization all the grid points will be affected.
+expect a spectral convergence rate, and due to the global nature of a
+pseudo-spectral discretization, all the grid points will be affected.
 Furthermore, the gravest singularity dominates the actual convergence rate and
 the domain of convergence. In addition, the singularities outside the domain of
 interest may affect the convergence inside the area of interest. 
 
-\subsection{Why Regularizing the four-sided Cavity Flow?}
-
-Intuitively, it makes sense that the corresponding values at the grid point
-should also go to infinity at the singularities as the approximated function is
-itself unbounded. This can lead to poor approximation quality and renders the
-approximation useless in those regions due to oscillations \citep{canuto2006}.
-
-This is especially relevant in cases where the problem involves discontinuous
-boundary conditions and when the underlying mathematical problem has
-singularities, such as vorticity and pressure terms which diverge in the
-un-regularized cavity flows.
-
-This limitation is inherent to spectral methods. On the other hand, finite
-element methods are less affected since the singularity only contributes to a
-piecewise and low-order polynomial in the vicinity of the corner.
+From a physical perspective, singularities are present in cases where the
+problems involve discontinuous boundary conditions. Spectral methods are
+inherently affected by these discontinuities as the global nature of the
+discretization is "polluted" by the singularity and can render the
+approximation useless in those regions due to spurious modes and oscillations
+\citep{canuto2006}. On the other hand, finite element methods are less affected
+since the singularity only contributes to a piecewise and low-order polynomial
+in the vicinity of the corner.
 
 However, the strength of spectral methods lies in their ability to provide
 exact solutions for well-posed boundary conditions, ensuring exponential
@@ -124,33 +117,18 @@ convergence and serving as a benchmark for solvers. In real-world scenarios,
 extreme mathematical problems such are hardly ever encountered, mitigating the
 impact of singularities to some extent.
 
-In the setting of a benchmark solver that uses a pseudo-spectral method to
-guarantee a fast convergence to the solution, it seems that we have three
-essential options now. First, use substraction of the singularity, which was
-done by \citep{botella1998}, but this technique is rather complex. Secondly,
-one could use rounded borders, but this would lead to a complex geometry, and
-discretization errors at the corners are guaranteed. The third option is to
-assume well-posed, regularized boundary conditions to get an accurate solution
-to a slightly different cavity flow problem. In the interest of looking at the
-original problem with discontinuous boundary conditions, the regularization
-should be almost step-function-like to be similar to the original velocity
-profile.
-
 \subsection{Pseudo-spectral Discretization}
 
-The preceding sections explored the advantages of employing the pseudo-spectral
-approach. However, it has to be stressed that the actual interpolation points
-where we do the collocation have yet to be defined. A common choice are the
-previously mentioned Chebyshev nodes which are given by the roots of the
-Chebyshev polynomial and minimize the approximation error \citep{boyd2001}.
-Specifically, the discretization points for Chebyshev can be expressed as:
-
+A common choice for the interpolation points is to use the previously mentioned
+Chebyshev nodes which are given by the roots of the Chebyshev polynomial and
+minimize the approximation error \citep{boyd2001}. Specifically, these
+discretization points can be expressed as:
 \begin{align}
-x_i = \cos(\frac{i \pi}{n}), \quad j=0, 1,...,n.
+x_i = \cos(\frac{i \pi}{n}), \quad j=0, 1,\dots,n.
 \label{eq:cheb_nodes1d}
 \end{align}
 
-These definition yields $m+1$ points in the interval $[-1, 1]$. Notably, the
+These definition yields $n+1$ points in the interval $[-1, 1]$. Notably, the
 grid points cluster at the boundary. Figure \ref{fig:cheb_grid1d} illustrates a
 Chebyshev grid's unevenly spaced grid point distribution.
 
@@ -192,48 +170,42 @@ Chebyshev grid's unevenly spaced grid point distribution.
   \label{fig:cheb_grid1d}
 \end{figure}
 
-Utilizing these points, we can approximate a function within a given 1D domain
-and achieve the optimal approximation of Chebyshev polynomials, which could be
-recovered by going back to the representation with the coefficients $a_i$ (not
-discussed here).
-
 \subsection{Chebyshev Differentiation Matrix}
 
 If we would like to approximate derivatives in a discrete setting, using the
-concept of differentiation matrices is convenient. A derivate on a given set of
-nodes $\{x_0, x_1,..., x_n\}$ with respect to a function $f$, can be written as
-
+concept of differentiation matrices is convenient. A derivative on a given set
+of nodes $\{x_0, x_1,\dots, x_n\}$ with respect to a function $f$, can be written
+as,
 \begin{align}
-f(x_i)' = f_i' \approx \sum_{j=0}^{n}\mathbf{D}_{ij}f_j.
+f(x_i)' = f_i' \approx u_i' = \sum_{j=0}^{n}\mathbf{D}_{ij}f_j.
 \end{align}
 
 This formulation is commonly employed for finite difference approximations
 where the elements of the differentiation matrix $\mathbf{D}$ correspond to the
 derivatives of the respective cardinal functions. In the context of Chebyshev
 polynomials, we can utilize the same framework. The Chebyshev grid can be
-interpreted as an $n^{th}$-order finite difference approximation at non-equidistant
-grid points. For the 1D Chebyshev nodes, the differentiation matrix is given by
-\citep{meseguer2020}:
-
+interpreted as an $n^{th}$-order finite difference approximation at
+non-equidistant grid points. For the 1D Chebyshev nodes, the differentiation
+matrix is given by \citep{meseguer2020}:
 \begin{align}
 \mathbf{D}_{ij} =
 \begin{dcases}
-  (-1)^{i+j} \frac{\delta_j}{\delta_j(x_i - x_j)},
+  (-1)^{i+j} \frac{\delta_j}{\delta_j(x_i - x_j)}
     & (i \neq j), \\
   \frac{(-1)^{i+j}}{\delta_i} \sum^{n}_{k=0 \, (k \neq i)}
-    \frac{\delta_j}{x_i - x_k}, & (i = j).
+    \frac{\delta_j}{x_i - x_k}, & (i = j)
 \end{dcases}
 \label{eq:cheb_diff}
 \end{align}
 
-As mentioned earlier, the grid points cluster near the boundaries of the
+As mentioned before, the grid points cluster near the boundaries of the
 interval, which can result in small differences in function evaluations. The
 definition \eqref{eq:cheb_diff} utilizes a numerically more stable formula to
 address this issue.
 
-For higher-order derivates, one can calculate them by setting the matrix to the
-power of the given order. For instance, s second order is given as follows:
-
+Higher-order derivatives can be simply calculated by setting the matrix to the
+power of the order. For instance, an approximation of the second derivative of
+a function $f$ is given by:
 \begin{align}
   f_i'' \approx \sum_{j=0}^{n}\mathbf{D}_{ij}^{2}f_j.
 \end{align}
@@ -242,20 +214,20 @@ power of the given order. For instance, s second order is given as follows:
 
 To define a two-dimensional Chebyshev grid, we can extend the one-dimensional
 definition \eqref{eq:cheb_nodes1d} to both spatial directions, $(x_i, y_j)$:
-
+\vspace{-10pt}
 \begin{align} \label{eq:cheb_nodes2d}
   \begin{split}
-  x_i & = \cos(\frac{i \pi}{m}), \quad i = 0,1,...,m, \\ 
-  y_j &  = \cos(\frac{j \pi}{n}), \quad j = 0,1,...,n
+  x_i & = \cos(\frac{i \pi}{m}), \quad i = 0,1,\dots,m \\ 
+  y_j &  = \cos(\frac{j \pi}{n}), \quad j = 0,1,\dots,n
   \end{split}
 \end{align}
 
-Figure \ref{fig:cheb_grid2d} shows such a grid. Analogously to the
-1D case, points are clustered in the corner. \\
+Figure \ref{fig:cheb_grid2d} shows such a grid. Analogously to the 1D case,
+points are clustered in the corner. \\
 
 \begin{figure}[ht]
   \centering
-  \begin{tikzpicture}[scale=1.2]
+  \begin{tikzpicture}[scale=1]
   \def\n{7}
 
   \def\length{3}
@@ -272,8 +244,8 @@ Figure \ref{fig:cheb_grid2d} shows such a grid. Analogously to the
     }
   }
 
-  \draw[<->, thick] (\dotsize/2, -0.2) -- node[below] {$y$, $n+1$ points} (\length-\dotsize/2, -0.2);
-  \draw[<->, thick] (\length + 0.2, \dotsize/2) -- node[right] {$x$, $m+1$ points}
+  \draw[<->, thick] (\dotsize/2, -0.2) -- node[below] {$m+1$ points} (\length-\dotsize/2, -0.2);
+  \draw[<->, thick] (\length + 0.2, \dotsize/2) -- node[right] {$m+1$ points}
     (\length + 0.2, \length - \dotsize/2);
   \end{tikzpicture}
   \caption{2D Chebyshev grid points in a square domain ($m = n$).}
@@ -281,25 +253,25 @@ Figure \ref{fig:cheb_grid2d} shows such a grid. Analogously to the
 \end{figure}
 
 The next step is to define differentiation in the $x$ and $y$ direction of the
-grid of a function. One approach is to use the Kronecker delta product
-($\mathbf{D} = \mathbf{D_x} \otimes \mathbf{D_y}$) to create the differentiation
-matrix for a 2D scalar function $f(x,y)$ \citep{trefethen2000}. Each unknown
-value of the function corresponds to an element in a flattened vector. The
-differentiation matrices in both spatial directions are combined into a single,
-large matrix $\mathbf{D} \in \mathbb{R}^{(m+1)(n+1)\times(m+1)(n+1)}$. This
-matrix is multiplied by the vector to compute the derivatives. Although the
-matrix is not completely dense, higher derivatives result in a dense matrix. \\
+grid. One approach is to use the Kronecker delta product ($\mathbf{D} =
+\mathbf{D_x} \otimes \mathbf{D_y}$) to create the differentiation matrix for a
+2D scalar function $f(x,y)$ \citep{trefethen2000}. Each unknown value of the
+function corresponds to an element in a flattened vector. The differentiation
+matrices in both spatial directions are combined into a single, large matrix
+$\mathbf{D} \in \mathbb{R}^{(m+1)(n+1)\times(m+1)(n+1)}$. The matrix is
+multiplied by the flattened vector of the values at the grid points to compute
+the derivatives. Although this matrix is not completely dense, higher
+derivatives result in a dense matrix.
 
-Another approach is to consider the grid points as a matrix. Instead of
-representing the unknown values as a flattened vector, we can use a matrix
-$\Psi \in \mathrm{R}^{(m+1) \times (n+1)}$, where the grid points $ij$
+Another approach is to visualize the grid points as entries of a matrix.
+Instead of representing the unknown values as a flattened vector, we can use a
+matrix $\Psi \in \mathrm{R}^{(m+1) \times (n+1)}$, where the grid points $ij$
 correspond to the $ji$-th entry of the matrix $\Psi$. The spatial derivative of
 one grid point is then given by the relations \eqref{eq:discr_der} (Einstein's
 summation notation). All derivatives can then simply be obtained by multiplying
 $\mathbf{D_x}$ from the left with $\Psi$ for the $x$-derivative and $\Psi
 \mathbf{D_y}^T$ for the $y$-derivative. The matrix $\Psi$ is shown in figure
 \ref{fig:bc_psi}.
-
 \begin{align}
   \begin{split}
   \partial_x \Psi_{ij} = (\mathbf{D_x})_{ik} \Psi_{kj} \\
@@ -310,7 +282,6 @@ $\mathbf{D_x}$ from the left with $\Psi$ for the $x$-derivative and $\Psi
 
 For the streamfunction equation \eqref{eq:str}, the discrete Laplace operator
 $\Delta_{dis} \Psi$ and the biharmonic operator are defined as:
-
 \begin{align}
   \Delta_{dis} \Psi &= \mathbf{D_x}^2\Psi + \Psi{\mathbf{D_y}^2}^T \\
   \Delta_{dis}^2 \Psi &= \mathbf{D_x}^2(\Delta_{dis} \Psi) (\Delta_{dis}
@@ -319,67 +290,63 @@ $\Delta_{dis} \Psi$ and the biharmonic operator are defined as:
 
 Combining all the above, we can state the discrete streamfunction equation we
 want to solve numerically:
-
+\vspace{-5pt}
 \begin{align}
-\partial_t (\Delta_{dis} \Psi) = \frac{1}{\Rey} \Delta_{dis}^2 \Psi
+\partial_t (\Delta_{dis} \Psi) = \frac{1}{\Rey} (\Delta_{dis}^2 \Psi)
   + \mathbf{D_x}\Psi((\Delta_{dis}\Psi)\mathbf{D_y}^T)
   - \Psi\mathbf{D_y}^T (\mathbf{D_x}(\Delta_{dis} \Psi)). 
 \label{eq:str_dis}
 \end{align}
 
-As mentioned, $\Psi$ is a matrix representing the finite-dimensional
-approximation of the streamfunction and the matrix $\Delta_{dis} \Psi$ is the
-discrete Laplace of $\Psi$. The partial derivative with respect to time will be
-discussed in section \ref{sec:time} on temporal discretization.
+Here, $\Psi$ represents the matrix for the finite-dimensional approximation of
+the streamfunction. The discretized partial derivative with respect to time
+will be discussed in section \ref{sec:time} on the temporal discretization.
 
 \subsection{Incorporating the Boundary Conditions} \label{sec:bc}
 
-As seen in the section before, it is convenient for the R4CF to view the grid
-points as the transpose of the matrix $\Psi$, and so we can do derivation in
-$x$ and $y$ by just applying a matrix multiplication from the left or right
-with $\mathbf{D_x}$ or the transpose of $\mathbf{D_y}$ respectively. 
+As illustrated, it is convenient for the R4CF to view the grid points as the
+transpose of the matrix $\Psi$, and so we can do derivation in $x$ and $y$ by
+just applying a matrix multiplication from the left or right with
+$\mathbf{D_x}$ or the transpose of $\mathbf{D_y}$ respectively. 
 
-Incorporating the boundary conditions has to be carefully considered and can be
-done in many different ways. One option is to explicitly substitute the
+Now, incorporating the boundary conditions has to be carefully considered and
+can be done in many different ways. One option is to explicitly substitute the
 discrete equations into the equations for the boundary conditions (see
-\cite{meseguer2020}). As we will see in our case, the boundary conditions are
-simple enough to make the evaluation efficient.
-
-Recalling the tangential boundary conditions \eqref{reg_u_bca},
-\eqref{reg_u_bcb} and the definition of the stream function
-\eqref{eq:str_defx}, \eqref{eq:str_defy} we see that the boundary conditions
-are essential of "Dirichlet"-type as the streamfunction is defined through the
-derivative of the two velocity components. For clarity, this is shown below:
-
-\begin{eqnarray}
-\frac{\partial\Psi(x,\pm 1,t)}{\partial y} & = & \pm\left[\left(\rme^{k_0(x - 1)} - 1\right)
+\cite{meseguer2020}). Recalling the tangential boundary conditions
+\eqref{reg_u_bca} and \eqref{reg_u_bcb} and the definition of the
+streamfunction \eqref{eq:str_defx} and \eqref{eq:str_defy} we see that the
+boundary conditions are essential of "Neumann"-type as the streamfunction is
+defined through the derivative of the two velocity components. For clarity,
+this is shown below:
+\begin{align}
+\frac{\partial\Psi(x,\pm 1,t)}{\partial y} &= \pm\left[\left(\rme^{k_0(x - 1)} - 1\right)
   \left(\rme^{-k_0(x + 1)} - 1\right)\right]^2,\label{reg_psi_bca} \\
-  \frac{\partial\Psi(\pm 1,y,t)}{\partial x} & = & \mp\left[\left(\rme^{k_0(y - 1)} - 1\right)
+  \frac{\partial\Psi(\pm 1,y,t)}{\partial x} &= \mp\left[\left(\rme^{k_0(y - 1)} - 1\right)
   \left(\rme^{-k_0(y + 1)} - 1\right)\right]^2.\label{reg_psi_bcb}
-\end{eqnarray}
+\end{align}
 
-Furthermore, as stated above, the boundary components are only nonzero in the
-tangential direction of the four lids, meaning this corresponds to the derivate
-of the streamfunction normal to the boundary. Regarding the normal component of
-the velocity, we can use the fact is that the streamfunction is defined up to a
-constant. And the streamfunctions values can be set to $0$ at all the
-boundaries (outermost rows and columns of the matrix). As the geometric shape
+Furthermore, the boundary components are only nonzero in the tangential
+direction of the four lids, meaning this corresponds to the derivate of the
+streamfunction normal to the boundary. Regarding the normal component of the
+velocity, we can use the fact that the scalar streamfunction is defined up to a
+constant. And the streamfunctions values can be set to $0$ at all the lids of
+the cavity (outermost rows and columns of the matrix). As the geometric shape
 of the cavity is a square or rectangle, this tells us that the derivative of
 the streamfunction along the lids is $0$. Corresponding to the normal component
 of the velocity field, which ensures no flux outwards from within the cavity.
 
-Now we want to incoorporate the boundary conditions above \eqref{reg_psi_bca}
-and \eqref{reg_psi_bcb}, by expressing the first inner grid points (outermost
+The next step is to incorporate the boundary conditions \eqref{reg_psi_bca} and
+\eqref{reg_psi_bcb} above, by expressing the first inner grid points (outermost
 are all $0$) in terms of the other components. Using the Einstein summation
-convention, we can express the derivative of the streamfunction for the horizontal walls as,
-
+convention, we can write the derivative of the streamfunction for the
+horizontal walls as,
 \begin{align}
 \partial_x \Psi_{0j} = \sum_{k=0}^{m} (\mathbf{D_x})_{0k} \Psi_{kj}
-  &= \mycancel{=0}{\mathbf{D_x}_{00}\Psi_{kj}} + (\mathbf{D_x})_{01}\Psi_{1j} 
+  &= \mycancel{=0}{(\mathbf{D_x})_{00}\Psi_{kj}} + (\mathbf{D_x})_{01}\Psi_{1j} 
   + (\mathbf{D_x})_{0m-1}\Psi_{m-1j} +  \mycancel{=0}{(\mathbf{D_x})_{0m}\Psi_{mj}}
   + (\mathbf{D_x})_{0\bar{k}}\Psi_{\bar{k}j} \nonumber \\
   &= (\mathbf{D_x})_{01}\Psi_{1j} + (\mathbf{D_x})_{0m-1}\Psi_{m-1j}
-  + \mathbf{D_x}_{0\bar{k}}\Psi_{\bar{k}j}, \\
+  + (\mathbf{D_x})_{0\bar{k}}\Psi_{\bar{k}j}, \\
 \partial_x \Psi_{nj} = \sum_{k=0}^{m} (\mathbf{D_x})_{mk} \Psi_{kj}
   &= (\mathbf{D_x})_{m1}\Psi_{1j} + (\mathbf{D_x})_{mm-1}\Psi_{m-1j} 
   + (\mathbf{D_x})_{m\bar{k}}\Psi_{\bar{k}j}.
@@ -388,7 +355,7 @@ convention, we can express the derivative of the streamfunction for the horizont
 The same is the case for the derivatives in the $y$ direction. $\bar{k}$ is the
 index running from $k=1$ to $k=m-1$.
 
-We can express the above relations as a matrix equation:
+We can recast the above relations into a matrix equation:
 
 \begin{align}
 \underbrace{\begin{bmatrix} (\mathbf{D_x})_{01} & (\mathbf{D_x})_{0m-1} \\
@@ -411,17 +378,18 @@ We can express the above relations as a matrix equation:
 \label{eq:mat1}
 \end{align}
 
-The above matrix equation tells us that all elements on the first inner grid
-points for the horizontal components are explicitly given through the boundary
-conditions. The $2 \times 2$ matrix to the left is known in advance from the
-Cheyshev differentiation matrix. It follows that the inverse can be precomputed
-and reused in succeeding calculations whenever the boundary conditions have to
-be evaluated. The right part of the equations is given by the partial derivates
-and a sum of a matrix-vector product of the inner elements $\Psi$.
+The matrix equation \eqref{eq:mat1} tells us that all elements on the first
+inner grid points for the horizontal components are explicitly given through
+the boundary conditions. The $2 \times 2$ matrix to the left is known in
+advance from the Chebyshev differentiation matrix. It follows that the inverse
+can be pre-computed and reused in succeeding calculations whenever the boundary
+conditions have to be evaluated. The right part of the equations is given by
+the partial derivates and a sum of a matrix-vector product of the inner
+elements of $\Psi$.
 
 The same procedure can be applied to the $y$ derivatives of the streamfunction
-at the vertical wall. Similarly, we get again a matrix that can be pre-computed. 
-
+at the vertical wall. Similarly, we get another matrix where the inverse can be
+pre-computed. 
 \begin{align}
 \begin{bmatrix} \Psi_{i1} \\ \Psi_{in-1}
 \end{bmatrix} &=
@@ -429,7 +397,7 @@ at the vertical wall. Similarly, we get again a matrix that can be pre-computed.
 \end{bmatrix}}_{B^{-1}}
 \begin{bmatrix}
 \partial_y\Psi_{i0} - (\mathbf{D_y})_{0\bar{l}}\Psi_{i\bar{l}} \\
-\partial_x\Psi_{in} - (\mathbf{D_y})_{n\bar{l}}\Psi_{j\bar{l}} \\
+\partial_x\Psi_{in} - (\mathbf{D_y})_{n\bar{l}}\Psi_{i\bar{l}} \\
 \end{bmatrix}.
 \label{eq:mat2}
 \end{align}
@@ -445,14 +413,14 @@ columns which are computed with equation \eqref{eq:mat1} and \eqref{eq:mat2}.
   \begin{tikzpicture}
 
     \matrix (m) [matrix of math nodes, nodes in empty cells,
-                 minimum width=1.1cm]
+                 minimum width=1.05cm]
     {
       \Psi_{00} & \Psi_{01} & \dots & \Psi_{0j} & \dots & \Psi_{0n-1} & \Psi_{0n} \\
-      \Psi_{10} & \Psi_{11} & \dots & \Psi_{1j} & \dots & \Psi_{1n-1} & \Psi_{1n} \quad \\
+      \Psi_{10} & \Psi_{11} & \dots & \Psi_{1j} & \dots & \Psi_{1n-1} & \Psi_{1n} \\
       \vdots & \vdots & \ddots & \vdots & \reflectbox{$\ddots$} & \vdots & \vdots \\
       \Psi_{i0} & \Psi_{i1} & \dots & \Psi_{ij} & \dots & \Psi_{in-1} & \Psi_{0n} \\
       \vdots & \vdots & \reflectbox{$\ddots$} & \vdots & \ddots & \vdots & \vdots \\
-      \Psi_{m-10} & \Psi_{m-11} \quad & \dots & \Psi_{m-1j} & \dots & \Psi_{m-1n-1} & \Psi_{m-1n} \\
+      \Psi_{m-10} & \Psi_{m-11} & \dots & \Psi_{m-1j} & \dots & \Psi_{m-1n-1} & \Psi_{m-1n} \\
       \Psi_{m0} & \Psi_{m1} & \dots & \Psi_{mj} & \dots & \Psi_{m-1n} & \Psi_{mn} \\
     };
 
@@ -473,6 +441,8 @@ columns which are computed with equation \eqref{eq:mat1} and \eqref{eq:mat2}.
     \draw [decorate,decoration={brace,amplitude=5pt},xshift=-0.5cm,yshift=0.3cm] (m-7-1.south west) -- (m-1-1.north west) node [black,midway,xshift=-0.5cm] {$x$};
     \draw [decorate,decoration={brace,amplitude=5pt},xshift=0.3cm,yshift=0.5cm] (m-1-1.north west) -- (m-1-7.north east) node [black,midway,yshift=0.5cm] {$y$};
   \end{tikzpicture}
-  \caption{Elements of streamfunction matrix needed for the boundary calculation}
+  \caption{Elements of the streamfunction matrix representation $\Psi$, blue shading
+    corresponds to the inner rows computed in \eqref{eq:mat1} and red shading
+    to the columns calculated in \eqref{eq:mat1} }
   \label{fig:bc_psi}
 \end{figure}

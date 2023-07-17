@@ -1,5 +1,5 @@
 %-------------------------------------------------------------------------------
-% INTRODUCTION 
+%INTRODUCTION
 %-------------------------------------------------------------------------------
 
 \section{Introduction} \label{sec:intro}
@@ -22,12 +22,12 @@ is necessary to anticipate instabilities and comprehend the emergence of new
 flow states. That implies the seek for invariant sets or manifolds, the
 simplest cases being equilibria (steady flows) and periodic orbits
 (time-periodic flows). Although dynamically of high relevance, these manifolds
-are often linearly unstable, and therefore systematically overlooked by time
+are often linearly unstable and, therefore, systematically overlooked by time
 integrators of the Navier-Stokes equations, as time-stepping will only approach
 local attractors.
 
 Accurately computing steady or time-periodic flows, regardless of their
-stability,,requires the implementation of suitable continuation algorithms to
+stability, requires the implementation of suitable continuation algorithms to
 monitor them as the Reynolds number is varied \citep{kuznetsov2004}. Moreover,
 the linear stability analysis of these invariant flows is crucial for
 predicting potential local bifurcations in parameter space. However, this
@@ -44,7 +44,7 @@ have long been known for providing unbeatable exponential convergence, provided
 the domain is simple, and the boundary conditions are mathematically
 well-posed.
 
-For historical reasons, the one-sided version has received most attention among
+For historical reasons, the one-sided version has received more attention among
 the wide variety of two-dimensional lid-driven cavity flows
 \citep{kuhlmann2019}. This cavity consists of a square with one lid sliding at
 a uniform speed, and the three other lids are kept stationary. In this case,
@@ -52,29 +52,29 @@ the flow is steady and stable even for high Reynolds numbers. The first
 instability found is due to a Hopf bifurcation which may lie somewhere in the
 interval [7500, 8100] reported by different studies \citep{kuhlmann2019}. This
 uncertainty in the reported critical Reynolds number is due to multiple
-factors. For instance,  the large Reynolds number where the instability
-appears, demands very high resolutions in space and time, as well as the
-different spatial discretization techniques and methodologies used in the works
-to identify the bifurcation (time integration or linear stability analysis).
-Due to its simple geometry, the square lid-driven cavity has long been
-qualified as a good candidate for a canonical benchmark problem. Still,
-lid-driven cavity flow problems, in their original formulations, typically have
-singular boundary conditions at the corners, where the velocity profile is
+factors. For instance,  the large Reynolds number where the instability appears
+demands very high resolutions in space and time, as well as the different
+spatial discretization techniques and methodologies used in the works to
+identify the bifurcation (time integration or linear stability analysis). Due
+to its simple geometry, the square lid-driven cavity has long been qualified as
+a good candidate for a canonical benchmark problem. Still, lid-driven cavity
+flow problems, in their original formulations, typically have \red{singular
+boundary conditions} at the corners, where the velocity profile is
 discontinuous. In this case, the exponential convergence of spectrally
 approximated flow solutions is at stake. 
 
 The corner-singularity problem has, however, been successfully circumvented
 using different approaches, such as substraction methods \citep{botella1998},
-that removes the leading terms of the asymptotic expansion of the solution of
-the Navier-Stokes equations in the vicinity of the corners, thus recovering
-spectral accuracy. Another successful strategy to preserve exponential
-convergence when using spectral methods in lid-driven cavity flows is the
-regularization of the boundary conditions by replacing the original
-discontinuous profiles at the walls by polynomial or exponential velocity
-distributions that mimic the original problem while preserving smoothness at
-the corners \citep{shen1991, lopez2017}.
+which eliminates the dominant terms of the asymptotic expansion of the solution
+to the Navier-Stokes equations near the corners, thus recovering spectral
+accuracy. Another successful strategy to preserve exponential convergence when
+using spectral methods in lid-driven cavity flows is the regularization of the
+boundary conditions. By replacing the discontinuous profiles at the walls with
+polynomial or exponential velocity distributions, the original problem can be
+mimicked while preserving smoothness at the corners \citep{shen1991,
+lopez2017}.
 
-A more recent variant termed the four-sided cavity flow, has been proposed
+A more recent variant, termed the four-sided cavity flow, has been proposed
 \citep{wahba2009}. Here the four lids are moving at the same speed (top-bottom
 and right-left lids moving rightwards-leftwards and upwards-downwards,
 respectively). This cavity has the computational advantage of exhibiting a
@@ -89,20 +89,21 @@ performance comparable to compiled C/Fortran codes, making it an attractive
 platform for implementing scientific computing. A developed Julia module
 provides a reproducible example of the regularized cavity.
 
-The regularized, four-sided lid-driven cavity shows most of the primary
+The regularized four-sided lid-driven cavity shows most of the primary
 bifurcation scenarios. The flow undergoes instabilities, such as pitchfork,
-saddle-node (fold), and Hopf. Predicting the precise location of the
+saddle-node (fold), and Hopf. \red{Predicting} the precise location of the
 bifurcations could present an amenable benchmark when testing and comparing
 different discretization schemes and implementations. \\
 
-This master project is structured as follows. First, the driven cavity flow
-problem is reviewed. Then the governing equations are presented, followed by an
-introduction to the regularized four-sided lid-driven cavity. The necessary is
+This master project is structured as follows. First, a review of the driven
+cavity flow problem is provided. Then the four-sided lid-driven cavity flow is
+introduced, and the governing equations are presented, followed by an
+introduction to the regularized version. The necessary \red{theory} is
 developed in the theoretical part regarding spatial (spectral Chebyshev) and
 time discretization. The numerical tools required for bifurcation analysis of
-the flow are also explained. The subsequent step focuses on some implementation
+the flow are also explained. The subsequent step focuses on implementation
 details for the Julia programming language. Finally, the results of the
-regularized flows are presented and discussed, including stable and unstable
+regularized problem are presented and discussed, including stable and unstable
 solutions and the precise occurrences of bifurcations. The study concludes with
 a summary of the objectives, limitations, and recommendations for future
 research.

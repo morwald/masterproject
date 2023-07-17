@@ -6,6 +6,12 @@
 
 \begin{document}
 
+% Ajust display skips between paragraphs and equations
+\setlength\abovedisplayskip{11pt}
+\setlength\belowdisplayskip{11pt}
+\setlength\abovedisplayshortskip{11pt}
+\setlength\belowdisplayshortskip{11pt}
+
 %-------------------------------------------------------------------------------
 % TITLE PAGE 
 %-------------------------------------------------------------------------------
@@ -59,9 +65,17 @@
 \input{governingequations.tex}
 
 %-------------------------------------------------------------------------------
+% REGULARIZATION 
+%-------------------------------------------------------------------------------
+
+\clearpage
+\input{regularization.tex}
+
+%-------------------------------------------------------------------------------
 % SPATIAL DISCRETIZATION 
 %-------------------------------------------------------------------------------
 
+\clearpage
 \input{spatialdiscretization.tex}
 
 %-------------------------------------------------------------------------------
@@ -83,13 +97,14 @@
 \input{implementationaspects.tex}
 
 %-------------------------------------------------------------------------------
-% RESULTS AND DISCUSSION
+% RESULTS
 %-------------------------------------------------------------------------------
 
-\input{resultsdiscussion.tex}
+\clearpage
+\input{results.tex}
 
 %-------------------------------------------------------------------------------
-% CONCLUSION
+% CONCLUSION AND FURTHER WORK
 %-------------------------------------------------------------------------------
 
 \input{conclusion.tex}
