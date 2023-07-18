@@ -84,7 +84,7 @@ every function call. The optimized, allocation-free version is shown in the
 second code snippet. 
 
 \begin{jllisting}[caption=Optimized implementation in Julia of the nonlinear
-  function $F$ \vspace{4pt},float]
+  function $F$ \vspace{4pt}]
 function f!(fu, u, p::CavityStruct)
     @unpack Re, n, D1, D2, D4 = p.params
     @unpack fΨ, Ψ, D2Ψ, ΨD2, D4Ψ, ΨD4, laplΨ, biharmΨ = p.cache

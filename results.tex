@@ -2,7 +2,7 @@
 % RESULTS
 %-------------------------------------------------------------------------------
 
-\section{Results} \label{sec:res}
+\section{Results \red{and Discussion}} \label{sec:res}
 
 \subsection{Outline of Bifurcation Diagram}
 
@@ -14,12 +14,10 @@ occurred along with their corresponding critical Reynolds numbers. As
 mentioned, only a square cavity is considered for this study, and no aspect
 ratios have been varied.
 
-The critical Reynolds numbers reported were determined by linearly
+The critical Reynolds numbers reported were determined by \red{linearly}
 interpolating the eigenvalues between two states of the pseudo-arclength
 continuation algorithm where the eigenvalue crosses the imaginary axis in the
-complex plane. When eigenvalues are only touching the real line (i.e., no
-crossing), the Reynolds number with the smallest eigenvalue evaluated has been
-reported. The reported results are rounded to three significant digits.
+complex plane. The reported results are rounded to three significant digits.
 
 \begin{table}[h!]
   \centering
@@ -39,9 +37,9 @@ $H$, Hopf bifurcation of the asymmetric steady solution & $348.319$ \\
 
 \begin{table}[h!]
   \centering
-  \caption{Critical Reynolds numbers depending on the grid size $m$ of the two
+  \caption{Critical Reynolds numbers for different grid sizes $m$ of the two
     pitchfork bifurcations of the symmetric base flow, $\Rey_c^{P_1}$ and
-    $\Rey_c^{P_2}$, and of the saddle-node, the third pitchfork and Hopf
+    $\Rey_c^{P_2}$, \sout{and} of the saddle-node, the third pitchfork and Hopf
     bifurcations corresponding to the asymmetric steady solution,
     $\Rey_c^{SN}$, $\Rey_c^{P_3}$ and $\Rey_c^{H}$ respectively. For the Hopf
     bifurcation, the imaginary part $\omega_c^{H}$ corresponding to the
@@ -64,7 +62,7 @@ $96$ & $66.197$ & $172.708$ & $348.319$ & $0.0599$ & \red{$353.357$} & $353.654$
     \node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[width=0.9\textwidth]{figs/bifurcation_diag64x64.pdf}};
       \begin{scope}[x={(image.south east)},y={(image.north west)}]
           \draw (0.872,0.72) circle [radius=14pt];
-          % \draw[->] (0.868,0.72) -- (0.9,0.72) 
+          \draw[-latex] (0.92,0.728) -- (0.95,0.733);
           \node[anchor=south west,inner sep=0] (image) at (0.8,0.65) {\includegraphics[width=0.3\textwidth]{figs/bifurcation_diag_zoom64x64.pdf}};
       \end{scope}
   \end{tikzpicture}
@@ -78,11 +76,11 @@ the regularized version resembles the non-regularized one regarding
 bifurcations and the shape of the asymmetric branches. The reported critical
 Reynolds numbers for the pitchforks $P_1$ and $P_2$ are close to those of the
 original problem (scaled by $2$, see section \ref{sec:regul}). We can also see
-how the regularized version converges rapidly, with only the third decimal
-digits changing from a grid of size $48 \times 48$ or larger for the two
-pitchforks and the saddle-node bifurcation. However, it is worth mentioning
-that the pitchfork $P_2$ is not a true pitchfork as only unstable branches
-(represented by the dashed line) join at this bifurcation.
+how the regularized version converges rapidly, with only the changes third
+decimal digits (or smaller) changing from a grid of size $48 \times 48$ or
+larger for the two pitchforks and the saddle-node bifurcation. However, it is
+worth mentioning that the pitchfork $P_2$ is not a true pitchfork as only
+unstable branches (represented by the dashed line) join at this bifurcation.
 
 On the other hand, it has been observed that the critical value for the
 saddle-node in the regularized version deviates significantly from the original
@@ -99,29 +97,52 @@ bifurcation ($H$) at the asymmetric branch. Furthermore, a pitchfork
 bifurcation ($P_3$) was found with a critical Reynolds number close to the
 saddle-node. Another branch is emerging at that location, displaying a
 different asymmetric flow pattern. The following two subsections will discuss
-these two bifurcation scenarios in more detail. 
+these two bifurcation scenarios in more detail.
 
 \subsection{Hopf Bifurcation and Time-Periodic Flows}
 
-The Hopf bifurcation at a critical Reynolds of around $348.3$ has not been
-reported in any of the previous studies. The question that arises is if the
-Hopf bifurcation is subcritical or supercritical. For the subcritical case, we
-should be able to detect a stable time-periodic flow before and after the Hopf
-bifurcation. After the critical value for the Hopf, all steady-solutions become
-unstable, and launching a time-stepper with random values of the order of
-$10^{-3}$ does reveal trajectories converging to stable periodic orbits, which
-are shown in figure \ref{fig:orbit}. In order to visualize the orbit in the
-phase space, the average of the vertical and horizontal velocities at the top
-and left mid-points of the cavity (as defined in figure \ref{fig:cav_domain})
-is used. In figure \ref{fig:orbit_bif_diag}, the amplitude of these
-oscillations is shown in terms of the center value of the streamfunction and
-compared to the unstable branches. Notably, the magnitudes are greater than the
-expected square root growth of amplitude for unstable oscillations that
-characterize a supercritical Hopf bifurcation. One can also recognize that the
-stable periodic orbits pass close by the two locally attracting lower
-asymmetric branches.
+The Hopf bifurcation was found at a critical Reynolds of $348.319$ and has not
+been reported in previous studies. Now, the question arises if the Hopf
+bifurcation is subcritical or supercritical. 
 
-\begin{figure}[ht]
+For a subcritical case, we should be able to detect a stable time-periodic flow
+at Reynolds numbers before and after the Hopf bifurcation. At higher Reynolds
+numbers than the critical value of the Hopf, all steady solutions become
+unstable, and if we launch a time-stepper with random noise, we should observe
+time-periodic flows. If these orbits converge to a limit cycle, we can expect
+that it will be a Hopf of subcritical nature.
+
+Doing so does reveal trajectories converging to stable periodic orbits,
+depicted in figure \ref{fig:orbits} for three distinct Reynolds numbers. The
+orbits are visualized in a projection of the phase space using the average of
+the vertical and horizontal velocities at the top and left mid-points of the
+cavity (as defined in figure \ref{fig:cav_domain}). In figure \ref{fig:orbits},
+the amplitudes of these oscillations are also shown by extracting the center
+value of the streamfunction and are compared to the unstable branches. Notably,
+the magnitudes are greater than an expected square root growth of amplitude for
+unstable oscillations that characterize a supercritical Hopf bifurcation.
+
+Further, stable periodic orbits exist below the Hopf bifurcation's critical
+value. These orbits were obtained by extracting the solutions of the matrix
+$\Psi$ with the maximum amplitude from an orbit at a higher Reynolds number and
+then use this as an initial condition for the time-stepper. In this way, one
+can "continue" the branch of periodic orbits backward in Reynolds, similar to a
+natural continuation algorithm.
+
+The periodic orbits collapse at a Reynolds number of around $335$, and time
+evolutions at lower values will converge to one of the stable asymmetric
+branches. 
+
+Figure \ref{fig:orbits_zoom} shows a zoom of the phase portrait of figure
+\ref{fig:orbits} on the trajectories of the stable periodic orbits close to
+the upper unstable and stable branches. The blue dots refer to the value of
+these stationary solutions. One can also recognize that the stable periodic
+orbits pass close by the locally attracting lower unstable fixed point. The
+periodic orbit with a Reynolds number of $336$ is getting even closer to this
+fixed point. The collapse at around $335$ in Reynolds is suspected to form a
+connection with this unstable lower branch. \\\\
+
+\begin{figure}[!h]
   \begin{subfigure}[b]{0.42\textwidth}
   \centering
   \includegraphics[trim={3cm 0 4.6cm 0},clip,width=\textwidth]{figs/orbits_bif_diag64x64.pdf}
@@ -132,36 +153,34 @@ asymmetric branches.
   \end{subfigure}
   \caption{Periodic orbits at different Reynolds numbers, depicted in the
     bifurcation diagram and in a projection of phase space} 
-  \label{fig:orbit_bif_diag}
+  \label{fig:orbits}
 \end{figure}
 
-\begin{figure}[ht]
+\begin{figure}[!h]
   \centering
-  \includegraphics[width=0.8\textwidth]{figs/orbits_zoom64x64.pdf}
-  \caption{Zoom of periodic orbits at different Reynolds numbers, green dots denote
+  \includegraphics[trim={0 1cm 0 1cm},clip,width=0.8\textwidth]{figs/orbits_zoom64x64.pdf}
+  \caption{Zoom of periodic orbits at different Reynolds numbers, blue dots denote
   the locations of the two upper stable and unstable steady solutions}
-  \label{fig:orbit}
+  \label{fig:orbits_zoom}
 \end{figure}
-It becomes evident that stable orbits exist below the critical Reynolds number
-of the Hopf bifurcation. The periodic orbits below this Reynolds number are
-obtained by extracting the solutions of the $\Psi$ with the maximum amplitude
-and utilizing this as initial conditions for a lower Reynolds number in the
-time-stepper. These periodic orbits collapse at a Reynolds number of around
-\red{335}. Time evolutions at lower values will converge to one of the stable
-asymmetric branches. Additionally, unstable periodic orbits have been computed
-using the MATLAB version, with the Reynolds number lower than the critical
-value of the Hopf. The lower branch of these orbits connects to the lower
-asymmetric branch through a homoclinic connection. Figure
-\ref{fig:sub_hopf_sketch} illustrates what seems to be going on. It is still
-unclear what happens in the region after the collapse of the stable larger
-periodic orbits and before the homoclinic connection. Two stable solutions
-coexist in this interval, namely the stable asymmetric branch and the stable
-periodic orbit. From a dynamical systems point of view, these stable solutions
-have to be separated by an unstable branch. This remains unclear, but this
-likely corresponds to a subcritical Hopf.
+
+Additionally, unstable periodic orbits have been computed using the MATLAB
+version, with the Reynolds number lower than the critical value of the Hopf.
+The lower branch of these orbits connects to the lower asymmetric branch
+through a homoclinic connection. Figure \ref{fig:sub_hopf_sketch} illustrates
+what seems to be going on. It is still unclear what happens in the region after
+the stable larger periodic orbits collapse and before the homoclinic
+connection. Two stable solutions coexist in this interval, namely the stable
+asymmetric branch and the stable periodic orbit. From a dynamical systems point
+of view, these stable solutions must be separated by an unstable branch. 
+
+Another option could be that these two branches are connected, forming a
+saddle-node of orbits. However, this is not the case because the homoclinic
+connection and the collapse of the subcritical periodic orbits happen at
+different critical Reynolds numbers. What the separating branch is, remains
+unclear, but the bifurcation likely corresponds to a subcritical Hopf.
 
 \begin{figure}[h!]
-\vspace{20pt}
 \centering
 \begin{tikzpicture}[scale=0.5]
   \draw[thick, dashed] plot[smooth,domain=-2.8:1.5] ({-\x*\x},\x);
@@ -228,7 +247,6 @@ in orange) lies within a range of $0.3$ in Reynolds. \\\\
 \begin{minipage}[b]{.35\textwidth}
   \centering
   \begin{tabular}{crrr}
-  \label{tab:cross}
   $n$ & $A$ ($H$) & $B$ ($P_3$) & $C$ ($SN$) \\
   \hline
   $64$ & $348.19$ & $353.356$ & $353.656$ \\
@@ -237,13 +255,14 @@ in orange) lies within a range of $0.3$ in Reynolds. \\\\
   & & & \\
 \end{tabular}
 \captionof{table}{Critical Reynolds numbers where crossings appear. \newline \newline}
+\label{tab:cross}
 \end{minipage}
 \end{minipage}
 \smallskip
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.8\textwidth]{figs/lsa_sn96x96.pdf}
+  \includegraphics[width=0.75\textwidth]{figs/lsa_sn96x96.pdf}
   \caption{Linear stability analysis around saddle-node (increasing and
     decreasing Reynolds number), the real part of the three largest eigenvalues
     are shown, grid $96 \times 96$} 
@@ -253,7 +272,7 @@ in orange) lies within a range of $0.3$ in Reynolds. \\\\
 Additionally, close to the saddle-node, another unstable branch emerges, which
 was detected by starting the natural continuation algorithm near the critical
 Reynolds of the fold. This branch is depicted in figure \ref{fig:branch2} and
-contains unstable solutions. The figure shows the projections onto the $\Psi$
+contains unstable fixed points. The figure shows the projections onto the $\Psi$
 and $u_T$ planes to distinguish the branches. One can see that for the new
 branch, the center value of the streamfunction is not changing significantly,
 whereas, for both the asymmetric and the second branch, there is a slight
@@ -266,7 +285,7 @@ Linear stability analysis around the pitchfork of this new branch (figure
 \begin{figure}[h!]
   \centering
   \includegraphics[width=0.8\textwidth]{figs/branch2_64x64.pdf}
-  \caption{3D plot of the asymmetric branch (blue) and second branch (green) and the
+  \caption{3D plot of the asymmetric branch (blue) and second branch (light blue) and the
     connection of the two branches at pitchfork $P_3$ ($B$)}
   \label{fig:branch2}
 \end{figure}
@@ -283,15 +302,16 @@ symmetry is no longer valid for these branches. However, both branches exhibit
 the rotational symmetry to one another.
 
 \begin{figure}[h!]
-\begin{subfigure}[b]{0.33\textwidth}
+\centering
+\begin{subfigure}[b]{0.3\textwidth}
   \centering
   \includegraphics[trim={2cm 0 2cm 0},clip,width=\textwidth]{figs/psi_Re353.356_pf3.pdf}
 \end{subfigure}
-\begin{subfigure}[b]{0.33\textwidth}
+\begin{subfigure}[b]{0.3\textwidth}
   \centering
   \includegraphics[trim={2cm 0 2cm 0},clip,width=\textwidth]{figs/psi_Re375.000_branch2_u_t_smaller.pdf}
 \end{subfigure}
-\begin{subfigure}[b]{0.33\textwidth}
+\begin{subfigure}[b]{0.3\textwidth}
   \centering
   \includegraphics[trim={2cm 0 2cm 0},clip,width=\textwidth]{figs/psi_Re375.000_branch2_u_t_bigger.pdf}
 \end{subfigure}
@@ -302,7 +322,7 @@ the rotational symmetry to one another.
 
 \begin{figure}[h!]
   \centering
-  \includegraphics[width=0.7\textwidth]{figs/lsa_branch2_96x96.pdf}
+  \includegraphics[trim={0 2.5cm 0 1cm},clip,width=0.8\textwidth]{figs/lsa_branch2_96x96.pdf}
   \caption{Linear stability analysis around connection $B$ of second branch
   (decreasing and then increasing Reynolds number), grid $96 \times 96$}
   \label{fig:lsa_branch2}
@@ -319,10 +339,10 @@ saddle-node $C$ is, first of all, that the two eigenvalues lose their imaginary
 part and become purely real. Moreover, this takes place at a nonzero real part.
 What seems to be happening is that one of the complex pairs (now real) "jumps"
 and becomes negative. The eigenvalue configuration is depicted in the complex
-plane in figure \ref{fig:complexplane} to illustrate the behavior. This
-explanation is speculative because we cannot be sure that it is the eigenvalue
-corresponding to the complex pair that becomes stable. It could be that two
-positive eigenvalues meet at the saddle-node.
+plane in figure \ref{fig:complexplane} to illustrate the behavior at the
+saddle-node. This explanation is speculative because we cannot be sure that it
+is the eigenvalue corresponding to the complex pair that becomes stable. It
+could be that two positive eigenvalues meet at the saddle-node.
 
 Another reason for being cautious with our interpretation is that the
 saddle-node is a highly degenerated point where the Jacobian is
@@ -332,12 +352,11 @@ even be that the saddle-node corresponds to a double or triple zero, and
 multiple eigenvalue crossings coincide. Nonetheless, these results were
 obtained on a large grid for a pseudo-spectral code of size $96 \times 96$.
 
-\vspace{100pt}
-
 \begin{figure}[h!]
   \centering
-  \includegraphics[width=0.6\textwidth]{figs/lsa_sn_zoom96x96.pdf}
-  \caption{Zoom of figure \ref{fig:lsa} on location of saddle-node at Reynolds $353.654$} 
+  \includegraphics[width=0.7\textwidth]{figs/lsa_sn_zoom96x96.pdf}
+  \caption{Zoom of figure \ref{fig:lsa} on saddle-node bifurcation, grid $96
+    \times 96$} 
   \label{fig:lsa_zoom}
 \end{figure}
 
