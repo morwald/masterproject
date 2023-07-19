@@ -8,10 +8,10 @@ We have seen that the problem involves more bifurcation scenarios than
 anticipated. We want to finish with the discussion on further improvements and
 future work. The abovementioned more complicated crossing at the saddle-node
 needs further refinement of the states of the continuation algorithm. An exact
-comparison to the MATLAB code at a higher resolution would be required to
-clarify the issue. Nevertheless, it seems that the Hopf bifurcation and
-pitchfork $P_3$ can be seen independent of the problem arising at the
-saddle-node. 
+comparison to the MATLAB code at a higher resolution of the points on the
+continuation curve would be required to clarify the issue. Nevertheless, it
+seems that the Hopf bifurcation and pitchfork $P_3$ can be seen independent of
+the problem arising at the saddle-node. 
 
 Another possible future investigation is related to the symmetries of the
 cavity. Using a square cavity and having the four lid's velocities changing at
@@ -20,9 +20,9 @@ a geometrical point of view, that reflects that we are moving on a line in a
 four-dimensional space of the four Reynolds numbers that could be varied.
 
 To get a better picture of what is happening, one could break the symmetries of
-the problem and impose different velocities at the four lids and thus different
-Reynolds numbers. This could separate the dense scenario of eigenvalues near
-the saddle-node.
+the problem and impose different velocities at the four lids and, thus,
+different Reynolds numbers. This could separate the dense scenario of
+eigenvalues near the saddle-node.
 
 Moreover, we have always worked with the regularized version to be sure of the
 convergence rate for our pseudo-spectral discretization. It could be
@@ -45,8 +45,8 @@ saved using a CSV format, and the values of the streamfunctions at the grid
 points are stored in plain text files. A further optimization could be to save
 results as binaries in an HDF5 format directly. This could easily be done with
 a package called \emph{JLD.jl} and would probably reduce the code size and
-simplify the results handling. Another improvement worse mentioning is that the
-code is divided into the core functions explained in section \ref{sec:impl} ant
+simplify the results handling. Another improvement worth mentioning is that the
+code is divided into the core functions explained in section \ref{sec:impl} and
 into the code necessary to run the simulations and generate the plots. The
 Julia module only includes the core functions mentioned in the implementation
 section for readability. It could be beneficial to have both parts reconciled,
@@ -56,21 +56,24 @@ In conclusion, this master project focused on the four-sided lid-driven cavity
 flow using regularized boundary conditions. The study's spectral Chebyshev
 discretization technique combined with the regularization yields highly
 accurate results having an exponential convergence rate as the grid size
-increases. We have seen that the RC4F exhibits a wide variety of bifurcation
-scenarios. The regularized version recovers the asymmetric branches of the
-problem with discontinuous boundary conditions. The original bifurcations have
-been detected, namely the two pitchforks of the base flow and the saddle-node
-of the un-regularized version. Further, in the regularized version, a Hopf
-bifurcation of the asymmetric solution branch was found at a Reynolds number of
-$348.319$. Additionally, a third pitchfork occurs close to the saddle-node at
-$353.347$ in Reynolds. The connected unstable branch breaks the $\pi$-rotation
-symmetry of the asymmetric solutions. On the other hand, for the saddle-node
-bifurcation, further investigation is required due to an unclear eigenvalue
-crossing, possibly associated with a complex conjugate pair. The presence of
-three pitchfork bifurcations and the Hopf bifurcation in this problem offers
-robust scenarios to benchmark a Navier-Stokes solver. The regularized
-four-sided lid-driven cavity only requires slight adaptations from the
-classical one-sided version, making it easily applicable to existing codes.
+increases. We have seen that the R4CF exhibits a wide variety of bifurcation
+scenarios at much more moderate Reynolds numbers, so that different
+discretizations of the Navier-Stokes equations can be easily tested.
+
+The regularized version recovers the asymmetric branches of the problem with
+discontinuous boundary conditions without regularization. The original
+bifurcations have been detected, namely the two pitchforks of the base flow and
+the saddle-node of the non-regularized version. Further, in the regularized
+version, a Hopf bifurcation of the asymmetric solution branch was found at a
+Reynolds number of $348.319$. Additionally, a third pitchfork occurs close to
+the saddle-node at $353.347$ in Reynolds. The connected unstable branch breaks
+the $\pi$-rotation symmetry of the asymmetric solutions. On the other hand, for
+the saddle-node bifurcation, further investigation is required due to an
+unclear eigenvalue crossing, possibly associated with a complex conjugate pair.
+The presence of three pitchfork bifurcations and the Hopf bifurcation in this
+problem offers robust scenarios to benchmark a Navier-Stokes solver. The
+regularized four-sided lid-driven cavity only requires slight adaptations from
+the classical one-sided version, making it easily applicable to existing codes.
 This modified setup allows for testing the multiplicity of states and periodic
 orbits at low to moderate Reynolds numbers provide the means to assess a
 solver's capability in identifying these solution types and the oscillatory

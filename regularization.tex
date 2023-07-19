@@ -33,15 +33,16 @@ bifurcation points can thus be calculated more reliably.
 
 \subsection{The Regularized Four-Sided Lid-Driven Cavity Flow (R4CF)} \label{sec:r4sc}
 
-Illustrated below is the domain we will use for the regularized four-sided
-cavity flow problem (R4CF). To distinguish between different states, it is
-useful to monitor not only the streamfunction value at the center but also the
-horizontal and vertical velocities at the left and top midpoints of the domain.
-The motivation for using a normalized domain of $[-1,1]\times[-1,1]$ centered
-at the origin instead of the classical on, $[0,1]\times[0,1]$, is that, on the
-one hand, the reflectional symmetries of the flow are more natural, just
-implying a change of sign of the spatial variables $x$ or $y$. On the other
-hand, the $[-1,1]$ interval is the canonical domain for orthogonal polynomials. 
+The domain we will use for the regularized four-sided cavity flow problem
+(R4CF) is illustrated in figure \ref{fig:cav_domain}. To distinguish between
+different states, it is useful to monitor not only the streamfunction value at
+the center but also the horizontal and vertical velocities at the left and top
+midpoints of the domain. The motivation for using a normalized domain of
+$[-1,1]\times[-1,1]$ centered at the origin instead of the classical on
+$[0,1]\times[0,1]$, is that, on the one hand, the reflectional symmetries of
+the flow are more natural, just implying a change of sign of the spatial
+variables $x$ or $y$. On the other hand, the $[-1,1]$ interval is the canonical
+domain for orthogonal polynomials. 
 
 \begin{figure}[ht]
 \centering
@@ -156,5 +157,5 @@ Using a regularized version, as presented above, will help to obtain numerical
 accurate results, but it makes it even harder to reproduce in practice. From
 the point of view of a benchmark for an instability analysis for different
 solvers, the resulting flow (whether fictional or not) should at least be
-precisely computable. This report will focus on this main aspect, meaning the
+precisely computable. This report will focus on this main aspect, that is the
 accurate computation of a well-posed mathematical problem. 

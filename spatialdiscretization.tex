@@ -37,10 +37,10 @@ Spectral methods encompass a range of global discretization techniques used to
 solve differential and integral equations and can be classified into two main
 categories. To demonstrate some of the underlying theory for spectral methods,
 we will examine a one-dimensional approximation based on a finite series
-expansion of $n+1$ points with a basis functions $\psi_i$ and unknown
+expansion of $m+1$ points with basis functions $\psi_i$ and unknown
 coefficients $a_i$:
 \begin{align}
-u(x) \approx u_n(x) = \sum_{i=1}^{n} a_i \, \psi_i. 
+u(x) \approx u_m(x) = \sum_{i=0}^{m} a_i \, \psi_i. 
 \label{eq:approx}
 \end{align}
 
@@ -57,12 +57,12 @@ function.
 We can distinguish broadly between two categories of spectral methods. The
 "interpolating" or "non-interpolating" versions \citep{boyd2001}. The so-called
 \emph{pseudo-spectral} or interpolating methods refer to the strategy of
-choosing interpolation points on which the residual function should be exactly
-zero. This technique is also referred to as \emph{collocation}. Through the
-$n+1$ points that are obtained, the coefficients $a_i$ can be determined. The
-non-interpolating versions use Galerkin's method or Lanczos' tau-method to
-solve the equation by multiplying with a test function $\phi_i$ and integrating
-the equation. This results in the integrated so-called weak form of the
+choosing a set of interpolation points. This technique is also referred to as
+\emph{collocation}. Through the $m+1$ equations that are obtained, the
+coefficients $a_i$ can be determined. The non-interpolating versions use
+Galerkin's method or Lanczos' tau-method to solve the equation by multiplying
+the residual function with a test function $\phi_i$ and integrating the
+equation. This results in the integrated so-called weak form of the
 differential equation and the residual is minimized in terms of the integral.
 In the case of the widely used Galerkin's method, the test function is chosen
 to be of the form of the approximating (basis) function. In this sense, the
@@ -74,10 +74,10 @@ preferred and doesn't lose much accuracy. In this study, the spectral method is
 actually referring to the pseudo-spectral approach.
 
 From the point of view of interpolation theory, using the collocation method is
-de facto equivalent to an implicit polynomial interpolation at specified grid
-points in the physical space. In contrast to the basis function formulation
-defined in \eqref{eq:approx}, we don't have to compute the coefficients of the
-basis function but just choose the right collocation points to approximate the
+similar to an implicit polynomial interpolation at specified grid points in the
+physical space. In contrast to the basis function formulation defined in
+\eqref{eq:approx}, we don't have to compute the coefficients of the basis
+function but just choose the right collocation points to approximate the
 solution using these grid points. It turns out that if we use unevenly spaced
 grids corresponding to the roots of orthogonal polynomials (Chebyshev, Fourier,
 or Lagrange), we get a much better interpolation compared to an evenly spaced
@@ -114,7 +114,7 @@ in the vicinity of the corner.
 However, the strength of spectral methods lies in their ability to provide
 exact solutions for well-posed boundary conditions, ensuring exponential
 convergence and serving as a benchmark for solvers. In real-world scenarios,
-extreme mathematical problems such are hardly ever encountered, mitigating the
+such extreme mathematical problems are hardly ever encountered, mitigating the
 impact of singularities to some extent.
 
 \subsection{Pseudo-spectral Discretization}
@@ -124,11 +124,11 @@ Chebyshev nodes which are given by the roots of the Chebyshev polynomial and
 minimize the approximation error \citep{boyd2001}. Specifically, these
 discretization points can be expressed as:
 \begin{align}
-x_i = \cos(\frac{i \pi}{n}), \quad j=0, 1,\dots,n.
+x_i = \cos(\frac{i \pi}{m}), \quad i=0, 1,\dots,m.
 \label{eq:cheb_nodes1d}
 \end{align}
 
-These definition yields $n+1$ points in the interval $[-1, 1]$. Notably, the
+These definition yields $m+1$ points in the interval $[-1, 1]$. Notably, the
 grid points cluster at the boundary. Figure \ref{fig:cheb_grid1d} illustrates a
 Chebyshev grid's unevenly spaced grid point distribution.
 
@@ -174,26 +174,26 @@ Chebyshev grid's unevenly spaced grid point distribution.
 
 If we would like to approximate derivatives in a discrete setting, using the
 concept of differentiation matrices is convenient. A derivative on a given set
-of nodes $\{x_0, x_1,\dots, x_n\}$ with respect to a function $f$, can be written
+of nodes $\{x_0, x_1,\dots, x_m\}$ with respect to a function $f$, can be written
 as,
 \begin{align}
-f(x_i)' = f_i' \approx u_i' = \sum_{j=0}^{n}\mathbf{D}_{ij}f_j.
+f(x_i)' = f_i' \approx u_i' = \sum_{j=0}^{m}\mathbf{D}_{ij}f_j.
 \end{align}
 
 This formulation is commonly employed for finite difference approximations
 where the elements of the differentiation matrix $\mathbf{D}$ correspond to the
 derivatives of the respective cardinal functions. In the context of Chebyshev
 polynomials, we can utilize the same framework. The Chebyshev grid can be
-interpreted as an $n^{th}$-order finite difference approximation at
+interpreted as an $m^{th}$-order finite difference approximation at
 non-equidistant grid points. For the 1D Chebyshev nodes, the differentiation
 matrix is given by \citep{meseguer2020}:
 \begin{align}
 \mathbf{D}_{ij} =
 \begin{dcases}
-  (-1)^{i+j} \frac{\delta_j}{\delta_j(x_i - x_j)}
+  (-1)^{i+j} \frac{\delta_j}{\delta_i(x_i - x_j)}
     & (i \neq j), \\
-  \frac{(-1)^{i+j}}{\delta_i} \sum^{n}_{k=0 \, (k \neq i)}
-    \frac{\delta_j}{x_i - x_k}, & (i = j)
+  \frac{(-1)^{i+j}}{\delta_i} \sum^{m}_{k=0 \, (k \neq i)}
+    (-1)^{k} \frac{\delta_k}{x_i - x_k}, & (i = j).
 \end{dcases}
 \label{eq:cheb_diff}
 \end{align}
@@ -201,13 +201,14 @@ matrix is given by \citep{meseguer2020}:
 As mentioned before, the grid points cluster near the boundaries of the
 interval, which can result in small differences in function evaluations. The
 definition \eqref{eq:cheb_diff} utilizes a numerically more stable formula to
-address this issue.
+address this issue and the coefficients $\delta$ are defined as $\delta_0 = \delta_m = 1/2$
+and $\delta_1 = \delta_2 = \dots = \delta_{m-1}$.
 
 Higher-order derivatives can be simply calculated by setting the matrix to the
 power of the order. For instance, an approximation of the second derivative of
 a function $f$ is given by:
 \begin{align}
-  f_i'' \approx \sum_{j=0}^{n}\mathbf{D}_{ij}^{2}f_j.
+  f_i'' \approx \sum_{j=0}^{m}\mathbf{D}_{ij}^{2}f_j.
 \end{align}
 
 \subsection{2D Chebyshev Discretization} \label{sec:2d_cheb}
@@ -315,7 +316,7 @@ discrete equations into the equations for the boundary conditions (see
 \cite{meseguer2020}). Recalling the tangential boundary conditions
 \eqref{reg_u_bca} and \eqref{reg_u_bcb} and the definition of the
 streamfunction \eqref{eq:str_defx} and \eqref{eq:str_defy} we see that the
-boundary conditions are essential of "Neumann"-type as the streamfunction is
+boundary conditions are essential of Neumann-type as the streamfunction is
 defined through the derivative of the two velocity components. For clarity,
 this is shown below:
 \begin{align}
@@ -339,27 +340,27 @@ The next step is to incorporate the boundary conditions \eqref{reg_psi_bca} and
 \eqref{reg_psi_bcb} above, by expressing the first inner grid points (outermost
 are all $0$) in terms of the other components. Using the Einstein summation
 convention, we can write the derivative of the streamfunction for the
-horizontal walls as,
+vertical walls as,
 \begin{align}
-\partial_x \Psi_{0j} = \sum_{k=0}^{m} (\mathbf{D_x})_{0k} \Psi_{kj}
+\partial_x \Psi_{0j} = \sum_{k=0}^{m} (\mathbf{D_x})_{0k} \Psi_{0j}
   &= \mycancel{=0}{(\mathbf{D_x})_{00}\Psi_{kj}} + (\mathbf{D_x})_{01}\Psi_{1j} 
   + (\mathbf{D_x})_{0m-1}\Psi_{m-1j} +  \mycancel{=0}{(\mathbf{D_x})_{0m}\Psi_{mj}}
   + (\mathbf{D_x})_{0\bar{k}}\Psi_{\bar{k}j} \nonumber \\
   &= (\mathbf{D_x})_{01}\Psi_{1j} + (\mathbf{D_x})_{0m-1}\Psi_{m-1j}
   + (\mathbf{D_x})_{0\bar{k}}\Psi_{\bar{k}j}, \\
-\partial_x \Psi_{nj} = \sum_{k=0}^{m} (\mathbf{D_x})_{mk} \Psi_{kj}
+\partial_x \Psi_{mj} = \sum_{k=0}^{m} (\mathbf{D_x})_{mk} \Psi_{kj}
   &= (\mathbf{D_x})_{m1}\Psi_{1j} + (\mathbf{D_x})_{mm-1}\Psi_{m-1j} 
   + (\mathbf{D_x})_{m\bar{k}}\Psi_{\bar{k}j}.
 \end{align}
 
 The same is the case for the derivatives in the $y$ direction. $\bar{k}$ is the
-index running from $k=1$ to $k=m-1$.
+index running from $k=1$ to $k=n-1$.
 
 We can recast the above relations into a matrix equation:
 
 \begin{align}
 \underbrace{\begin{bmatrix} (\mathbf{D_x})_{01} & (\mathbf{D_x})_{0m-1} \\
-    (\mathbf{D_x})_{01} & (\mathbf{D_x})_{0m-1} \\
+    (\mathbf{D_x})_{m1} & (\mathbf{D_x})_{mm-1} \\
 \end{bmatrix}}_{A \in \mathrm{R}^{2 \times 2}}
 \begin{bmatrix} \Psi_{1j} \\ \Psi_{m-1j}
 \end{bmatrix} &=
@@ -372,7 +373,7 @@ We can recast the above relations into a matrix equation:
 \underbrace{\begin{bmatrix} a_{11} & a_{12} \\ a_{21} & a_{22} 
 \end{bmatrix}}_{A^{-1}}
 \begin{bmatrix}
-\partial_x\Psi_{1j} - (\mathbf{D_x})_{0\bar{k}}\Psi_{\bar{k}j} \\
+\partial_x\Psi_{0j} - (\mathbf{D_x})_{0\bar{k}}\Psi_{\bar{k}j} \\
 \partial_x\Psi_{mj} - (\mathbf{D_x})_{m\bar{k}}\Psi_{\bar{k}j} \\
 \end{bmatrix}.
 \label{eq:mat1}
@@ -388,8 +389,8 @@ the partial derivates and a sum of a matrix-vector product of the inner
 elements of $\Psi$.
 
 The same procedure can be applied to the $y$ derivatives of the streamfunction
-at the vertical wall. Similarly, we get another matrix where the inverse can be
-pre-computed. 
+at the horizontal wall. Similarly, we get another matrix where the inverse can
+be pre-computed. 
 \begin{align}
 \begin{bmatrix} \Psi_{i1} \\ \Psi_{in-1}
 \end{bmatrix} &=

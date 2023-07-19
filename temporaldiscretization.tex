@@ -54,10 +54,10 @@ Given an autonomous ordinary differential equation (ODE) of the form:
 \end{equation}
 
 where $x$ represents the dependent variable and
-$f(x)$ is the derivative function with respect to $t$. The implicit Euler
+$f(x)$ is the derivative function with respect to $t$, the implicit Euler
 approximates the solution by
 \begin{equation}
-  x_{j+1} = x_j + h \cdot f(x_j),
+  x_{j+1} = x_j + h \cdot f(x_{j+1}),
 \end{equation}
 
 where $h$ is the timestep size and
@@ -79,9 +79,9 @@ derivative is applied to the Laplacian of the streamfunction. We get:
 
 This equation can be rewritten as follows:
 \begin{align}
-  F(\Psi_{j+1}) & = - \Delta\Psi_{j+1} + \Delta\Psi_j + h (\frac{1}{\Rey}\Delta^2 \Psi_j +
-    (\partial_x \Psi_j) \partial_y(\Delta \Psi_j) -
-    (\partial_y \Psi_j) \partial_x(\Delta \Psi_j)) \nonumber \\
+  F(\Psi_{j+1}) & = \Delta\Psi_j - \Delta\Psi_{j+1} + h (\frac{1}{\Rey}\Delta^2 \Psi_{j+1} +
+  (\partial_x \Psi_{j+1}) \partial_y(\Delta \Psi_{j+1}) -
+  (\partial_y \Psi_{j+1}) \partial_x(\Delta \Psi_{j+1})) \nonumber \\
   & =  0 \label{eq:newton_ts}
 \end{align}
 
