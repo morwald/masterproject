@@ -57,7 +57,7 @@ The flow observed in the upper corners is a result of the discontinuous
 boundary conditions in the mathematical problem and is caused by the horizontal
 component being set to a velocity $U$ at the upper corners, whereas the
 vertical walls are not moving. As a consequence, the pressure and the vorticity
-diverge at these locations. This phenomenon is a special case of Taylor's
+diverge at these locations. This phenomenon is a special case of the Taylor's
 scrapper problem, and there exist closed-form solutions in terms of series
 expansions \citep{kuhlmann2019}. The other effect worth mentioning is the
 formation of two eddies at the lower corners of the cavity. These vortices
@@ -73,12 +73,12 @@ different studies \citep{kuhlmann2019}. No conclusive results could be drawn
 due to significant uncertainty. The numerical variations are primarily the
 result of the large Reynolds number at which the bifurcations appear and the
 different discretizations used when solving the Navier-Stokes equations
-numerically. The other issue, as mentioned before, is the corner singularities
-caused by the discontinuous boundary conditions.
+numerically. As mentioned before, the other issue is related to the corner
+singularities caused by the discontinuous boundary conditions.
 
 Until now, we have restricted our attention only to the 2D single lid-driven
 case. However, there is a whole spectrum of different variants. The analysis
-can be performed for different aspect ratios (height-width ratio of the box),
+can be performed for different aspect ratios (height-width ratio of the box)
 and one can evaluate the effect on the flow pattern. Shapes other than a
 rectangular cavity can be considered as well. With more computing resources
 being available, the 3D variant has also been studied, giving rise to other
@@ -140,7 +140,7 @@ the boundary conditions.
 \label{fig:bc_types}
 \end{figure}
 
-\subsection{\red{The Four-Sided Lid-Driven Cavity Flow}} \label{sec:4sc}
+\subsection{The Four-Sided Lid-Driven Cavity Flow} \label{sec:4sc}
 
 We will focus on the four-sided version of the cavity flow problem. In this
 configuration, the top and bottom lids move in the rightward and leftward
@@ -185,7 +185,7 @@ on a finite-difference grid using the line successive over-relaxation method
 \begin{figure}[ht]
   \centering
   \includegraphics[width=0.6\textwidth]{figs/fig1_chen2013}
-  \caption{Symmetric and asymmetric solutions at Reynolds number, $Re=250$,
+  \caption{Symmetric and asymmetric solutions at Reynolds number $Re=250$,
     computed by \cite{chen2013}}
   \label{fig:4fsc_states}
 \end{figure}
@@ -203,28 +203,29 @@ discovered for the two-sided non-facing boundary conditions. On the other hand,
 in the four-sided version, no such bifurcation has been reported in the
 literature.
 
-A full bifurcation diagram was presented by \cite{chen2013}, which plots the
-streamfunction value at the center of the cavity against an increasing Reynolds
-number. Through a continuation algorithm, the asymmetric solution branches
-could be followed (see section \ref{sec:cont}) and are visualized in the
-diagram. The solid curves represent stable solutions, whereas the dashed curves
-correspond to unstable ones. One notices that the effect of changing the
-Reynolds number in the four-sided version reveals two pitchfork bifurcations
-and saddle-node (fold) points for the asymmetric solutions.
+A full bifurcation diagram (figure \ref{fig:bif_diag_chen}) was presented by
+\cite{chen2013}, which plots the streamfunction value at the center of the
+cavity against an increasing Reynolds number. Through a continuation algorithm,
+the asymmetric solution branches could be followed (see section \ref{sec:cont})
+and are visualized in the diagram. The solid curves represent stable solutions,
+whereas the dashed curves correspond to unstable ones. One notices that the
+effect of changing the Reynolds number in the four-sided version reveals two
+pitchfork bifurcations and saddle-node (fold) points for the asymmetric
+solutions.
 
 The bifurcation diagram generally illustrates that this could be an ideal
-bifurcation benchmark. The Reynolds numbers are within a low to moderate
-range, making it feasible from a computational point of view. The precise
-detection of the two asymmetric solutions can be used to assess the accuracy of
-a Navier-Stokes solver under test.
+bifurcation benchmark. The Reynolds numbers are within a low to moderate range,
+making it feasible from a computational point of view. The precise detection of
+the two asymmetric solutions can be used to assess the accuracy of a
+Navier-Stokes solver under test.
 
 However, it has to be mentioned that the bifurcation diagram was obtained using
-a \red{second-order finite differences scheme (non-uniform)}. As pointed out,
-the goal here is to look at a regularized problem with the aim of applying a
-spectral discretization and accurately resolving the locations of the
-bifurcations. To do so, the governing equations will now be introduced
-formally, and mathematical well-posed boundary conditions will be defined to
-achieve higher accuracy and an exponential convergence rate.
+a second-order finite differences scheme. As pointed out, the goal here is to
+look at a regularized problem with the aim of applying a spectral
+discretization and accurately resolving the locations of the bifurcations. To
+do so, the governing equations will now be introduced formally, and
+mathematical well-posed boundary conditions will be defined to achieve higher
+accuracy and an exponential convergence rate.
 
 \begin{figure}[h!]
   \centering

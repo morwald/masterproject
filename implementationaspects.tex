@@ -14,11 +14,11 @@ gives a code language-intermediated representation that is
 platform-independent. Julia offers performance comparable to compiled code of
 statically typed languages such as C or Fortran.
 
-Another important feature is the use of the multiple dispatch paradigm. This
+Another essential feature is the use of the multiple dispatch paradigm. This
 paradigm allows a function to be dynamically dispatched based on the run-time
-information of the function's arguments. Then, once a function has been
-compiled for a set of input types, the successive call of the function will not
-have to be recompiled and will give the expected performance. 
+information of the function's arguments. Once a function has been compiled for
+a set of input types, the successive call of the function will not have to be
+recompiled and will give the expected performance. 
 
 For the regularized four-sided cavity flow, the Group of Nonlinear Fluid
 Dynamics at UPC has developed a MATLAB code implementing the necessary
@@ -33,21 +33,22 @@ choices for the implementation.
 Julia provides a way to develop the code similar to scripting languages such as
 Python, but then one can add optimizations where needed without changing the
 language. This coding style will be demonstrated by showing the implementation
-of the nonlinear function. 
+of the nonlinear function. The implementation was carried out for the square
+cavity where the grid is of size $(m+1)\times(m+1)$.
 
 We want to recall the dynamical system defined in equation \eqref{eq:dyn_sys}.
 The code of this nonlinear function $F(\Psi, Re)$ has to be highly optimized,
-as it is evaluated in a very Newton-Raphson iteration multiple times. The most
-costly part consists of calculating the Jacobian where the function is called
-of the order $\mathcal{O}(m^2)$.
+as it is evaluated in every Newton-Raphson iteration multiple times. The most
+costly part consists of calculating the Jacobian, where the function is called
+$\mathcal{O}(m^2)$ times.
 
 The following code snippet shows a straightforward implementation of the
 nonlinear function. 
 
 \clearpage
 
-\begin{jllisting}[caption=Simple implementation in Julia of the nonlinear
-  function $F$ \vspace{3pt}]
+\begin{jllisting}[caption=Simple implementation of the nonlinear
+  function $F$ in Julia \vspace{3pt}]
 function f(u, p::CavityStruct)
     @unpack Re, m, D1, D2, D4 = p
 
@@ -70,19 +71,21 @@ the necessary parameters and the differentiation matrices.
 
 The coding style of defining a nonlinear function of a differential equation as
 \jlinl{f(u,p)} is widely used in the Julia ecosystem. This standard helps to
-easily pass the function to other libraries to compute the Jacobian, for
-example. Moreover, one can use Unicode input such as the $\Psi $ symbol to
+easily pass the function to other libraries, for example, to compute the
+Jacobian. Moreover, one can use Unicode input such as the $\Psi $ symbol to
 facilitate the notations for mathematical expressions. The
-\jlinl{constructBC(u,p)} is a function (see appendix), which returns the
+\jlinl{constructBC(u,p)} is a function (see appendix) which returns the
 streamfunction matrix by constructing the two outer rows and columns from the
-given boundary conditions to the vector \jlinl{u}. Though this function could
-be more efficient. If we want to use it repeatedly, every function call will
-allocate new variables for the matrices. A useful approach is to pre-allocate
-memory which we pass to the function and reuse at every function call. The
-optimized, allocation-free version is shown in the second code snippet. 
+given boundary conditions by applying them to the vector \jlinl{u}.
 
-\begin{jllisting}[caption=Optimized implementation in Julia of the nonlinear
-  function $F$ \vspace{3pt}]
+The nonlinear function could be more efficient. If we want to use it
+repeatedly, every function call will allocate new variables for the matrices. A
+useful approach is to pre-allocate memory which we pass to the function and
+reuse at every function call. The optimized, allocation-free version is shown
+in the second code snippet. 
+
+\begin{jllisting}[caption=Optimized implementation of the nonlinear
+  function $F$ in Julia \vspace{3pt}]
 function f!(fu, u, p::CavityStruct)
     @unpack Re, m, D1, D2, D4 = p.params
     @unpack fΨ, Ψ, D2Ψ, ΨD2, D4Ψ, ΨD4, laplΨ, biharmΨ = p.cache
@@ -120,21 +123,21 @@ The exclamation mark in front of the \jlinl{f} in the function definition is
 standard to inform the programmer that the function is changing its input
 variable (here \jlinl{fu}). \jlinl{f!(fu, u, p)} is then referred to as an
 in-place function. In general, this cache-like programming style is important
-when writing efficient Julia code. In the optimized version, the \jlinl{struct
-p} is now split into two sub-\jlinl{struct}s containing the parameters and
-cache variables. The cache variables are reused to store the intermediate
-results. The \jlinl{mul!(C, A, B)} function does a matrix multiplication, $AB$,
-and stores the values in C without allocating a new variable. Secondly, a dot
-(\jlinl{.}) before an operation applies an element-wise operation, and the
-macro, denoted by an \jlinl{@.}, will apply it to all the operations of an
-expression. The \jlinl{@inbounds} macro turns off bound checking (consumes time
-as well) and should be used carefully. Moreover, the macro \jlinl{@views}
-avoids creating a copy of the accessed subarray.
+when writing efficient Julia code. In the optimized version, for clarity, the
+\jlinl{struct p} is now split into two secondary \jlinl{struct}s, containing
+the parameters and cache variables. The cache variables are reused to store the
+intermediate results. The \jlinl{mul!(C, A, B)} function does a matrix
+multiplication $AB$ and stores the values in C without allocating a new
+variable. Secondly, a dot (\jlinl{.}) before an operation applies an
+element-wise operation. The macro, denoted by an (\jlinl{@.}), will apply
+it to all the operations of an expression. The \jlinl{@inbounds} macro turns
+off bound checking (time-consuming) and should be used carefully. Moreover, the
+macro \jlinl{@views} avoids creating a copy of the accessed subarray.
 
-A bottleneck in this implementation is that representation is changed from
-\jlinl{u} to \jlinl{Ψ} and vis versa in every function call. The vector
-\jlinl{u} accesses the inner elements of the streamfunction matrix \jlinl{Ψ}.
-This access is not aligned in memory, making it a slower operation. \\
+A bottleneck in this implementation is the conversion between \jlinl{u} and
+\jlinl{Ψ} representation in every function call. The vector \jlinl{u} accesses
+the inner elements of the streamfunction matrix \jlinl{Ψ}. This access is not
+aligned in memory, making it a slower operation. \\
 
 Below is a list of the algorithms implemented in Julia for square domains with
 $(m+1) \times (m+1)$ grid points:
@@ -161,13 +164,13 @@ grid points.
 
 \subsection{Comparison between MATLAB and Julia}
 
-Table \ref{tab:comp} provides a comparison between some basic operations for
-the R4CF implemented in Julia and MATLAB. The benchmark was performed on an
-Intel Core i5-5200U processor.
+Table \ref{tab:comp} compares some basic operations for the R4CF implemented in
+Julia and MATLAB. The benchmark was performed on an Intel Core i5-5200U
+processor.
 
 The table shows a slight decrease in time using the Julia module. One might
-expect that the Julia code should be much faster, but the problem here is that
-most of the time is spent doing matrix multiplication, where MATLAB is highly
+expect that the Julia code should be much faster, but the problem is that most
+of the time is spent doing matrix multiplication, where MATLAB is highly
 optimized, and essentially both implementations will run the same lower level
 \emph{Blas} (Basic Linear Algebra Subprograms) routines. Still, as the Newton's
 method will be called repeatedly in the continuation algorithm, this
@@ -177,12 +180,12 @@ but one has to do these kinds of optimizations only for specific functions
 where efficiency matters.
 
 \begin{table}[ht]
-  \caption{MATLAB vs. Julia comparison of median time to solve for a steady
-    state solution at Reynolds number 100 (MATLAB: \jlinl{timeit}, Julia:
+  \caption{MATLAB vs. Julia comparison of median time to solve for a
+    steady-state solution at Reynolds number 100 (MATLAB: \jlinl{timeit}, Julia:
     \jlinl{@benchmark})}.
   \label{tab:matlab_julia}
 \begin{tabular}{lrrr}
-Test & $m$ & MATLAB time (ms) & Julia time (ms) \\
+Test & $m$ & MATLAB time ($ms$) & Julia time ($ms$) \\
 \hline
 Function evaluation  & $32$ & $0.0949$  & $0.0526$ \\
 & $64$ & $0.3267$ & $0.2232$ \\

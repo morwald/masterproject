@@ -8,11 +8,11 @@ Hydrodynamic stability theory studies how a fluid flow is affected by small
 disturbances of an initial state. This analysis involves analytical,
 experimental, and more and more computational explorations. Flow regimes can be
 categorized as either linearly unstable or stable. Unstable in the sense that
-even infinitesimally small variations will cause the flow to deviate from its
-initial state, resulting in a different flow state or the onset of turbulence.
+even infinitesimal variations will cause the flow to deviate from its initial
+state, resulting in a different flow state or the onset of turbulence.
 Conversely, disturbances do not change the initial system's state in a stable
-flow. In the context of the R4CF problem, the main objective is to investigate
-the low arising in the driven cavity for different configurations through
+flow. In the context of the R4CF problem, the objective is to investigate the
+flow arising in the driven cavity for different configurations through
 numerical computations. We want to mainly understand how the flow is affected
 by the length of the side walls, the boundary velocity, and the fluid's
 viscosity, all of these quantities captured by the Reynolds number.
@@ -29,7 +29,7 @@ behavior. We recall the original bifurcation diagram presented in figure
 \ref{fig:bif_diag_chen}. To understand this diagram and to differentiate the
 points where the flow states are altered, we want to introduce the mathematical
 underpinnings from a dynamical system point of view. After that, the occurring
-bifurcations for the 4RCF will be explained in detail.
+bifurcations for the R4CF will be explained in detail.
 
 \subsection{The Dynamical Systems Perspective}
 
@@ -39,19 +39,18 @@ dynamical systems:
   \frac{dx}{dt} = {f(x, \mu)}, \label{eq:dyn_sys_orig}
 \end{align}
 where $x$ represents a state variable and $\mu$ is a parameter. In this
-framework, the state of a system is represented by a multidimensional point
-denoted as $x$ within a set of all possible states referred to as the state
-space or phase space (indicated as $X$). This point describes the system's
-current state and includes all the necessary dimensions to determine its future
-evolution.
+framework $x$ is a multidimensional point within a set of all possible states
+referred to as the state space or phase space (indicated as $X$). This point
+describes the system's current state and includes all the necessary dimensions
+to determine its future evolution.
 
 The solution $x(t)$ depends on a time variable $t \in T$, where $T$, in our
 case, is a set of positive real numbers ($T \in \mathbb{R}^+$). We can define
-an evolution operator $\varphi_t : X \to X$ which is a map that describes the
+an evolution operator $\varphi_t : X \to X$, which is a map that describes the
 system's transformation over time. Formally, a dynamical system is written as a
 triple $\{ T, X, \varphi^t \}$ \citep{kuznetsov2004}.
 
-The equation for the streamfunction \eqref{eq:str} is an autonomous partial
+The equation of the streamfunction \eqref{eq:str} is an autonomous partial
 differential equation, which can be reformulated as a dynamical system. We
 consider an infinite-dimensional point denoted as $\Psi$ in a state space $X$.
 $\Psi$ can be thought of as a vector covering all possible points of our cavity
@@ -67,64 +66,64 @@ solution is expected to converge exponentially because of the
 singularity-avoiding regularization. The finite-dimensional space for the
 numerical computations can be defined as:
 \begin{align}
-  \frac{d\Psi_j}{dt} &= {F_j(\Psi, \Rey)} \quad \quad \quad
+  \frac{d\Psi_j}{dt} &= {F_j(\Psi, \Rey)}, \quad \quad \quad
     j= 1,2,\dots,(m+1)(n+1), \label{eq:dyn_sys}
 \end{align}
 
-where $F_j$ is the $j$th component of the nonlinear function at the $j^{th}$
+where $F_j$ is the $j$-th component of the nonlinear function at the $j$-{th}
 grid point. Equations \eqref{eq:dyn_sys} is essentially a dynamical system of
 $(m+1)(n+1)$ equations, and one parameter, namely the Reynolds number $\Rey$.
 
 This more abstract framework is helpful in the sense that it provides a
 geometrical representation of the sought-after solutions. It is useful to look
 at subsets of the phase space $X$. Of particular interest are the so-called
-invariant sets, subsets $S$ satisfying $\varphi_t(S) \in S$ for all $t \in T$
-\citep{kuznetsov2004}. If $S$ is just one single point, having measure $0$,
-this set is called a fixed point (or equilibrium). 
+invariant sets, subsets $S$ satisfying $\varphi_t(S) \in S$ for all $t \in T$.
+If $S$ is just one single point, having measure $0$, this set is called a fixed
+point (or equilibrium). One-dimensional invariant manifolds may also be
+dynamically relevant. An example is an isolated periodic orbit (or limit cycle)
+which is a closed trajectory such that there exists a time $T > 0$ for which
+$\varphi_{t+T}(x) = \varphi_{t}(x)$. A stable periodic orbit corresponds to a
+closed trajectory, where other nearby trajectories converge toward the orbit.
+An unstable periodic orbit is characterized by nearby trajectories diverging
+away from it. Further, periodic orbits can be classified by their period and
+amplitude and are usually depicted in what is called a phase portrait.
+Equilibria and periodic orbits interact, leading to homoclinic connections,
+which are one-dimensional sets of self-connected equilibria. If an orbit
+reconnects more than one equilibrium, it is called a heteroclinic connection
+\citep{kuznetsov2004}.
 
-One-dimensional invariant manifolds may also be dynamically relevant. An
-example is an isolated periodic orbit (or limit cycle) which is a closed
-trajectory such that there exists a time $T > 0$ for which $\varphi_{t+T}(x) =
-\varphi_{t}(x)$. A stable periodic orbit corresponds to a closed trajectory,
-where other nearby trajectories converge toward the orbit. An unstable
-periodic orbit is characterized by nearby trajectories diverging away from it.
-Further, periodic orbits can be classified by their period and amplitude and
-are usually depicted in what is called a phase portrait. Equilibria and
-periodic orbits interact, leading to homoclinic connections, which are
-one-dimensional sets of self-connected equilibria. If an orbit reconnects more
-than one equilibrium, it is called a heteroclinic connection. These invariant
-sets help to characterize dynamical systems and understand the fundamental
-types of solutions when a parameter of interest is varied.
+These invariant sets help to characterize dynamical systems and understand the
+fundamental types of solutions when a parameter of interest is varied.
+
 
 \subsection{Steady-State Flows}
 
 We have seen that launching a time stepper gives different kinds of states
 depending on the initial condition. A steady-state solution corresponds to a
 solution of the differential equation where the time $t$ approaches infinity,
-satisfying:
+satisfying
 \begin{align}
   F(\Psi, \Rey) &= \frac{1}{\Rey}\Delta^2 \Psi +
     (\partial_x \Psi) \partial_y(\Delta \Psi) -
-    (\partial_y \Psi) \partial_x(\Delta \Psi), \nonumber \\
+    (\partial_y \Psi) \partial_x(\Delta \Psi) \nonumber \\
   & =  0, \quad \text{or} \\
-  F_j(\Psi, \Rey) &= 0 \quad \quad \quad 
+  F_j(\Psi, \Rey) &= 0, \quad \quad \quad 
   j= 1,2,\dots,(m+1)(n+1), \label{eq:str_steady}
 \end{align}
 
 in the discretized version. As the outer two grid rows and columns are
 explicitly known through the boundary conditions (explained in section
-\ref{sec:bc}), a reduced system of equations, $F(\psi, \Rey) = 0$, can be
+\ref{sec:bc}), a reduced system of equations $F(\psi, \Rey) = 0$, can be
 formulated, where $\psi \in \mathbb{R}^{(m-1)\times(n-1)} $ corresponds now to
-the inner grid points. Thus, in practice the system is
-$(m-1)(n-1)$-dimensional, and solvable with Newtons's method.
+the inner grid points. Thus, in practice, the system is
+$(m-1)(n-1)$-dimensional and solvable with Newtons's method.
 
 \subsection{Linear Stability Analysis}
 
-To analyze the stability of steady flows converged with Newton-s method, we
+To analyze the stability of steady flows converged with Newton's method, we
 perform a linear stability analysis. Given an equilibrium solution $\Psi_0$,
 satisfying equation \eqref{eq:str_steady}, we perturb it by adding a small
-disturbance so that
-$\Psi$,
+disturbance
 \begin{align}
 \Psi = \Psi_0 + \epsilon \tilde{\Psi},
 \end{align}
@@ -133,13 +132,13 @@ where $\epsilon$ is a small amplitude, and $\tilde{\Psi}$ is and arbitrary
 field satisfying homogeneous boundary conditions. We can insert this expression
 into the time-dependent streamfunction equation \eqref{eq:str}. By only
 identifying first-order terms $\mathcal{O}(\epsilon)$ and using the fact that
-$F_{steady}(\Psi_0) = 0$, we get
+$F_{steady}(\Psi_0) = 0$, we get,
 \begin{align}
 \partial_t \Delta \tilde{\Psi} = \frac{1}{Re} \Delta^2 \tilde{\Psi}
   + (\partial_x \Psi_0) \partial_y (\Delta \tilde{\Psi})
   + (\partial_x \tilde{\Psi}) \partial_y (\Delta \Psi_0)
   - (\partial_y \Psi_0) \partial_x (\Delta \tilde{\Psi})
-  - (\partial_y \tilde{\Psi}) \partial_x (\Delta \Psi_0)
+  - (\partial_y \tilde{\Psi}) \partial_x (\Delta \Psi_0).
 \label{eq:str_pert}
 \end{align}
 
@@ -154,7 +153,7 @@ where $\Phi$ is the eigenfunction associated with the eigenvalue $\lambda$,
 whose real part will dictate the stability or instability of $\Psi_0$. After
 formal substitution of the ansatz \eqref{eq:ansatz} into \eqref{eq:str_pert},
 the exponential time dependence of the problem disappears, leading to an
-algebraic generalized boundary eigenvalue problem that reads:
+algebraic generalized boundary eigenvalue problem that reads
 \begin{align}
 \lambda \Delta \Phi = \frac{1}{Re} \Delta^2 \Phi
   + (\partial_x \Psi_0) \partial_y (\Delta \Phi)
@@ -164,7 +163,7 @@ algebraic generalized boundary eigenvalue problem that reads:
 \label{eq:str_phi}
 \end{align}
 
-where, $\Phi = 0$, at the boundaries. In terms of two operators $A$ and $B$,
+where $\Phi = 0$ at the boundaries. In terms of two operators $A$ and $B$,
 the problem can be stated as follows: 
 \begin{align} \label{eq:eig_prob}
   \begin{split}
@@ -185,7 +184,7 @@ associated eigenvalue. If all the eigenvalues of the generalized eigenvalue
 problem have a positive real part, the equilibrium is stable. On the contrary,
 if only one of the eigenvalues is found to be positive, then the system is
 unstable because a small perturbation will grow exponentially in time, which
-can be directly seen in the definition of the Ansatz.
+can be directly seen in the definition of the ansatz.
 
 This linear stability problem becomes computationally demanding because the
 perturbation $\Phi$ acts on every grid point, and the numerical eigenvalue
@@ -193,10 +192,11 @@ problem is solved with matrices of the size $(m+1)(n+1) \times (m+1)(n+1)$. We
 compute the whole spectrum of eigenvalues using the QZ algorithm (\jlinl{eigen}
 function in Julia). The Arnoldi
 method employed for a partial evaluation of the spectrum has been tried but
-did not converge in the case of the R4CF. A final remark is that with linear
-stability analysis, we are only looking at linear perturbation, meaning that
-nonlinear disturbances (second or higher order) are not captured with this
-technique.
+did not converge in the case of the R4CF.
+
+A final remark is that with linear stability analysis, we only look at linear
+perturbation, meaning that nonlinear disturbances (second or higher order) are
+not captured with this technique.
 
 \subsection{Bifurcations} \label{sec:bif_details}
 
@@ -205,7 +205,7 @@ occurring in the RCF4 precisely.
 
 To illustrate the bifurcations we encountered, a parameter of interest $\mu$
 ($\Rey$ in the R4CF) will be varied and plotted against a variable that
-identifies different states. Let denote this variable by $U$ ($\Psi_{center}$
+identifies different states. Lets denote this variable by $U$ ($\Psi_{center}$
 in the R4CF). The first bifurcation we want to look at is a pitchfork (figure
 \ref{fig:pitch_saddle}), where the symmetry of the problem is broken, and two
 different flow solutions appear. The base solution is still an equilibrium but
@@ -257,11 +257,10 @@ At a Hopf bifurcation, a stable fixed point becomes unstable, and the system
 starts to oscillate. A sketch of the amplitudes is depicted in figure
 \ref{fig:hopf}. One can distinguish between sub- and supercritical Hopf
 bifurcations. In the supercritical case, the system is changing suddenly from a
-fixed point to a stable periodic orbit (SPO) and now following a trajectory in
-a larger invariant set when we think in terms of dynamical systems. On the
-other hand, the subcritical Hopf is less predictable. Before the critical
-$\mu$, there are unstable periodic orbits (UPO), and then it is unclear what
-happens when the fixed point becomes unstable.
+fixed point to a stable periodic orbit (SPO). On the other hand, the
+subcritical Hopf is less predictable. Before the critical $\mu$, there are
+unstable periodic orbits (UPO), and then it is unclear what happens when the
+fixed point becomes unstable.
 
 \begin{figure}[ht]
 \centering
@@ -327,7 +326,7 @@ parameter is decreasing again. The natural continuation cannot properly achieve
 this, as the Reynolds number is manually set to increase. Another strategy to
 overcome this issue is called pseudo-arclength continuation
 \citep{kuznetsov2004}. Given two fixed points $x^{(0)}$ and $x^{(1)}$ on a
-curve with parameter values $\mu^{(0)}$ and $\mu^{(1)}$ we want to find the
+curve with parameter values $\mu^{(0)}$ and $\mu^{(1)}$, we want to find the
 next $x^{(2)}$ and $\mu^{(2)}$ making a prediction with the approximated
 tangents from the already given fixed points:
 \begin{equation}
@@ -335,26 +334,25 @@ tangents from the already given fixed points:
 \end{equation}
 
 Here $\gamma$ (in this study set to $1$) is a parameter that determines the
-prediction step size. $\tilde{x}^{(2)}$ is called the predictor. Now we want to
-impose another equation with what is called the correction step.
+prediction step size. $\tilde{x}^{(2)}$ is called the predictor. Now, another
+equation is imposed, which is referred to as the correction step:
 \begin{equation}
-  (x^{(2)} - x^{(1)})  \cdot \hat{x} \label{eq:extra}
+  (x^{(2)} - x^{(1)})  \cdot \hat{x} = 0 \label{eq:extra}
 \end{equation}
 
-This equation tells us that we want to find the next point on the curve, that is
-orthogonal in our phase space to the tangent drawn from our previous points.
-Figure \ref{fig:pseudo_cont} illustrates this idea geometrically.
-
-Consequently, $\mu^{(2)}$ is determined explicitly by satisfying the equation
+This equation tells us that we want to find the next point on the curve, that
+is orthogonal to the tangent drawn from our previous points. Figure
+\ref{fig:pseudo_cont} illustrates this idea geometrically. Consequently,
+$\mu^{(2)}$ is determined explicitly by satisfying the equation
 \eqref{eq:extra}. To find the next point, the initial system of nonlinear
-equations \eqref{eq:dyn_sys} is augmented by:
+equations \eqref{eq:dyn_sys} is augmented by
 \begin{equation}
   F(x^{(2)}, \mu^{(0)}) = 
 \begin{bmatrix} F(x^{(2)}, \mu) \\ (x^{(2)} - x^{(1)})  \cdot \hat{x}
 \end{bmatrix}, \label{eq:dyn_sys_cont}
 \end{equation}
 
-and this means the parameter $\mu$ is now part of the equation. The augmented
+which means the parameter $\mu$ is now part of the equation. The augmented
 Jacobian can be formulated as follows: 
 \begin{equation}
 \renewcommand\arraystretch{1.5}
@@ -368,10 +366,10 @@ J =
 \right]
 \end{equation}
 
-So we, first of all, calculate the original Jacobian $J_x$, and the components
+First of all, we calculate the original Jacobian $J_x$. The components
 of the last row of the augmented Jacobian are given by the transpose of the
 distance in phase space between the two already computed states. The last
-column (without the last row) corresponds to the finite difference derivative
+column (excluding the last row) corresponds to the finite difference derivative
 of the nonlinear function with respect to $\mu$. It is necessary to scale the
 parameter $\mu$ to obtain changes with similar magnitudes as for the $x$
 components. This ensures a well-conditioned Jacobian.

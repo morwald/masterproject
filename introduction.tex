@@ -58,10 +58,10 @@ spatial discretization techniques and methodologies used in the works to
 identify the bifurcation (time integration or linear stability analysis). Due
 to its simple geometry, the square lid-driven cavity has long been qualified as
 a good candidate for a canonical benchmark problem. Still, lid-driven cavity
-flow problems, in their original formulations, typically have \red{singular
-boundary conditions} at the corners, where the velocity profile is
-discontinuous. In this case, the exponential convergence of spectrally
-approximated flow solutions is at stake. 
+flow problems, in their original formulations, typically have singular boundary
+conditions at the corners, where the velocity profile is discontinuous. In this
+case, the exponential convergence of spectrally approximated flow solutions is
+at stake. 
 
 The corner-singularity problem has, however, been successfully circumvented
 using different approaches, such as substraction methods \citep{botella1998},
@@ -91,19 +91,18 @@ provides a reproducible example of the regularized cavity.
 
 The regularized four-sided lid-driven cavity shows most of the primary
 bifurcation scenarios. The flow undergoes instabilities, such as pitchfork,
-saddle-node (fold), and Hopf. \red{Predicting} the precise location of the
+saddle-node (fold), and Hopf. Determining the precise location of the
 bifurcations could present an amenable benchmark when testing and comparing
 different discretization schemes and implementations. \\
 
 This master project is structured as follows. First, a review of the driven
 cavity flow problem is provided. Then the four-sided lid-driven cavity flow is
 introduced, and the governing equations are presented, followed by an
-introduction to the regularized version. The necessary \red{theory} is
-developed in the theoretical part regarding spatial (spectral Chebyshev) and
-time discretization. The numerical tools required for bifurcation analysis of
-the flow are also explained. The subsequent step focuses on implementation
-details for the Julia programming language. Finally, the results of the
-regularized problem are presented and discussed, including stable and unstable
-solutions and the precise occurrences of bifurcations. The study concludes with
-a summary of the objectives, limitations, and recommendations for future
-research.
+introduction to the regularized version. The necessary theory is developed in
+the theoretical part regarding spatial (spectral Chebyshev) and time
+discretization. The numerical tools required for bifurcation analysis of the
+flow are also explained. The subsequent step focuses on implementation details
+for the Julia programming language. Finally, the results of the regularized
+problem are presented and discussed, including stable and unstable solutions
+and the precise occurrences of bifurcations. The study concludes with a summary
+of the objectives, limitations, and recommendations for future research.

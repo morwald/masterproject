@@ -55,29 +55,29 @@ Given an autonomous ordinary differential equation (ODE) of the form:
 
 where $x$ represents the dependent variable and
 $f(x)$ is the derivative function with respect to $t$, the implicit Euler
-approximates the solution by
+approximates the solution $x_{j+1}$ of the next timestep by
 \begin{equation}
   x_{j+1} = x_j + h \cdot f(x_{j+1}),
 \end{equation}
 
-where $h$ is the timestep size and
-$t_j$ and $x_j$ represent the time and solution at the $j$-th timestep,
-respectively.
+where $h$ is the timestep size and $t_j$ and $x_j$ represent the time and
+solution at the $j$-th timestep, respectively.
 
-\subsection{Streamfunction Time-stepping Equation}
+\subsection{Streamfunction Time-Stepping Equation}
 
 Some adjustments must be made to apply the Euler method to the R4CF. First, the
 one-dimensional problem naturally generalizes to problems where $\mathbf{x}$ is
 a finite-dimensional vector. Secondly, the streamfunction equation involves the
 Laplace operator applied to the streamfunction, which means that the time
-derivative is applied to the Laplacian of the streamfunction. We get:  
+derivative is applied to the Laplacian of the streamfunction. Overall, the time-stepping
+equation reads
 \begin{align}
   \Delta\Psi_{j+1} = \Delta\Psi_j + h \cdot (\frac{1}{\Rey}\Delta^2 \Psi_{j+1} +
   (\partial_x \Psi_{j+1}) \partial_y(\Delta \Psi_{j+1}) -
-  (\partial_y \Psi_{j+1}) \partial_x(\Delta \Psi_{j+1})) \label{eq:str_timestepping}
+  (\partial_y \Psi_{j+1}) \partial_x(\Delta \Psi_{j+1})). \label{eq:str_timestepping}
 \end{align}
 
-This equation can be rewritten as follows:
+The equation can be rewritten as follows:
 \begin{align}
   F(\Psi_{j+1}) & = \Delta\Psi_j - \Delta\Psi_{j+1} + h (\frac{1}{\Rey}\Delta^2 \Psi_{j+1} +
   (\partial_x \Psi_{j+1}) \partial_y(\Delta \Psi_{j+1}) -
@@ -85,8 +85,8 @@ This equation can be rewritten as follows:
   & =  0 \label{eq:newton_ts}
 \end{align}
 
-This means that in order to calculate the solution of the next timestep
-$t_{n+1}$ from a given solution at time $t_n$, we have to solve the nonlinear
+This means that in order to calculate the solution for the next timestep
+$t_{j+1}$ from a given solution at time $t_j$, we have to solve the nonlinear
 equation \eqref{eq:newton_ts}. The equation for the cavity flow is usually
 solved with a Newton-Raphson algorithm \citep{kuhlmann2019}, which is briefly
 introduced in the following section. 
@@ -94,10 +94,10 @@ introduced in the following section.
 \subsection{Newton-Raphson Method}
 
 The Newton-Raphson algorithm is an iterative method used to find the roots of a
-system of nonlinear equations. Given a system of $p$ nonlinear equations,
+system of nonlinear equations. Given a system of $p$ nonlinear equations
 $F(\mathbf{x}) = \mathbf{0}$, the algorithm starts with an initial guess
 $\mathbf{x}_0$ and iteratively improves the solution by updating the guess
-using the iteration formula:
+using the formula:
 \begin{align} 
 \mathbf{x}_{k+1} = \mathbf{x}_k - J_F(\mathbf{x}_k)^{-1} \cdot F(\mathbf{x}_k),
 \end{align}

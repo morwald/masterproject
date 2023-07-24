@@ -59,22 +59,22 @@ domain for orthogonal polynomials.
   \foreach \y in {-1,-0.5,0.5,1}
     \draw (-0.02,\y) -- (0.02,\y) node[below=5pt, left=4pt] {\small $\y$};
 
-  \node at (0.28,0.5) {$u_T, v_T$};
+  \node at (0.29,0.5) {$u_T, v_T$};
   \fill (0, 0.5) circle [radius=0.6pt];
 
   \node at (-0.5,0.1) {$u_L, v_L$};
   \fill (-0.5,0) circle [radius=0.6pt];
 
-  \node at (0.28,0.12) {$\Psi_{center}$};
+  \node at (0.29,0.12) {$\Psi_{center}$};
   \fill (0,0) circle [radius=0.6pt];
 \end{tikzpicture}
-\caption{Square domain $(x,y) \in [-1,1]\times[-1,1]$ for the four-sided cavity.}
+\caption{Square domain $(x,y) \in [-1,1]\times[-1,1]$ for the four-sided cavity}
 \label{fig:cav_domain}
 \end{figure}
 
 As shown in figure \ref{fig:cav_4s} of the four-sided cavity flow, all lids
 have the same tangential velocity. The original discontinuous boundary
-conditions are,
+conditions are
 
 \begin{align}
 u(x,\pm 1,t) &= \pm 1,\label{non_reg_u_bca} \\
@@ -85,12 +85,12 @@ v(\pm 1,y,t) &= \pm 1.\label{non_reg_u_bcb}
 
 To discretize \eqref{eq:str} using a spectral method, \eqref{non_reg_u_bca} and
 \eqref{non_reg_u_bcb} are replaced by the regularized boundary conditions,
-which impose a zero velocity at all four corners of the cavity,
+which impose a zero velocity at all four corners of the cavity:
 \begin{align}
 u(x,\pm 1,t) &= \pm\left[\left(\rme^{k_0(x - 1)} - 1\right)
-  \left(\rme^{-k_0(x + 1)} - 1\right)\right]^2, \label{reg_u_bca} \\
+  \left(\rme^{-k_0(x + 1)} - 1\right)\right]^2 \label{reg_u_bca} \\
 v(\pm 1,y,t) &= \pm\left[\left(\rme^{k_0(y - 1)} - 1\right)
-  \left(\rme^{-k_0(y + 1)} - 1\right)\right]^2. \label{reg_u_bcb}
+  \left(\rme^{-k_0(y + 1)} - 1\right)\right]^2 \label{reg_u_bcb}
 \end{align}
 
 The exponential regularization function is adapted from \citet{lopez2017}.
@@ -120,14 +120,14 @@ suitable but not too extreme decay for the velocity at the edges. Figure
   \end{axis}
 \end{tikzpicture}
 \caption{\label{bc_profile} Regularized horizontal velocity profile
-  \eqref{reg_u_bca} at the top wall $y=1$ for $k_0=10$.}
+  \eqref{reg_u_bca} at the top wall $y=1$ for $k_0=10$}
 \end{figure}
 
 In order to compare the results of this work with the previous literature, the
 Reynolds number has to be scaled. The $[0,1] \times [0,1]$ domain used in
 \citet{wahba2009} and the subsequent studies mean that reference length
-$l_{ref}$ used is, therefore, half the length $l$ used here. Thus the relation
-of the Reynolds numbers is,
+$l_{ref}$ is half the length $l$ used here. Thus the relation
+of the Reynolds numbers is
 \vspace{-8pt}
 \begin{align}
 \Rey = \frac{U \cdot l}{\nu} 
@@ -143,7 +143,7 @@ symmetrical domain.
 
 The final important point to make is that the 2D problem must be studied
 cautiously. The paper of \cite{eturk2009} concludes that the single lid-driven
-cavity represents \emph{fictitious} flow at high Reynolds numbers. Fictitious
+cavity represents a \emph{fictitious} flow at high Reynolds numbers. Fictitious
 meaning that the problem from a physical point of view would no longer be
 purely 2D because instabilities in the third dimension would influence the
 flow. However, numerical solutions exist at high Reynolds numbers for the
@@ -153,9 +153,9 @@ Furthermore, it is hard to replicate the lid-driven cavity experimentally with
 regularized boundary conditions. This problem gets even worse considering the
 four-sided cavity flow and the different velocity directions at all lids.
 
-Using a regularized version, as presented above, will help to obtain numerical
-accurate results, but it makes it even harder to reproduce in practice. From
-the point of view of a benchmark for an instability analysis for different
-solvers, the resulting flow (whether fictional or not) should at least be
-precisely computable. This report will focus on this main aspect, that is the
-accurate computation of a well-posed mathematical problem. 
+Using a regularized version, as presented above, will help to obtain
+numerically accurate results, but it makes it even harder to reproduce in
+practice. From the point of view of a benchmark for an instability analysis for
+different solvers, the resulting flow (whether fictional or not) should at
+least be precisely computable. This study will focus on this main aspect, that
+is the accurate computation of a well-posed mathematical problem. 

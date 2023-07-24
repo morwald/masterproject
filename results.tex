@@ -2,7 +2,7 @@
 % RESULTS
 %-------------------------------------------------------------------------------
 
-\section{Results \red{and Discussion}} \label{sec:res}
+\section{Results and Discussion} \label{sec:res}
 
 \subsection{Outline of Bifurcation Diagram}
 
@@ -10,7 +10,7 @@ The primary objective of this project is to reproduce and complete the
 bifurcation diagram presented in figure \ref{fig:bif_diag_chen} of
 \citet{chen2013}. The resulting bifurcation diagram of the regularized version
 is depicted in figure \ref{fig:bif_diag}, and table \ref{tab:bif_points} lists
-the bifurcations that occurre along with their corresponding critical Reynolds
+the bifurcations that occur along with their corresponding critical Reynolds
 numbers. Table \ref{tab:re_crit} shows the critical Reynolds numbers obtained
 for different grid sizes. As mentioned, only a square cavity is considered for
 this study, and no aspect ratios have been varied.
@@ -30,9 +30,9 @@ Bifurcation & $\Rey$\\
 \hline
 $P_1$, first supercritical pitchfork of the base flow & $66.197$ \\
 $P_2$, second pitchfork of the base flow & $172.708$ \\
-$P_3$, pitchfork of the asymmetric steady solution & $353.357$ \\
+$P_3$, pitchfork of the asymmetric steady solution & $353.358$ \\
 $SN$, saddle-node bifurcation of the asymmetric steady solution & $353.654$ \\
-$H$, Hopf bifurcation of the asymmetric steady solution & $348.319$ \\
+$H$, Hopf bifurcation of the asymmetric steady solution & $348.321$ \\
 \end{tabular}
 \end{table}
 
@@ -50,10 +50,10 @@ $H$, Hopf bifurcation of the asymmetric steady solution & $348.319$ \\
 \begin{tabular}{crrrrrr}
 $m$ & $\Rey_c^{P_1}$ & $\Rey_c^{P_2}$ & $\Rey_c^{H}$ &  $\omega_c^{H}$ & $\Rey_c^{P_3}$ & $\Rey_c^{SN}$  \\
 \hline
-$32$ & $66.197$ & $172.731$ & $348.210$ & $0.0582$ & $352.152$ & $352.527$ \\
-$48$ & $66.197$ & $172.708$ & $348.312$ & $0.0588$ & $353.365$ & $353.663$ \\
-$64$ & $66.197$ & $172.708$ & $348.319$ & $0.0599$ & $353.356$ & $353.656$ \\
-$96$ & $66.197$ & $172.708$ & $348.319$ & $0.0599$ & \red{$353.357$} & $353.654$ \\
+$32$ & $66.197$ & $172.731$ & $348.210$ & $0.0582$ & $352.160$ & $352.527$ \\
+$48$ & $66.197$ & $172.708$ & $348.315$ & $0.0600$ & $353.365$ & $353.663$ \\
+$64$ & $66.197$ & $172.708$ & $348.321$ & $0.0599$ & $353.356$ & $353.656$ \\
+$96$ & $66.197$ & $172.708$ & $348.321$ & $0.0599$ & $353.358$ & $353.654$ \\
 \citet{chen2013} & $65.154$ & $177.723$ & - $\quad$ & - $\quad$ & - $\quad$ & $438.285$ \\
 \end{tabular}
 \end{table}
@@ -85,19 +85,20 @@ bifurcation.
 On the other hand, it has been observed that the critical value for the
 saddle-node in the regularized version deviates significantly from the original
 value by approximately $80$ units of Reynolds. This variation is probably
-caused by the regularization. However, measuring the discrepancy as a function
-of the control parameter $k_0$ is out of the scope of this work.
+caused by the regularization. However, measuring the discrepancy between the
+regularized and original version is out of the scope of this work because the
+focus lies on the development of a robust benchmark.
 
 Moreover, the Group of Nonlinear Fluid Dynamics at UPC has recently discovered
-a Hopf bifurcation ($H$) at the asymmetric branch. Furthermore, a pitchfork
-bifurcation ($P_3$) has also been found with a critical Reynolds number close
-to the saddle-node. Another branch is emerging at that location, displaying a
+a Hopf bifurcation ($H$) at the asymmetric branch. A pitchfork bifurcation
+($P_3$) has also been found with a critical Reynolds number close to the
+saddle-node. Another branch is emerging at that location, displaying a
 different asymmetric flow pattern. The following two subsections will discuss
 these two bifurcation scenarios in more detail.
 
 \subsection{Hopf Bifurcation and Time-Periodic Flows}
 
-The Hopf bifurcation is found to be located at a critical Reynolds of $348.319$
+The Hopf bifurcation is found to be located at a critical Reynolds of $348.321$
 and has not been reported in previous studies to our knowledge. The question
 that arises is whether the Hopf bifurcation is subcritical or
 supercritical. 
@@ -108,12 +109,12 @@ stable periodic orbits for a Reynolds number above the critical value of the
 Hopf bifurcation. On the contrary, for the subcritical case, unstable periodic
 orbits should be located below the critical value. The amplitudes of the
 periodic orbits, for both cases, should scale following a square root envelope
-of the form, $A \propto \lvert R - R_c \rvert^{\frac{1}{2}}$
+of the form $A \propto \lvert R - R_c \rvert^{\frac{1}{2}}$
 \citep{kuznetsov2004}. 
 
-To investigate the above, the time-stepper is launched from the perturbed
-symmetric unstable solution at Reynolds number larger than the critical value
-of the Hopf. These time evolutions reveal trajectories that converge to stable
+To investigate this, the time-stepper is launched from the perturbed symmetric
+unstable solution at Reynolds number larger than the critical value of the
+Hopf. These time evolutions reveal trajectories that converge to stable
 periodic orbits (see figure \ref{fig:orbits}), but the amplitudes of these
 oscillations are larger than the expected square root growth for a
 supercritical Hopf. Further, the Group of Nonlinear Fluid Dynamics has computed
@@ -122,20 +123,20 @@ at $\Rey = \Rey_c^H$. At smaller Reynolds numbers, the unstable periodic orbits
 collapse in a homoclinic connection with the lower asymmetric branch. These
 results confirm that the Hopf is subcritical.
 
-The follow-up questions revolve around the detected stable periodic orbits with large
-amplitudes. They are depicted in figure \ref{fig:orbits} for three distinct
-Reynolds numbers. The orbits are visualized in a projection of the phase space
-using the average of the vertical and horizontal velocities at the top and left
-mid-points of the cavity (as defined in figure \ref{fig:cav_domain}). In figure
-\ref{fig:orbits}, the amplitudes of these oscillations are also shown by
+The follow-up questions revolve around the detected stable periodic orbits with
+large amplitudes. They are depicted in figure \ref{fig:orbits} for three
+distinct Reynolds numbers. The orbits are visualized in a projection of the
+phase space using the average of the vertical and horizontal velocities at the
+top and left mid-points of the cavity (as defined in figure
+\ref{fig:cav_domain}). The amplitudes of these oscillations are also shown by
 extracting the center value of the streamfunction. They are compared to the
-steady-state branches in the bifurcation diagram. 
+steady-state lower (LB) and upper (UB) branches in the bifurcation diagram. 
 
-Moreover, as shown in the figure, these stable periodic orbits with large
+Moreover, as shown in figure \ref{fig:orbits}, these stable periodic orbits with large
 amplitude exist below the Hopf bifurcation's critical value and were obtained
 by extracting the solutions of the matrix $\Psi$ with the maximum amplitude
-from an orbit at a higher Reynolds number, and then this solution is used as an
-initial condition for the time-stepper. In this way, one can "continue" stable
+from an orbit at a higher Reynolds number. This solution is then used as an
+initial condition for the time-stepper. With this approach, one can "continue" stable
 periodic orbits backward in Reynolds, similar to a natural continuation
 algorithm. These periodic orbits collapse at a Reynolds number of around $335$,
 and time evolutions at lower values will converge to one of the stable
@@ -165,12 +166,9 @@ Reynolds is through a heteroclinic connection with the unstable lower branches.
   \label{fig:orbits}
 \end{figure}
 
-\begin{figure}[!htb]
-  \begin{tikzpicture}
-    \node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[trim={0 1cm 0 1cm},clip,width=0.8\textwidth]{figs/orbits_zoom64x64.pdf}};
-    \node at (8, 4.5) {\small UB};
-    \node at (11.1, 4.4) {\small LB};
-  \end{tikzpicture}
+\begin{figure}[h]
+  \centering
+  \includegraphics[trim={0 1cm 0 1cm},clip,width=0.8\textwidth]{figs/orbits_zoom64x64.pdf}
   \caption{Zoom of periodic orbits at different Reynolds numbers, blue dots
     denote the locations of the upper stable (UB) and unstable (LB) steady
     solutions for $\Rey = 336$}
@@ -222,15 +220,15 @@ likely of subcritical type.
 
 A linear stability analysis performed along the upper asymmetric branch has
 also revealed that another real eigenvalue crosses the imaginary axis slightly
-after the Hopf bifurcation and before reaching the saddle-node point. Figure
-\ref{fig:lsa} shows the three rightmost eigenvalues in a plot where the
-Reynolds number increases and then decreases again from the saddle-node
-onwards. The details of these crossings are presented in table \ref{tab:cross}.
-The crossing labeled $A$ corresponds to the complex conjugate pair associated
-with the Hopf bifurcation, which is denoted by $\lambda_1$ and $\lambda_2$ in
-green. However, another eigenvalue crossing is found just before the
-saddle-node, denoted as $B$. This second eigenvalue crossing ($\lambda_3$ in
-orange) lies within a range of $0.3$ in Reynolds. \\\\
+after the Hopf bifurcation and before reaching the saddle-node point. The
+details of these crossings are presented in figure \ref{fig:schem_saddle} and
+in table \ref{tab:cross}. Figure \ref{fig:lsa} shows the three rightmost
+eigenvalues in a plot where the Reynolds number increases and then decreases
+again from the saddle-node onwards. The crossing labeled $A$ corresponds to the
+complex conjugate pair associated with the Hopf bifurcation, which is denoted
+by $\lambda_1$ and $\lambda_2$ in green. However, another eigenvalue crossing
+is found just before the saddle-node, denoted as $B$. This second eigenvalue
+crossing ($\lambda_3$ in orange) lies within a range of $0.3$ in Reynolds. \\\\
 
 \begin{minipage}[h]{\textwidth} \begin{minipage}[b]{.53\textwidth} \centering
   \begin{tikzpicture}[scale=0.9] \draw[thick, dashed]
@@ -262,8 +260,8 @@ orange) lies within a range of $0.3$ in Reynolds. \\\\
   \begin{tabular}{crrr}
   $n$ & $A$ ($H$) & $B$ ($P_3$) & $C$ ($SN$) \\
   \hline
-  $64$ & $348.19$ & $353.356$ & $353.656$ \\
-  $96$ & $348.19$ & $353.357$ & $353.654$ \\
+  $64$ & $348.321$ & $353.356$ & $353.656$ \\
+  $96$ & $348.321$ & $353.358$ & $353.654$ \\
   & & & \\
   & & & \\
 \end{tabular}
@@ -282,16 +280,17 @@ orange) lies within a range of $0.3$ in Reynolds. \\\\
   \label{fig:lsa}
 \end{figure}
 
-Additionally, close to the saddle-node, another unstable branch emerges, which
-was detected by starting the natural continuation algorithm near the critical
-Reynolds of the fold. This branch is depicted in figure \ref{fig:branch2} and
-contains unstable fixed points. The figure shows the projections onto the
-$\Psi$ and $u_T$ planes to distinguish the branches. One can see that for the
-new branch, the center value of the streamfunction is not changing
-significantly, whereas, for both the asymmetric and the second branch, there is
-a slight change in the horizontal velocity $u_T$. Further, this branch is
-connected to point $B$, corresponding to another pitchfork, denoted by $P_3$.
-Linear stability analysis around the pitchfork of this new branch (figure
+Additionally, close to the saddle-node, another branch emerges, which was
+detected by starting the natural continuation algorithm near the critical
+Reynolds of the fold. The branch consists of unstable steady solutions because
+a time-stepper starting from this branch will diverge. The branch is depicted
+in figure \ref{fig:branch2}. The figure shows the projections onto the $\Psi$
+and $u_T$ planes to distinguish the branches. One can see that for the new
+branch, the center value of the streamfunction is not changing significantly,
+whereas, for both the asymmetric and the second branch, there is a slight
+change in the horizontal velocity $u_T$. Further, this branch is connected to
+point $B$, corresponding to another pitchfork, denoted by $P_3$. Linear
+stability analysis around the pitchfork of this new branch (figure
 \ref{fig:lsa_branch2}) reveals how the eigenvalues can be related to point $B$
 (i.e. $P_3$).
 
@@ -299,14 +298,14 @@ Linear stability analysis around the pitchfork of this new branch (figure
   \centering
   \includegraphics[trim={0 0.8cm 0 0.5cm},clip,width=0.8\textwidth]{figs/branch2_64x64.pdf}
   \caption{3D plot of the asymmetric branch (blue) and second branch (light blue) and the
-    connection of the two branches at pitchfork $P_3$ ($B$)}
+    connection of the two branches at pitchfork $P_3$)}
   \label{fig:branch2}
 \end{figure}
 
 The emergence of the second branch provides an alternative perspective on the
 problem. Since we are dealing with symmetric boundary conditions, we can
 observe that the streamlines of the symmetric base solution in the four-sided
-lid-driven cavity flow remains unchanged under a $\pi$-rotation and a
+lid-driven cavity flow remain unchanged under a $\pi$-rotation and a
 reflection on the diagonal combined with a change of sign (in terms of
 streamfunction) of the cavity. The second symmetry is broken for the two
 asymmetric branches, which only conserve the $\pi$-rotation symmetry. Figure
@@ -314,6 +313,30 @@ asymmetric branches, which only conserve the $\pi$-rotation symmetry. Figure
 emerging at $P_3$, and it can be seen that the rotational symmetry is no
 longer valid for these branches. However, both branches exhibit the rotational
 symmetry to one another.
+
+The question that remains is what happens at the saddle-node at point $C$. The
+schematic in figure \ref{fig:schem_saddle} shows the evolution of the
+eigenvalues, and figure \ref{fig:lsa_zoom} shows a detail on the real part of
+the eigenvalues for figure \ref{fig:lsa}. After the Hopf bifurcation ($A$), we
+have a complex conjugate pair with nonzero imaginary components and a positive
+real part. From pitchfork $P_3$ ($B$) onwards, the additional eigenvalue
+$\lambda_3$ has a real part that also becomes positive. What occurs at the
+saddle-node $C$ is, first of all, that the two eigenvalues lose their imaginary
+part and become purely real. Moreover, this takes place at a nonzero real part.
+What seems to be happening is that one of the complex pairs (now real) "jumps"
+and becomes negative. The eigenvalue configuration is depicted in the complex
+plane in figure \ref{fig:complexplane} to illustrate the behavior at the
+saddle-node. The preceding explanation is speculative because we cannot be sure
+that it is the eigenvalue corresponding to the complex pair that becomes
+stable. It could be that two positive eigenvalues meet at the saddle-node.
+
+Another reason for being cautious with our interpretation is that the
+saddle-node is a highly degenerated point where the Jacobian is
+ill-conditioned. Therefore the accuracy of the steady flows, along the linear
+stability analysis, may be at stake. Due to the degeneracy, it may even be that
+the saddle-node corresponds to a double or triple zero, and multiple eigenvalue
+crossings coincide. Nonetheless, these results were obtained on a large grid
+for a pseudo-spectral code of size $96 \times 96$.
 
 \begin{figure}[h!]
 \centering
@@ -345,29 +368,6 @@ symmetry to one another.
   \label{fig:lsa_branch2}
 \end{figure}
 
-The question that remains is what happens at the saddle-node at point $C$. The
-schematic in figure \ref{fig:schem_saddle} shows the evolution of the
-eigenvalues, and figure \ref{fig:lsa_zoom} shows a detail on the real part of
-the eigenvalues for figure \ref{fig:lsa}. After the Hopf bifurcation ($A$), we
-have a complex conjugate pair with nonzero imaginary components and a positive
-real part. From pitchfork $P_3$ ($B$) onwards, the additional eigenvalue
-$\lambda_3$ has a real part that also becomes positive. What occurs at the
-saddle-node $C$ is, first of all, that the two eigenvalues lose their imaginary
-part and become purely real. Moreover, this takes place at a nonzero real part.
-What seems to be happening is that one of the complex pairs (now real) "jumps"
-and becomes negative. The eigenvalue configuration is depicted in the complex
-plane in figure \ref{fig:complexplane} to illustrate the behavior at the
-saddle-node. The preceding explanation is speculative because we cannot be sure
-that it is the eigenvalue corresponding to the complex pair that becomes
-stable. It could be that two positive eigenvalues meet at the saddle-node.
-
-Another reason for being cautious with our interpretation is that the
-saddle-node is a highly degenerated point where the Jacobian is
-ill-conditioned, therefore the accuracy of the steady flows, along the linear
-stability analysis, may be at stake. Due to the degeneracy, it may even be that
-the saddle-node corresponds to a double or triple zero, and multiple eigenvalue
-crossings coincide. Nonetheless, these results were obtained on a large grid
-for a pseudo-spectral code of size $96 \times 96$.
 
 \begin{figure}[h!]
   \centering
