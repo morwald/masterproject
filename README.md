@@ -1,6 +1,6 @@
 # Master Project: "Regularized Four‑Sided Cavity Flows: A Spectral Bifurcation Benchmark implemented in Julia"
 
-Repository of my master project. Contains Tex files for the [PDF](./report.pdf)
+Repository of my master project. Contains Tex files for the [PDF](./src/main.pdf)
 of the report. The Julia code can be found here:
 [FourSidedCavityFlow.jl](https://github.com/morwald/FourSidedCavityFlow.jl.git).
 
