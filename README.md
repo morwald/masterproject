@@ -1,8 +1,8 @@
 # Master Project: "Regularized Four‑Sided Cavity Flows: A Spectral Bifurcation Benchmark implemented in Julia"
 
-Repository of my master project. Contains Tex files for the [PDF][./report.pdf]
+Repository of my master project. Contains Tex files for the [PDF](./report.pdf)
 of the report. The Julia code can be found here:
-[FourSidedCavityFlow.jl][https://github.com/morwald/FourSidedCavityFlow.jl.git].  
+[FourSidedCavityFlow.jl](https://github.com/morwald/FourSidedCavityFlow.jl.git).
 
 ## Abstract 
 
@@ -34,7 +34,8 @@ To compile the LaTeX file, inside of the `src` folder:
 pdflatex main.tex
 ```
 
-Run bibtex and compile multiple times to resolve references and generate the bibliography:
+Run the BibTex command and compile the document multiple times to resolve
+references and generate the bibliography:
 
 ```bash
 bibtex main
@@ -44,5 +45,5 @@ pdflatex main.tex
 
 ## Credits 
 
-The [template][https://wiki.epfl.ch/sma/pdm] for the report was provided by
+The [template](https://wiki.epfl.ch/sma/pdm) for the report was provided by
 Mathematics sections at EPFL.
