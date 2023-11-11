@@ -1,3 +1,3 @@
-[submodule "jlcode"]
-	path = jlcode
-	url = https://github.com/wg030/jlcode
+[submodule "external/jlcode"]
+	path = external/jlcode
+	url = https://github.com/wg030/jlcode.git
